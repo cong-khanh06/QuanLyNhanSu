@@ -1,10 +1,10 @@
 package DAO;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+import java.sql.*;
 public class Connection_DAO {
+
 	public Connection getCon()
 	{
 		Connection con=null;
