@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -20,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import DTO.Phongban_DTO;
 import DAO.Phongban_DAO;
 import BUS.Phongban_BUS;
+import DTO.NhanVien_DTO;
 import javax.swing.SwingConstants;
 public class Phongban1_GUI extends JFrame implements ActionListener {
 
@@ -29,10 +32,11 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 	private ArrayList<Phongban_DTO> arr;
 	private Phongban_BUS pbb;
 	private DefaultTableModel model;
+	private JLabel jlnhanvien;
 	public Phongban1_GUI() {
 		init();
 		this.setTitle("Quản lý phòng ban");
-        this.setSize(1100, 750); // Kích thước cửa sổ
+        this.setSize(1100, 700); // Kích thước cửa sổ
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Đóng app khi nhấn X
         this.setLocationRelativeTo(null); // Hiển thị giữa màn hình
         this.setVisible(true); // Hiển thị lên
@@ -163,21 +167,21 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 			getContentPane().add(panel);
 			panel.setLayout(null);
 			
-			JLabel jltittle2 = new JLabel("Nhân Viên");
-			jltittle2.setFont(new Font("Tahoma", Font.BOLD, 14));
-			jltittle2.setBounds(10, 4, 115, 30);
-			panel.add(jltittle2);
+			jlnhanvien = new JLabel("Nhân Viên");
+			jlnhanvien.setFont(new Font("Tahoma", Font.BOLD, 14));
+			jlnhanvien.setBounds(10, 4, 359, 30);
+			panel.add(jlnhanvien);
 			
 			table_1 = new JTable();
 			table_1.setModel(new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
-					"STT", "M\u00E3 nh\u00E2n vi\u00EAn", "H\u1ECD v\u00E0 t\u00EAn", "Ch\u1EE9c v\u1EE5", "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i"
+					"STT", "M\u00E3 nh\u00E2n vi\u00EAn", "H\u1ECD v\u00E0 t\u00EAn", "Gi\u1EDBi t\u00EDnh", "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i", "\u0110\u1ECBa ch\u1EC9"
 				}
 			) {
 				boolean[] columnEditables = new boolean[] {
-					false, false, false, false, false
+					false, false, false, false, false, true
 				};
 				public boolean isCellEditable(int row, int column) {
 					return columnEditables[column];
@@ -185,24 +189,33 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 			});
 			table_1.setBounds(0, 0, 1, 1);
 			JScrollPane scrollPane_1 = new JScrollPane(table_1);
-			scrollPane_1.setBounds(0, 50, 680, 318);
+			scrollPane_1.setBounds(0, 50, 680, 293);
 			panel.add(scrollPane_1);
 			
 			
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
-			panel_1.setBounds(700, 321, 380, 368);
+			panel_1.setBounds(700, 321, 380, 342);
 			getContentPane().add(panel_1);
 			
 			btthem.addActionListener(this);
-			
-			
-			renderTable();
 			btsua.addActionListener(this);
+			renderTable();
+			addEvent();
+			if(table.getRowCount()>0)
+			{
+				String madautien=table.getValueAt(0, 1).toString();
+				jlnhanvien.setText("Nhân Viên - "+table.getValueAt(0, 2).toString());
+
+				LoaddataNhanVien(madautien);
+				
+			}
+			
 	}
 	public void renderTable()
 	{
+		arr=pbb.getdatabase();
 		model=(DefaultTableModel)table.getModel();
 		model.setRowCount(0);
 		Object[][] oj=pbb.getObjectToRender();
@@ -238,13 +251,28 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 			int i=table.getSelectedRow();
 			if(i!=-1)
 			{
-				Phongban2_GUI framesua=new Phongban2_GUI();
-				framesua.setParent(this);
 				String ma=table.getValueAt(i, 1).toString();
-				String ten=table.getValueAt(i, 2).toString();
-				framesua.setEditMode(ma,ten,"","");
-				framesua.setVisible(true);
-				framesua.setLocationRelativeTo(null);
+				String tetruongphong=table.getValueAt(i, 3).toString();
+				Phongban_DTO pbchon=null;
+				for(Phongban_DTO tmp:arr)
+				{
+					if(tmp.getMaphongban().equals(ma))
+					{
+						pbchon=tmp;
+						break;
+					}
+				}
+				if(pbchon!=null)
+				{
+					Phongban2_GUI framesua=new Phongban2_GUI();
+					framesua.setParent(this);
+					String matruongphong=pbchon.getMatruongphong();
+					String ten=table.getValueAt(i, 2).toString();
+					framesua.setEditMode(ma,ten,pbchon.getDiachi(),pbchon.getSdt());
+					framesua.LoaddataComboboxTP(pbchon.getMaphongban(),matruongphong);
+					framesua.setVisible(true);
+					framesua.setLocationRelativeTo(null);
+				}
 
 			}
 			else {
@@ -253,6 +281,35 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 		}
 		
 		
+	}
+	public void LoaddataNhanVien(String mapb)
+	{
+		DefaultTableModel model1=(DefaultTableModel)table_1.getModel();
+		model1.setRowCount(0);
+		Object[][] data=pbb.getNhanVienbyPB(mapb);
+		for(Object []row:data)
+		{
+			model1.addRow(row);
+		}
+		
+	}
+	public void addEvent()
+	{
+		table.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row=table.getSelectedRow();
+				if(row!=-1)
+				{
+					jlnhanvien.setText("Nhân Viên - "+table.getValueAt(row, 2).toString());
+					String mapb=table.getValueAt(row, 1).toString();
+					LoaddataNhanVien(mapb);
+				}
+				
+			}
+			
+		});
 	}
 	
 	

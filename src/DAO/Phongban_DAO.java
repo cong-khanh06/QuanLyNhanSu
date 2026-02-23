@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
+import DTO.NhanVien_DTO;
 import DAO.Connection_DAO;
 public class Phongban_DAO {
 	public ArrayList<Phongban_DTO>getList()
@@ -131,7 +131,7 @@ public class Phongban_DAO {
 	    Connection con = null;
 	    try {
 	        con = conn.getCon();
-	        // Truy vấn đếm số lượng bản ghi có mã trùng với tham số truyền vào
+	        
 	        String query = "SELECT COUNT(*) FROM PhongBan WHERE ma_pb = ?";
 	        PreparedStatement ps = con.prepareStatement(query);
 	        ps.setString(1, mapb);
@@ -203,5 +203,44 @@ public class Phongban_DAO {
 			}
 			
 		}
+	}
+	public  ArrayList<NhanVien_DTO> getListNhanVien(String mapb)
+	{
+		Connection_DAO conn=new Connection_DAO();
+		Connection con=null;
+		ArrayList<NhanVien_DTO>listnhanvien=new ArrayList<>();
+		try
+		{
+			con=conn.getCon();
+			String query="SELECT ma_nv,ho_ten,gioi_tinh,sdt,dia_chi from NhanVien WHERE ma_pb=?";
+			PreparedStatement ps=con.prepareStatement(query);
+			ps.setString(1, mapb);
+			ResultSet rs=ps.executeQuery();
+			
+			while(rs.next())
+			{
+				NhanVien_DTO nv=new NhanVien_DTO();
+				nv.setManv(rs.getString("ma_nv"));
+				nv.setHoTen(rs.getString("ho_ten"));
+				nv.setGioiTinh(rs.getString("gioi_tinh"));
+				nv.setSdt(rs.getString("sdt"));
+				nv.setDiaChi(rs.getString("dia_chi"));
+				listnhanvien.add(nv);
+			}
+			return listnhanvien;
+
+		}catch(SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			if(con!=null)
+			{
+				conn.Closeconnection(con);
+			}
+		}
+		
 	}
 }

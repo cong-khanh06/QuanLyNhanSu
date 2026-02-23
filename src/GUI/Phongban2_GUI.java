@@ -93,6 +93,7 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
         comboBox_tp = new JComboBox();
         comboBox_tp.setEnabled(false);
         comboBox_tp.setBounds(520, 128, 220, 22);
+        
         p2.add(comboBox_tp);
 
         bthuy = new JButton("Hủy");
@@ -133,8 +134,6 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
     	jtfdiachi.setText("");
     	jtfsdt.setText("");
     	comboBox_tp.setEnabled(false);
-    	
-    	
     }
     public void setParent(Phongban1_GUI parent) {
         this.parent = parent;
@@ -167,14 +166,36 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
 	    	String arr[]=mabp.split("-");
 	    	mabp=arr[0];
 	    	String matp = "";
+	    	if(comboBox_tp.isEnabled() && comboBox_tp.getSelectedItem()!=null)
+	    	{
+	    		String selected= comboBox_tp.getSelectedItem().toString();
+	    		if(selected.equals("Đang tuyển"))
+	    		{
+	    			matp="";
+	    		}
+	    		else
+	    		{
+	    			String []tmp=selected.split("-");
+	    			matp=tmp[0].trim();
+	    		}
+	    	}
 	
 	    	Phongban_DTO pb = new Phongban_DTO(ma, ten, diachi, sdt, mabp, matp);
-	
-	    	String message = new Phongban_BUS().addPhongBan(pb);
-	
+	    	Phongban_BUS pbb=new Phongban_BUS();
+	    	String message="";
+	    	if(lblTitle.getText().equals("Thêm phòng ban"))
+	    	{
+	    		message=pbb.addPhongBan(pb);
+	    		comboBox_tp.removeAllItems();
+	    		comboBox_tp.addItem("Đang tuyển");
+	    	}
+	    	else
+	    	{
+	    		message=pbb.updatePhongBan(pb);
+	    	}
 	    	JOptionPane.showMessageDialog(this, message);
 	
-	    	if (message.contains("Thêm phòng ban thành công")) {
+	    	if (message.contains("thành công")) {
 	
 	    		if (parent != null) parent.renderTable();
 	
@@ -190,6 +211,30 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
         comboBox.removeAllItems();
         for (String tmp : list) {
             comboBox.addItem(tmp);
+        }
+    }
+    public void LoaddataComboboxTP(String mapb,String matp)
+    {
+    	Phongban_BUS pbb= new Phongban_BUS();
+    	ArrayList<String>list=pbb.getdataComboBoxTP(mapb);
+    	comboBox_tp.removeAllItems();
+    	comboBox_tp.addItem("Đang tuyển");
+    	for(String x :list)
+    	{
+    		comboBox_tp.addItem(x);
+    	}
+        if (matp == null || matp.equals("Đang tuyển") || matp.isEmpty()) {
+            comboBox_tp.setSelectedItem("Đang tuyển");
+        } else {
+            for (int i = 0; i < comboBox_tp.getItemCount(); i++) {
+                String item = comboBox_tp.getItemAt(i).toString();
+                
+                // So sánh: Nếu mục bắt đầu bằng "Mã -", chắc chắn là người đó
+                if (item.startsWith(matp + " -")) {
+                    comboBox_tp.setSelectedIndex(i);
+                    break; 
+                }
+            }
         }
     }
 }

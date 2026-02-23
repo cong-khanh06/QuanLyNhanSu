@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import DAO.Phongban_DAO;
 import DTO.Phongban_DTO;
-
+import DTO.NhanVien_DTO;
 public class Phongban_BUS {
 private ArrayList<Phongban_DTO>arr;
 private Phongban_DAO pbdao;
@@ -23,7 +23,7 @@ public ArrayList<Phongban_DTO> getlist()
 }
 public Object[][] getObjectToRender() {
 	getdatabase();
-	Object[][] ob = new Object[arr.size()][];
+	Object[][] ob = new Object[arr.size()][5];
 	for(int i=0;i<arr.size();i++) {
 		Phongban_DTO temp = arr.get(i);
 		// lấy ên trưởng phòng
@@ -36,6 +36,33 @@ public Object[][] getObjectToRender() {
 		
 	}
 	return ob;
+}
+public Object[][] getNhanVienbyPB(String mapb)
+{
+	ArrayList<NhanVien_DTO> listnv=pbdao.getListNhanVien(mapb);
+	Object [][]data=new Object[listnv.size()][6];
+	for(int i=0;i<listnv.size();i++)
+	{
+		NhanVien_DTO nv=listnv.get(i);
+		data[i][0]=i+1;
+		data[i][1]=nv.getManv();
+		data[i][2]=nv.getHoTen();
+		data[i][3]=nv.getGioiTinh();
+		data[i][4]=nv.getSdt();
+		data[i][5]=nv.getDiaChi();
+	}
+	return data;
+}
+public ArrayList<String> getdataComboBoxTP(String mapb)
+{
+	ArrayList<NhanVien_DTO> listdata=pbdao.getListNhanVien(mapb);
+	ArrayList<String> listds=new ArrayList<>();
+	for(NhanVien_DTO x: listdata)
+	{
+		listds.add(x.getManv()+" - "+x.getHoTen());
+	}
+	return listds;
+	
 }
 public String addPhongBan(Phongban_DTO pb) {
     // 1. Kiểm tra mã có trống không
@@ -68,19 +95,16 @@ public ArrayList<String>getTenMaBoPhan()
 	return arrten;
 }
 public String updatePhongBan(Phongban_DTO pb) {
-    // 1. Kiểm tra dữ liệu rỗng
     if (pb.getTenphongban().trim().isEmpty() || pb.getSdt().trim().isEmpty()) {
         return "Tên phòng và Số điện thoại không được để trống!";
     }
 
-    // 2. Kiểm tra định dạng số điện thoại (10 số)
     if (!pb.getSdt().matches("^\\d{10}$")) {
         return "Số điện thoại phải đúng 10 chữ số!";
     }
 
-    // 3. Gọi DAO thực hiện cập nhật
     if (pbdao.updatePhongban(pb)) {
-        getdatabase(); // Làm mới danh sách trong bộ nhớ BUS
+        getdatabase(); 
         return "Cập nhật phòng ban thành công!";
     } else {
         return "Lỗi: Không thể cập nhật dữ liệu vào hệ thống.";

@@ -3,6 +3,7 @@ package DTO;
 import java.time.LocalDate;
 
 public class NhanVien_DTO {
+	private String manv;
     private String hoTen;
     private LocalDate ngaySinh;
     private String gioiTinh;
@@ -17,7 +18,8 @@ public class NhanVien_DTO {
 
     public NhanVien_DTO() {
     }
-    public NhanVien_DTO(String hoTen,
+    public NhanVien_DTO(String manv,
+    				String hoTen,
                    LocalDate ngaySinh,
                    String gioiTinh,
                    String diaChi,
@@ -28,7 +30,7 @@ public class NhanVien_DTO {
                    String trangThai,
                    String maPB,
                    String maCV) {
-
+    	this.manv=manv;
         this.hoTen = hoTen;
         this.ngaySinh = ngaySinh;
         this.gioiTinh = gioiTinh;
@@ -129,6 +131,12 @@ public class NhanVien_DTO {
     public void setMaCV(String maCV) {
         this.maCV = maCV;
     }
-
+	public String getManv() {
+		return manv;
+	}
+	public void setManv(String manv) {
+		this.manv = manv;
+	}
+    
     
 }
