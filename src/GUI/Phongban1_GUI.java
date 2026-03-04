@@ -29,7 +29,7 @@ import BUS.Phongban_BUS;
 import DTO.NhanVien_DTO;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-public class Phongban1_GUI extends JFrame implements ActionListener {
+public class Phongban1_GUI extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
@@ -57,17 +57,12 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 	private JButton btsearch;
 	public Phongban1_GUI() {
 		init();
-		this.setTitle("Quản lý phòng ban");
-        this.setSize(1080, 700); // Kích thước cửa sổ
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Đóng app khi nhấn X
-        this.setLocationRelativeTo(null); // Hiển thị giữa màn hình
-        this.setVisible(true); // Hiển thị lên
 		
 	}
 	public void init()
 	{
 		setBackground(Color.white);
-		getContentPane().setLayout(null);		
+		this.setLayout(null);
 		pbb=new Phongban_BUS();
 		arr=new ArrayList<>();
 		arr=pbb.getdatabase();
@@ -75,7 +70,7 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 		panelTop.setBackground(Color.white);
 		panelTop.setBounds(10,10,1070,300);
 		panelTop.setBorder(new LineBorder(new Color(128, 128, 128)));
-		getContentPane().add(panelTop);
+		add(panelTop);
 		panelTop.setLayout(null);
 		
 		JPanel panelTopTitle = new JPanel();
@@ -96,7 +91,7 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 		btthem.setBorderPainted(false); 
 		btthem.setContentAreaFilled(true); 
 		btthem.setFocusPainted(false);
-		ImageIcon imageicon=new ImageIcon(getClass().getResource("/addpb.png"));
+		ImageIcon imageicon=new ImageIcon(getClass().getResource("/img/addpb.png"));
 		Image image=imageicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		btthem.setIcon(new ImageIcon(image));
 		
@@ -111,9 +106,14 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 		btxoa.setContentAreaFilled(true);
 		btxoa.setFocusPainted(false);
 		btxoa.setBackground(new Color(73, 209, 141));
-		ImageIcon iconxoa=new ImageIcon(getClass().getResource("/deletepb.png"));
-		Image imagexoa= iconxoa.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		btxoa.setIcon(new ImageIcon(imagexoa));
+		java.net.URL iconXoaURL = getClass().getResource("/img/deletepb.png");
+                if (iconXoaURL != null) {
+                    ImageIcon iconxoa = new ImageIcon(iconXoaURL);
+                    Image imagexoa = iconxoa.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                    btxoa.setIcon(new ImageIcon(imagexoa));
+                } else {
+                    System.err.println("Không tìm thấy ảnh: /img/deletepb.png");
+                }
 
 
 		
@@ -127,9 +127,12 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 		btsearch.setContentAreaFilled(true);
 		btsearch.setFocusPainted(false);
 		btsearch.setBackground(new Color(73, 209, 141));
-		ImageIcon iconsearch =new ImageIcon(getClass().getResource("/searchpb.png"));
-		Image imagesearch=iconsearch.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		btsearch.setIcon(new ImageIcon(imagesearch));
+		java.net.URL iconSearchURL = getClass().getResource("/img/searchpb.png");
+                if (iconSearchURL != null) {
+                    ImageIcon iconsearch = new ImageIcon(iconSearchURL);
+                    Image imagesearch = iconsearch.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                    btsearch.setIcon(new ImageIcon(imagesearch));
+                }
 		
 
 
@@ -152,9 +155,12 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 			btsua.setContentAreaFilled(true);
 			btsua.setFocusPainted(false);
 			btsua.setBackground(new Color(73, 209, 141));
-			ImageIcon iconsua=new ImageIcon(getClass().getResource("/fixpb.png"));
-			Image imagesua=iconsua.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			btsua.setIcon(new ImageIcon(imagesua));
+			java.net.URL iconSuaURL = getClass().getResource("/img/fixpb.png");
+                        if (iconSuaURL != null) {
+                            ImageIcon iconsua = new ImageIcon(iconSuaURL);
+                            Image imagesua = iconsua.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                            btsua.setIcon(new ImageIcon(imagesua));
+                        }
 			
 			jtfSearch = new JTextField();
 			jtfSearch.setBounds(395, 9, 149, 23);
@@ -168,9 +174,12 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 			btrefresh.setFocusPainted(false);
 			btrefresh.setContentAreaFilled(true);
 			btrefresh.setBorderPainted(false);
-			ImageIcon iconrefresh=new ImageIcon(getClass().getResource("/Refresh.png"));
-			Image imagerefresh=iconrefresh.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-			btrefresh.setIcon(new ImageIcon(imagerefresh));
+			java.net.URL iconRefreshURL = getClass().getResource("/img/Refresh.png");
+                        if (iconRefreshURL != null) {
+                            ImageIcon iconrefresh = new ImageIcon(iconRefreshURL);
+                            Image imagerefresh = iconrefresh.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                            btrefresh.setIcon(new ImageIcon(imagerefresh));
+                        }
 			btrefresh.setBackground(new Color(73, 209, 141));
 
 			panelTopTitle.add(btrefresh);
@@ -203,7 +212,7 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 			JPanel panel = new JPanel();
 			panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 			panel.setBounds(10, 321, 680, 342);
-			getContentPane().add(panel);
+			add(panel);
 			panel.setLayout(null);
 			
 			jlnhanvien = new JLabel("Nhân Viên");
@@ -236,7 +245,7 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 			panel_1.setBounds(700, 321, 380, 342);
-			getContentPane().add(panel_1);
+			add(panel_1);
 			panel_1.setLayout(null);
 			
 			jlthongtin = new JLabel("Thông tin nhân viên");
@@ -574,7 +583,7 @@ public class Phongban1_GUI extends JFrame implements ActionListener {
 		if(row!=-1 &&row<table_1.getRowCount())
 		{
 			NhanVien_DTO nv=list.get(row);
-			jlvaluemaso.setText(nv.getManv());
+			jlvaluemaso.setText(nv.getMaNV());
 			jlvaluehoten.setText(nv.getHoTen());
 			jlvaluegioitinh.setText(nv.getGioiTinh());
 			jlvaluesdt.setText(nv.getSdt());

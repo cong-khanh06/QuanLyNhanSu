@@ -55,5 +55,8 @@ public String getDiachi() {
 public void setDiachi(String diachi) {
 	this.diachi = diachi;
 }
-
+@Override
+    public String toString() {
+        return tenphongban;
+    }
 }

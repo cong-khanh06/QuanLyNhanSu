@@ -48,7 +48,7 @@ import java.util.ArrayList;
 		{
 			NhanVien_DTO nv=listnv.get(i);
 			data[i][0]=i+1;
-			data[i][1]=nv.getManv();
+			data[i][1]=nv.getMaNV();
 			data[i][2]=nv.getHoTen();
 		}
 		return data;
@@ -63,7 +63,7 @@ import java.util.ArrayList;
 		ArrayList<String> listds=new ArrayList<>();
 		for(NhanVien_DTO x: listdata)
 		{
-			listds.add(x.getManv()+" - "+x.getHoTen());
+			listds.add(x.getMaNV()+" - "+x.getHoTen());
 		}
 		return listds;
 		

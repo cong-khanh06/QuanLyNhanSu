@@ -21,5 +21,17 @@
         </configuration>
       </plugin>
     </plugins>
+    <resources>
+            <resource>
+                <directory>src</directory>
+                <includes>
+                    <include>**/*.png</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.jpeg</include>
+                    <include>**/*.gif</include>
+                </includes>
+            </resource>
+        </resources>
   </build>
+  
 </project>

@@ -1,12 +1,13 @@
 package DAO;
 import DTO.Phongban_DTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import DTO.NhanVien_DTO;
+import java.util.List;
 import DAO.Connection_DAO;
 public class Phongban_DAO {
 	public ArrayList<Phongban_DTO>getList()
@@ -93,33 +94,6 @@ public class Phongban_DAO {
 	    }
 	    return count;
 	}
-	public double gettongluong(String mapb)
-	{
-		Connection_DAO conn=new Connection_DAO();
-		Connection con=null;
-		double tongluong=0;
-		try
-		{
-			con=conn.getCon();
-			String query="SELECT SUM(bl.thuc_lanh) FROM NhanVien nv JOIN BangLuong bl on nv.ma_nv=bl.ma_nv"
-					+ " WHERE nv.ma_pb=?";
-			PreparedStatement ps=con.prepareStatement(query);
-			ps.setString(1, mapb);
-			ResultSet rs=ps.executeQuery();
-			if(rs.next())
-			{
-				tongluong=rs.getDouble(1);
-			}
-		}catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			conn.Closeconnection(con);
-		}
-		return tongluong;
-	}
 	public boolean insertPhongban(Phongban_DTO x) {
 	    Connection_DAO conn = new Connection_DAO();
 	    Connection con = null;
@@ -157,7 +131,7 @@ public class Phongban_DAO {
 	    Connection con = null;
 	    try {
 	        con = conn.getCon();
-	        
+	        // Truy vấn đếm số lượng bản ghi có mã trùng với tham số truyền vào
 	        String query = "SELECT COUNT(*) FROM PhongBan WHERE ma_pb = ?";
 	        PreparedStatement ps = con.prepareStatement(query);
 	        ps.setString(1, mapb);
@@ -230,82 +204,30 @@ public class Phongban_DAO {
 			
 		}
 	}
-	public ArrayList<NhanVien_DTO> getListNhanVien(String mapb) {
-	    Connection_DAO conn = new Connection_DAO();
-	    Connection con = null;
-	    ArrayList<NhanVien_DTO> listnhanvien = new ArrayList<>();
-	    try {
-	        con = conn.getCon();
-	        String query = "SELECT ma_nv, ho_ten, gioi_tinh, sdt, dia_chi, ngay_vao_lam from NhanVien WHERE ma_pb=?";
-	        PreparedStatement ps = con.prepareStatement(query);
-	        ps.setString(1, mapb);
-	        ResultSet rs = ps.executeQuery();
-	        
-	        while(rs.next()) {
-	            NhanVien_DTO nv = new NhanVien_DTO();
-	            nv.setMaNV(rs.getString("ma_nv"));
-	            nv.setHoTen(rs.getString("ho_ten"));
-	            nv.setGioiTinh(rs.getString("gioi_tinh"));
-	            nv.setSdt(rs.getString("sdt"));
-	            nv.setDiaChi(rs.getString("dia_chi"));
-	            if(rs.getDate("ngay_vao_lam") != null) {
-	                nv.setNgayVaoLam(rs.getDate("ngay_vao_lam").toLocalDate());
-	            }
-	            listnhanvien.add(nv);
-	        }
-	        return listnhanvien;
-	    } catch(SQLException e) {
-	        e.printStackTrace();
-	        return null;
-	    } finally {
-	        if(con != null) conn.Closeconnection(con);
-	    }
-	}
-	public boolean DeletePhongban(String mapb)
-	{
-		Connection_DAO conn=new Connection_DAO();
-		Connection con=null;
-		try
-		{
-			con=conn.getCon();
-			String query="DELETE From PhongBan WHERE ma_pb=?";
-			PreparedStatement ps=con.prepareStatement(query);
-			ps.setString(1, mapb);
-			int result =ps.executeUpdate();
-			return result>0;
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-		finally {
-			if(con!=null)
-			{
-				conn.Closeconnection(con);
-			}
-		}
-	}
-	public  int getSoLuongNhanVien(String maPhongBan) {
-		Connection_DAO conn=new Connection_DAO();
-		Connection con=null;
-		try {
-			con=conn.getCon();
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery("select COUNT(maNhanVien) from NHANVIEN where NHANVIEN.trangThai=1 and maPhong = '"+maPhongBan+"'");
-			while(rs.next()) {
-				return rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if(con!=null)
-			{
-				conn.Closeconnection(con);
-			}
-		}
-		
-		return 0;
-	}
+        public List<Phongban_DTO> layDanhSachPB() {
+            List<Phongban_DTO> list = new ArrayList<>();
+            Connection con=new Connection_DAO().getCon();
+            String sql = "SELECT * FROM PhongBan";
+            
+            try {
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    list.add(new Phongban_DTO(
+                        rs.getString("ma_pb"),
+                        rs.getString("ten_pb"),
+                        rs.getString("dia_chi"),
+                        rs.getString("sdt_phong"), 
+                        rs.getString("ma_bp"),
+                        rs.getString("ma_tp")
+                    ));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return list;
+        }
 }

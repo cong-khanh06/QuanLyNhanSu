@@ -1,9 +1,11 @@
 package BUS;
+
+import DAO.NhanVien_DAO;
 import DTO.NhanVien_DTO;
-import java.util.ArrayList;
+import java.util.List;
 
 public class NhanVien_BUS {
-    ArrayList<NhanVien_DTO> dsNhanVien;
+    NhanVien_DAO dao = new NhanVien_DAO();
     public static boolean isValidPhone(String sdt) {
         if (sdt == null) return false;
         return sdt.matches("^0(3|5|7|8|9)[0-9]{8}$");
@@ -48,5 +50,30 @@ public class NhanVien_BUS {
         public String getTrangThaiHienThi() {
             return trangThaiHienThi;
         }
+    }
+    
+    public String taoMaMoiNhat(){
+        return dao.getNewestMaNV();
+    }
+    
+    public boolean themNhanVien(NhanVien_DTO nv) {
+
+        // Validate trước khi lưu
+        if (!isValidPhone(nv.getSdt())) return false;
+        if (!isValidEmail(nv.getEmail())) return false;
+        if (!isValidCCCD(nv.getCccd())) return false;
+
+        return dao.insertNhanVien(nv);
+    }
+    
+    public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB) {
+        // Xử lý logic nếu cần (ví dụ loại bỏ khoảng trắng thừa của từ khóa)
+        if (tuKhoa == null) {
+            tuKhoa = "";
+        } else {
+            tuKhoa = tuKhoa.trim();
+        }
+
+        return dao.timKiemNhanVien(tuKhoa, gioiTinh, maPB);
     }
 }
