@@ -17,15 +17,13 @@ public class HopDong_BUS {
 
 //Thêm
     public String insert(HopDong_DTO hd) {
-        // 1. Kiểm tra trống dữ liệu cơ bản
         if (hd.getMaHD() == null || hd.getMaHD().trim().isEmpty()) return "Mã hợp đồng không được để trống!";
         if (hd.getMaNV() == null || hd.getMaNV().trim().isEmpty()) return "Mã nhân viên không được để trống!";
         if (hd.getLoaiHopDong() == null || hd.getLoaiHopDong().trim().isEmpty()) return "Loại hợp đồng không được để trống!";
 
-        // 2. Kiểm tra lương
+
         if (hd.getMucLuongCoBan() <= 0) return "Mức lương phải lớn hơn 0!";
 
-        // 3. Kiểm tra logic ngày tháng
         if (hd.getNgayBatDau() == null || hd.getNgayKetThuc() == null || hd.getNgayKy() == null) {
             return "Vui lòng chọn đầy đủ các loại ngày!";
         }
@@ -36,7 +34,6 @@ public class HopDong_BUS {
             return "Ngày ký phải trước hoặc bằng ngày bắt đầu!";
         }
 
-        // 4. Kiểm tra tồn tại qua DAO
         if (dao.checkMaHopDongTonTai(hd.getMaHD())) {
             return "Mã hợp đồng này đã tồn tại trong hệ thống!";
         }
@@ -44,7 +41,6 @@ public class HopDong_BUS {
             return "Nhân viên (mã " + hd.getMaNV() + ") không tồn tại!";
         }
 
-        // 5. Thực hiện lưu
         if (dao.insertHopDong(hd)) {
             return "Thêm hợp đồng thành công!";
         } else {
