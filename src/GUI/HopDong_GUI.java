@@ -16,13 +16,16 @@ import java.util.Locale;
 public class HopDong_GUI extends JPanel {
 
     private JTextField txtMaHD, txtLoaiHD, txtNgayBD, txtNgayKT,
-            txtNgayKy, txtLuong, txtTrangThai, txtMaNV,
+            txtNgayKy, txtLuong, txtMaNV,
             txtLanKy, txtNgayLenLuong, txtSearch;
+    
 
+    private JComboBox<String> cbTrangThai;
     private JTextArea txtNoiDung;
     private JTable table;
     private DefaultTableModel model;
     private HopDong_BUS bus = new HopDong_BUS();
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
     public HopDong_GUI() {
         setLayout(new BorderLayout());
@@ -41,8 +44,9 @@ public class HopDong_GUI extends JPanel {
         setupInputGrid(panelInput, gbc);
 
         JScrollPane scrollInput = new JScrollPane(panelInput);
-        scrollInput.setPreferredSize(new Dimension(0, 320)); 
+        scrollInput.setPreferredSize(new Dimension(0, 350)); 
         add(scrollInput, BorderLayout.NORTH);
+        
         setupTable();
         setupActionButtons();
         loadData();
@@ -57,15 +61,13 @@ public class HopDong_GUI extends JPanel {
         txtNgayLenLuong = new JTextField(10);
         txtLuong = new JTextField(10);
         
-        txtTrangThai = new JTextField(10);
-        txtTrangThai.setEditable(false);
-        txtTrangThai.setFocusable(false);
-        txtTrangThai.setBackground(new Color(235, 235, 235)); 
-        txtTrangThai.setText("-");
+        String[] rules = {"HieuLuc", "HetHan", "Huy"};
+        cbTrangThai = new JComboBox<>(rules);
+        cbTrangThai.setBackground(Color.WHITE);
 
         txtMaNV = new JTextField(10);
         txtLanKy = new JTextField(10);
-        txtNoiDung = new JTextArea(2, 10);
+        txtNoiDung = new JTextArea(3, 10);
         txtNoiDung.setLineWrap(true);
         txtSearch = new JTextField(12);
     }
@@ -78,7 +80,12 @@ public class HopDong_GUI extends JPanel {
         addDateComponent(p, "Ngày Ký:", txtNgayKy, 2, 0, gbc);
         addDateComponent(p, "Ngày Lên Lương:", txtNgayLenLuong, 2, 1, gbc);
         addComponent(p, "Mức Lương:", txtLuong, 3, 0, gbc);
-        addComponent(p, "Trạng Thái:", txtTrangThai, 3, 1, gbc);
+        
+        gbc.gridx = 2; gbc.gridy = 3; gbc.weightx = 0.1;
+        p.add(new JLabel("Trạng Thái:"), gbc);
+        gbc.gridx = 3; gbc.weightx = 0.4;
+        p.add(cbTrangThai, gbc);
+
         addComponent(p, "Mã Nhân Viên:", txtMaNV, 4, 0, gbc);
         addComponent(p, "Lần Ký:", txtLanKy, 4, 1, gbc);
 
@@ -89,10 +96,14 @@ public class HopDong_GUI extends JPanel {
     }
 
     private void setupTable() {
-        String[] headers = {"Mã HD", "Loại HD", "Bắt đầu", "Kết thúc", "Ngày ký", "Lương", "Lên lương", "Trạng thái", "Mã NV", "Lần ký", "Nội dung"};
-        model = new DefaultTableModel(headers, 0);
+        String[] headers = {"Mã HD", "Loại HD", "Bắt đầu", "Kết thúc", "Ngày ký", "Lương", "Trạng thái", "Mã NV", "Lần ký", "Nội dung"};
+        model = new DefaultTableModel(headers, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) { return false; }
+        };
         table = new JTable(model);
         table.setRowHeight(30);
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) { fillForm(table.getSelectedRow()); }
         });
@@ -114,48 +125,26 @@ public class HopDong_GUI extends JPanel {
         btnSearch.addActionListener(e -> search());
 
         panelAction.add(btnAdd); panelAction.add(btnUpdate); panelAction.add(btnDelete); 
-        panelAction.add(btnClear); panelAction.add(new JLabel("  Tìm mã:")); 
+        panelAction.add(btnClear); panelAction.add(new JLabel("  Tìm mã HD:")); 
         panelAction.add(txtSearch); panelAction.add(btnSearch);
         add(panelAction, BorderLayout.SOUTH);
     }
 
-    private void capNhatTrangThaiTuDong() {
+    private void autoUpdateStatus() {
         try {
-            String bdStr = txtNgayBD.getText().trim();
-            String ktStr = txtNgayKT.getText().trim();
+            if (txtNgayKT.getText().trim().isEmpty()) return;
 
-            if (bdStr.isEmpty() || ktStr.isEmpty()) {
-                txtTrangThai.setText("-");
-                txtTrangThai.setForeground(Color.GRAY);
-                return;
-            }
+            java.util.Date ngayKT = sdf.parse(txtNgayKT.getText().trim());
+            java.util.Date homNay = new java.util.Date();
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            java.util.Date ngayBD = sdf.parse(bdStr);
-            java.util.Date ngayKT = sdf.parse(ktStr);
-
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            java.util.Date homNay = cal.getTime();
-
-            if (homNay.before(ngayBD)) {
-                txtTrangThai.setText("Chưa hiệu lực");
-                txtTrangThai.setForeground(Color.BLUE);
-            } 
-            // Nếu hôm nay SAU ngày kết thúc thì mới báo hết hạn
-            else if (homNay.after(ngayKT)) {
-                txtTrangThai.setText("Đã hết hạn");
-                txtTrangThai.setForeground(Color.RED);
-            } 
-            else {
-                txtTrangThai.setText("Đang hiệu lực");
-                txtTrangThai.setForeground(new Color(0, 153, 0)); 
+            // Nếu ngày hôm nay sau ngày kết thúc thì tự động chọn HetHan
+            if (homNay.after(ngayKT)) {
+                cbTrangThai.setSelectedItem("HetHan");
+            } else {
+                cbTrangThai.setSelectedItem("HieuLuc");
             }
         } catch (Exception e) {
-            txtTrangThai.setText("Lỗi ngày");
+            cbTrangThai.setSelectedItem("HieuLuc");
         }
     }
 
@@ -175,14 +164,14 @@ public class HopDong_GUI extends JPanel {
         btn.setMargin(new Insets(2, 2, 2, 2));
         btn.addActionListener(e -> {
             new CalendarGrid(txt).setVisible(true);
-            capNhatTrangThaiTuDong(); 
+            autoUpdateStatus(); 
         });
         pDate.add(btn, BorderLayout.EAST);
         gbc.gridx = col * 2 + 1; gbc.weightx = 0.4;
         p.add(pDate, gbc);
     }
 
-    // lịch
+
     class CalendarGrid extends JDialog {
         private JTextField target;
         private JPanel pDays;
@@ -218,7 +207,7 @@ public class HopDong_GUI extends JPanel {
                 JButton btn = new JButton(String.valueOf(i));
                 btn.addActionListener(e -> {
                     cal.set(Calendar.DAY_OF_MONTH, day);
-                    target.setText(new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
+                    target.setText(sdf.format(cal.getTime()));
                     dispose();
                 });
                 pDays.add(btn);
@@ -231,7 +220,6 @@ public class HopDong_GUI extends JPanel {
 
     void renderTable(ArrayList<HopDong_DTO> list) {
         model.setRowCount(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         for (HopDong_DTO hd : list) {
             model.addRow(new Object[]{
                 hd.getMaHD(), hd.getLoaiHopDong(),
@@ -239,7 +227,6 @@ public class HopDong_GUI extends JPanel {
                 hd.getNgayKetThuc() != null ? sdf.format(hd.getNgayKetThuc()) : "",
                 hd.getNgayKy() != null ? sdf.format(hd.getNgayKy()) : "",
                 hd.getMucLuongCoBan(),
-                hd.getNgayLenLuongGanNhat() != null ? sdf.format(hd.getNgayLenLuongGanNhat()) : "",
                 hd.getTrangThai(), hd.getMaNV(), hd.getLanKy(), hd.getNoiDung()
             });
         }
@@ -253,11 +240,10 @@ public class HopDong_GUI extends JPanel {
         txtNgayKT.setText(getValueAt(i, 3));
         txtNgayKy.setText(getValueAt(i, 4));
         txtLuong.setText(getValueAt(i, 5));
-        txtNgayLenLuong.setText(getValueAt(i, 6));
-        txtTrangThai.setText(getValueAt(i, 7));
-        txtMaNV.setText(getValueAt(i, 8));
-        txtLanKy.setText(getValueAt(i, 9));
-        txtNoiDung.setText(getValueAt(i, 10));
+        cbTrangThai.setSelectedItem(getValueAt(i, 6));
+        txtMaNV.setText(getValueAt(i, 7));
+        txtLanKy.setText(getValueAt(i, 8));
+        txtNoiDung.setText(getValueAt(i, 9));
     }
 
     private String getValueAt(int row, int col) {
@@ -278,18 +264,18 @@ public class HopDong_GUI extends JPanel {
             String luongTxt = txtLuong.getText().trim().replaceAll("[^\\d.]", "");
             hd.setMucLuongCoBan(luongTxt.isEmpty() ? 0 : Double.parseDouble(luongTxt));
             String lanKyTxt = txtLanKy.getText().trim().replaceAll("[^\\d]", "");
-            hd.setLanKy(lanKyTxt.isEmpty() ? 0 : Integer.parseInt(lanKyTxt));
+            hd.setLanKy(lanKyTxt.isEmpty() ? 1 : Integer.parseInt(lanKyTxt));
         } catch(Exception e) {
-            hd.setMucLuongCoBan(0); hd.setLanKy(0);
+            hd.setMucLuongCoBan(0); hd.setLanKy(1);
         }
         hd.setNoiDung(txtNoiDung.getText().trim());
-        hd.setTrangThai(txtTrangThai.getText().trim()); // Trạng thái lấy từ ô tự động tính
+        hd.setTrangThai(cbTrangThai.getSelectedItem().toString()); 
         hd.setMaNV(txtMaNV.getText().trim());
         return hd;
     }
 
     private Date parseDate(String s) {
-        try { return new Date(new SimpleDateFormat("dd-MM-yyyy").parse(s).getTime()); } catch (Exception e) { return null; }
+        try { return new Date(sdf.parse(s).getTime()); } catch (Exception e) { return null; }
     }
 
     void insert() { 
@@ -307,7 +293,7 @@ public class HopDong_GUI extends JPanel {
     void delete() { 
         String ma = txtMaHD.getText().trim();
         if(ma.isEmpty()) { JOptionPane.showMessageDialog(this, "Vui lòng chọn hợp đồng!"); return; }
-        if(JOptionPane.showConfirmDialog(this, "Xác nhận xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if(JOptionPane.showConfirmDialog(this, "Xác nhận xóa hợp đồng này?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             String res = bus.delete(ma);
             JOptionPane.showMessageDialog(this, res);
             if(res.contains("thành công")) { loadData(); clearForm(); }
@@ -317,19 +303,18 @@ public class HopDong_GUI extends JPanel {
     void search() { renderTable(bus.search(txtSearch.getText().trim())); }
     
     void clearForm() {
-        JTextField[] fields = {txtMaHD, txtLoaiHD, txtNgayBD, txtNgayKT, txtNgayKy, txtLuong, txtMaNV, txtLanKy, txtNgayLenLuong};
+        JTextField[] fields = {txtMaHD, txtLoaiHD, txtNgayBD, txtNgayKT, txtNgayKy, txtLuong, txtMaNV, txtLanKy, txtNgayLenLuong, txtSearch};
         for(JTextField t : fields) t.setText("");
-        txtTrangThai.setText("-");
+        cbTrangThai.setSelectedIndex(0);
         txtNoiDung.setText("");
         table.clearSelection();
     }
-
-    // test
+//test
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) {}
-        JFrame frame = new JFrame("HỆ THỐNG QUẢN LÝ HỢP ĐỒNG");
+        JFrame frame = new JFrame("QUẢN LÝ HỢP ĐỒNG ");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1200, 800);
+        frame.setSize(1250, 800);
         frame.add(new HopDong_GUI());
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
