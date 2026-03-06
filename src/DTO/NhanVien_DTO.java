@@ -18,6 +18,10 @@ public class NhanVien_DTO {
 
     public NhanVien_DTO() {
     }
+    public NhanVien_DTO(String manv, String hoTen){
+        this.maNV = manv;
+        this.hoTen = hoTen;
+    }
     public NhanVien_DTO(String maNV,
                    String hoTen,
                    String gioiTinh,

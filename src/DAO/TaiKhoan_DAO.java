@@ -164,7 +164,6 @@ public class TaiKhoan_DAO {
         }
         return list;
     }
-
     public boolean checkExistMaNV(String manv) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -182,4 +181,38 @@ public class TaiKhoan_DAO {
         }
         return false;
     }
+    public String getTenchucvu(String user)
+    {
+    	Connection_DAO conn = new Connection_DAO();
+        Connection con = null;
+        String ketqua=null;
+        try
+        {
+        	con=conn.getCon();
+        	String query="Select ten_cv from TaiKhoan tk join NhanVien nv on tk.ma_nv=nv.ma_nv join ChucVu cv"
+        					+ " on nv.ma_cv=cv.ma_cv   Where tk.ten_dang_nhap=?";
+        	PreparedStatement ps=con.prepareStatement(query);
+        	ps.setString(1, user);
+            ResultSet rs = ps.executeQuery();
+            
+        	if(rs.next())
+        	{
+        		ketqua=rs.getString(1);
+        	}
+        	
+        	
+        }
+        catch(SQLException e)
+        {
+        	e.printStackTrace();
+        }
+        finally {
+        	if(con!=null)
+        	{
+        		conn.Closeconnection(con);
+        	}
+        }
+        return ketqua;
+    }
+    
 }

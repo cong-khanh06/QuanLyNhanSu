@@ -106,4 +106,12 @@ public class Display_GUI extends JFrame{
         }
         return null; 
     }
+    public JLabel getnameValue()
+    {
+    	return nameValue;
+    }
+    public JLabel getroleValue()
+    {
+    	return roleValue;
+    }
 }

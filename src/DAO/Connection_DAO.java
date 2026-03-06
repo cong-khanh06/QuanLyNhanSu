@@ -15,7 +15,7 @@ public class Connection_DAO {
 			{
 				String url="jdbc:sqlserver://localhost:1433;DatabaseName=quanlynhansu;encrypt=true;trustServerCertificate=true";
 				String user="sa";
-				String pass="YourStrong@123";
+				String pass="123";
 				con=DriverManager.getConnection(url,user,pass);
 				
 			}catch(SQLException e)

@@ -28,7 +28,7 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
         p1.setLayout(null);
         this.getContentPane().add(p1);
 
-        lblTitle = new JLabel("THÊM PHÒNG BAN");
+        lblTitle = new JLabel("Thêm phòng ban");
         lblTitle.setFont(new Font("Arial", Font.BOLD, 14));
         lblTitle.setForeground(Color.white);
         lblTitle.setBounds(10, 0, 300, 35); 
@@ -134,6 +134,9 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
     	jtfdiachi.setText("");
     	jtfsdt.setText("");
     	comboBox_tp.setEnabled(false);
+    	comboBox_tp.removeAllItems();
+    	comboBox_tp.addItem("Đang tuyển");
+    	comboBox_tp.setSelectedIndex(0);
     }
     public void setParent(Phongban1_GUI parent) {
         this.parent = parent;

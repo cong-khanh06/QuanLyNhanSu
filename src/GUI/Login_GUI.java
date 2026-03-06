@@ -1,64 +1,42 @@
 package GUI;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.CardLayout;
+import BUS.TaiKhoan_BUS;
 
-public class Login_GUI extends JFrame {
+public class Login_GUI extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private final JPanel panelLeft = new JPanel();
     private Logindangnhap_GUI logindangnhap;
     private LoginDMK_GUI logindmk;
-	private JPanel panelRight;
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Login_GUI frame = new Login_GUI();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+    private JPanel panelRight;
+    private TaiKhoan_BUS taikhoanbus;
 
     public Login_GUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
         setTitle("HR Management System - Login");
-        logindangnhap=new Logindangnhap_GUI();
-        logindmk=new LoginDMK_GUI();
+        taikhoanbus = new TaiKhoan_BUS();
         
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setPreferredSize(new Dimension(800, 500)); // Kích thước tổng thể mới
+        logindangnhap = new Logindangnhap_GUI();
+        logindmk = new LoginDMK_GUI();
+
+        contentPane = new JPanel(new GridLayout(1, 2));
+        contentPane.setPreferredSize(new Dimension(800, 500));
         setContentPane(contentPane);
-        contentPane.setLayout(null);
-        
-        // --- PANEL BÊN TRÁI (MÀU XANH) ---
-        panelLeft.setBounds(0, 0, 400, 500);
+
+        JPanel panelLeft = new JPanel(new GridBagLayout());
         panelLeft.setBackground(new Color(25, 118, 210));
-        panelLeft.setLayout(null);
-        contentPane.add(panelLeft);
         
-        // Logo - Căn giữa panel trái (400/2 - 170/2 = 115)
-        JLabel jlimage = new JLabel("");
-        jlimage.setBounds(115, 50, 170, 90);
-        panelLeft.add(jlimage);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 40, 10, 40); 
+
+        
+        JLabel jlimage = new JLabel("", SwingConstants.CENTER);
         try {
             ImageIcon icon = new ImageIcon(getClass().getResource("/quanlynhansu.png"));
             Image image = icon.getImage().getScaledInstance(170, 90, Image.SCALE_SMOOTH);
@@ -66,48 +44,76 @@ public class Login_GUI extends JFrame {
         } catch (Exception e) {
             System.out.println("Lưu ý: Chưa tìm thấy file ảnh quanlynhansu.png");
         }
+        gbc.gridy = 0;
+        panelLeft.add(jlimage, gbc);
 
-        // Câu chào nhỏ
         JLabel jlWelcome = new JLabel("Welcome to");
         jlWelcome.setForeground(Color.WHITE);
         jlWelcome.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        jlWelcome.setBounds(50, 180, 300, 30);
-        panelLeft.add(jlWelcome);
+        gbc.gridy = 1;
+        panelLeft.add(jlWelcome, gbc);
 
-        // Tên phần mềm (Đã điều chỉnh size font xuống 36 để vừa chiều rộng 400)
         JLabel jlTitle = new JLabel("HR PRO SYSTEM");
         jlTitle.setForeground(Color.WHITE);
-        jlTitle.setFont(new Font("Segoe UI", Font.BOLD, 36)); 
-        jlTitle.setBounds(50, 210, 350, 50);
-        panelLeft.add(jlTitle);
+        jlTitle.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        gbc.gridy = 2;
+        panelLeft.add(jlTitle, gbc);
 
-        // Slogan sử dụng HTML để tự động xuống dòng và căn lề
-     // Slogan sử dụng HTML để tự động xuống dòng và căn lề
-        JLabel jlSlogan=new JLabel("<html><bode style='width: 250px;'>Connecting people with purpose to build a stronger"
-        		+ " and more productive organization.</body></html>");
-        jlSlogan.setForeground(new Color(255, 255, 255));
+        JLabel jlSlogan = new JLabel("<html>Connecting people with purpose to build a stronger "
+                + "and more productive organization.</html>");
+        jlSlogan.setForeground(Color.WHITE);
         jlSlogan.setFont(new Font("Segoe UI", Font.ITALIC, 14));
+        gbc.gridy = 3;
+        panelLeft.add(jlSlogan, gbc);
 
-        jlSlogan.setBounds(50, 270, 328, 80); 
-        panelLeft.add(jlSlogan);
-        
-        panelRight = new JPanel();
+        panelRight = new JPanel(new CardLayout());
         panelRight.setBackground(Color.WHITE);
-        panelRight.setBounds(400, 0, 400, 500);
+        panelRight.add(logindangnhap, "formdangnhap");
+        panelRight.add(logindmk, "formdmk");
+
+        contentPane.add(panelLeft);
         contentPane.add(panelRight);
-        panelRight.setLayout(new CardLayout(0, 0));
-        panelRight.add(logindangnhap,"formdangnhap");
-        panelRight.add(logindmk,"formdmk");
-        
+
+        logindangnhap.getLogin().addActionListener(this);
+
         showCard("formdangnhap");
-        this.pack();
-        this.setLocationRelativeTo(null);
         
+        this.pack(); 
+        this.setLocationRelativeTo(null); 
     }
-    public void showCard(String name)
-    {
-    	CardLayout card=(CardLayout)panelRight.getLayout();
-    	card.show(panelRight, name);
+
+    public void showCard(String name) {
+        CardLayout card = (CardLayout) panelRight.getLayout();
+        card.show(panelRight, name);
     }
-    
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String src = e.getActionCommand();
+        if (src.equals("LOGIN")) {
+            String user = logindangnhap.getJtfuser().getText();
+            String password = new String(logindangnhap.getPasswordField().getPassword());
+            
+            if (user.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không được để trống tài khoản hoặc mật khẩu!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            String message = taikhoanbus.CheckLogin(user, password);
+            if (message.contains("thành công")) {
+                this.dispose();
+                Display_GUI ds=new Display_GUI();
+                ds.getnameValue().setText(user);
+                ds.getroleValue().setText(taikhoanbus.getTenchucvu(user));
+            } else {
+                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new Login_GUI().setVisible(true);
+        });
+    }
 }
