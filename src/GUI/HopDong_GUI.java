@@ -262,7 +262,7 @@ public class HopDong_GUI extends JPanel {
         
         try {
             String luongTxt = txtLuong.getText().trim().replaceAll("[^\\d.]", "");
-            hd.setMucLuongCoBan(luongTxt.isEmpty() ? 0 : Double.parseDouble(luongTxt));
+            hd.setMucLuongCoBan(luongTxt.isEmpty() ? 0 : Long.parseLong(luongTxt));
             String lanKyTxt = txtLanKy.getText().trim().replaceAll("[^\\d]", "");
             hd.setLanKy(lanKyTxt.isEmpty() ? 1 : Integer.parseInt(lanKyTxt));
         } catch(Exception e) {
