@@ -35,25 +35,27 @@ public class HopDong_GUI extends JPanel {
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // --- 1. HEADER & SEARCH ---
-        JPanel pHeader = new JPanel(new BorderLayout());
+        JPanel pHeader = new JPanel(new BorderLayout(20, 0)); 
         pHeader.setOpaque(false);
+        pHeader.setBorder(new EmptyBorder(0, 0, 15, 0)); 
 
+        JPanel pLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
+        pLeft.setOpaque(false);
         JLabel lblTitle = new JLabel("QUẢN LÝ HỢP ĐỒNG");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24)); 
         lblTitle.setForeground(PRIMARY_COLOR);
-        pHeader.add(lblTitle, BorderLayout.NORTH);
+        pLeft.add(lblTitle);
 
-        JPanel pActions = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 15));
-        pActions.setOpaque(false);
+        JPanel pRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 10)); 
+        pRight.setOpaque(false);
+        
+        JLabel lblTimKiem = new JLabel("Tìm kiếm:");
+        lblTimKiem.setFont(new Font("Segoe UI", Font.BOLD, 14));
         
         txtSearch = new JTextField();
-        txtSearch.setPreferredSize(new Dimension(200, 35));
+        txtSearch.setPreferredSize(new Dimension(180, 32)); 
         txtSearch.setBorder(BorderFactory.createCompoundBorder(
             new LineBorder(new Color(200, 200, 200), 1), new EmptyBorder(0, 10, 0, 10)));
-        
-        pActions.add(new JLabel("Mã :"));
-        pActions.add(txtSearch);
         
         bttiemkiem = createStyledButton("Tìm kiếm", PRIMARY_COLOR);
         btlammoi = createStyledButton("Làm mới", PRIMARY_COLOR);
@@ -61,13 +63,16 @@ public class HopDong_GUI extends JPanel {
         btsua = createStyledButton("Chỉnh sửa", PRIMARY_COLOR);
         btxoa = createStyledButton("Xóa", PRIMARY_COLOR);
         
-        pActions.add(bttiemkiem);
-        pActions.add(btlammoi);
-        pActions.add(btthem); 
-        pActions.add(btsua); 
-        pActions.add(btxoa); 
+        pRight.add(lblTimKiem);
+        pRight.add(txtSearch);
+        pRight.add(bttiemkiem);
+        pRight.add(btlammoi);
+        pRight.add(btthem); 
+        pRight.add(btsua); 
+        pRight.add(btxoa); 
 
-        pHeader.add(pActions, BorderLayout.SOUTH);
+        pHeader.add(pLeft, BorderLayout.WEST);
+        pHeader.add(pRight, BorderLayout.CENTER); 
         add(pHeader, BorderLayout.NORTH);
 
         // --- 2. CENTER: TABLE ---
