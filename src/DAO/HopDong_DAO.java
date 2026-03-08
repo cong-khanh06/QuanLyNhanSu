@@ -24,7 +24,7 @@ public class HopDong_DAO {
                 hd.setNgayBatDau(rs.getDate("ngay_bat_dau"));
                 hd.setNgayKetThuc(rs.getDate("ngay_ket_thuc"));
                 hd.setNgayKy(rs.getDate("ngay_ky"));
-                hd.setMucLuongCoBan(rs.getLong("muc_luong_co_ban"));
+                hd.setMucLuongCoBan(rs.getDouble("muc_luong_co_ban"));
                 hd.setNoiDung(rs.getString("noi_dung"));
                 hd.setTrangThai(rs.getString("trang_thai"));
                 hd.setMaNV(rs.getString("ma_nv"));
@@ -123,7 +123,7 @@ public class HopDong_DAO {
                     hd.setNgayBatDau(rs.getDate("ngay_bat_dau"));
                     hd.setNgayKetThuc(rs.getDate("ngay_ket_thuc"));
                     hd.setNgayKy(rs.getDate("ngay_ky"));
-                    hd.setMucLuongCoBan(rs.getLong("muc_luong_co_ban"));
+                    hd.setMucLuongCoBan(rs.getDouble("muc_luong_co_ban"));
                     hd.setNoiDung(rs.getString("noi_dung"));
                     hd.setTrangThai(rs.getString("trang_thai"));
                     hd.setMaNV(rs.getString("ma_nv"));
@@ -164,5 +164,43 @@ public class HopDong_DAO {
             e.printStackTrace();
         }
         return false;
+    }
+    public HopDong_DTO gethopdongtheomanv(String manv) { 
+        HopDong_DTO hd=null;
+        String sql = "SELECT * FROM HopDong where ma_nv= ?";
+        Connection con=null;
+        try {
+        		 con = connDAO.getCon();
+             PreparedStatement ps = con.prepareStatement(sql);
+        	ps.setString(1,manv);
+        	
+             ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                hd = new HopDong_DTO();
+                hd.setMaHD(rs.getString("ma_hd"));
+                hd.setLoaiHopDong(rs.getString("loai_hop_dong"));
+                hd.setNgayBatDau(rs.getDate("ngay_bat_dau"));
+                hd.setNgayKetThuc(rs.getDate("ngay_ket_thuc"));
+                hd.setNgayKy(rs.getDate("ngay_ky"));
+                hd.setMucLuongCoBan(rs.getDouble("muc_luong_co_ban"));
+                hd.setNoiDung(rs.getString("noi_dung"));
+                hd.setTrangThai(rs.getString("trang_thai"));
+                hd.setMaNV(rs.getString("ma_nv"));
+                hd.setLanKy(rs.getInt("Lan_ky"));
+                hd.setNgayLenLuongGanNhat(rs.getDate("ngay_len_luong_gan_nhat"));
+                
+            }
+          
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+        	if(con!=null)
+        	{
+        		connDAO.Closeconnection(con);
+        	}
+        }
+        return hd;
     }
 }

@@ -18,14 +18,14 @@ import javax.swing.BoxLayout;
 public class Display_GUI extends JFrame{
     JPanel pnLeft,pnRight,pnRAN,pnCard;
     JLabel name,role,nameValue,roleValue;
-<<<<<<< Updated upstream
-    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnDA;
-=======
-    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnL,btnCC,btnTK;
->>>>>>> Stashed changes
+
+    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnL,btnCC,btnTK,btnDA;
+
     CardLayout cardlayout=new CardLayout();
     Phongban1_GUI phongban;
     NhanVien_GUI nhanvien;
+    HopDong_GUI hopdong;
+    TaiKhoan_GUI taikhoan;
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
         setSize(1400,800);
@@ -34,6 +34,8 @@ public class Display_GUI extends JFrame{
         setLayout(new BorderLayout());
         phongban= new Phongban1_GUI();
         nhanvien=new NhanVien_GUI();
+        hopdong=new HopDong_GUI();
+        taikhoan=new TaiKhoan_GUI();
         
         
         pnLeft=new JPanel();
@@ -68,14 +70,12 @@ public class Display_GUI extends JFrame{
         pnCard.add(btnNV);
         btnHD=new ButtonSidebar("Hợp đồng", loadIcon("/GUI/icon/hopdong.png"));
         pnCard.add(btnHD);
-<<<<<<< Updated upstream
         btnPB=new ButtonSidebar("Phòng ban", loadIcon("/GUI/icon/phongban.png"));
         pnCard.add(btnPB);
-        btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
-        pnCard.add(btnDA);
-=======
-        btnPB=new ButtonSidebar("Phòng ban", loadIcon("/GUI/icon/phongban.png"));        
-        pnCard.add(btnPB);
+//        btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
+//        pnCard.add(btnDA);
+
+       
         btnL=new ButtonSidebar("Lương", loadIcon("/GUI/icon/salary.png"));        
         pnCard.add(btnL);
         btnCC=new ButtonSidebar("Chấm công", loadIcon("/GUI/icon/timesheets.png"));        
@@ -91,23 +91,20 @@ public class Display_GUI extends JFrame{
         btnL.setHorizontalAlignment(SwingConstants.LEFT);
         btnCC.setHorizontalAlignment(SwingConstants.LEFT);
         btnTK.setHorizontalAlignment(SwingConstants.LEFT);
->>>>>>> Stashed changes
-        
+
         pnLeft.add(pnCard);
 
         pnRight=new JPanel(cardlayout);
         pnRight.setBackground(Color.white);
         
-<<<<<<< Updated upstream
-        pnRight.add(new NhanVien_GUI(),"panelNV");
-        pnRight.add(new Phongban1_GUI(),"panelPB");
-        pnRight.add(new HopDong_GUI(), "panelHD");
-        pnRight.add(new DuAn_GUI(),"panelDA");
-=======
+
         pnRight.add(nhanvien,"panelNV");
         pnRight.add(phongban,"panelPB");
-        pnRight.add(new HopDong_GUI(),"panelHD");
->>>>>>> Stashed changes
+        pnRight.add(hopdong,"panelHD");
+
+        //pnRight.add(new DuAn_GUI(),"panelDA");
+        pnRight.add(taikhoan, "panelTK");
+
         
         btnNV.addActionListener(e->{
             cardlayout.show(pnRight,"panelNV");
@@ -127,8 +124,12 @@ public class Display_GUI extends JFrame{
             cardlayout.show(pnRight,"panelHD");
         });
         
-        btnDA.addActionListener(e->{
-            cardlayout.show(pnRight, "panelDA");
+//        btnDA.addActionListener(e->{
+//            cardlayout.show(pnRight, "panelDA");
+//        });
+        
+        btnTK.addActionListener(e->{
+            cardlayout.show(pnRight, "panelTK");
         });
         
         add(pnLeft,BorderLayout.WEST);
@@ -168,14 +169,16 @@ public class Display_GUI extends JFrame{
     		btnPB.setVisible(false);
     		btnTK.setVisible(false);
     		pnCard.revalidate();
-    		nhanvien.setphanquyenuser(false);
-    		nhanvien.Loaddatatheoma(manv);
+    		nhanvien.setphanquyenuser(false,manv);
+    		nhanvien.setphanquyennut(false,quyen);
+    		hopdong.setphanquyenUser(false, manv);
     		pnCard.revalidate();
     		pnCard.repaint();
     	}
     	else if(quyen.equals("Manager"))
     	{
-    		nhanvien.setphanquyenManager(false);
+    		nhanvien.setphanquyennut(false,quyen);
+    		hopdong.setphanquyenManager(false);
     		btnTK.setVisible(false);
     		pnCard.revalidate();
     		pnCard.repaint();

@@ -23,6 +23,9 @@ public class HopDong_BUS {
 
 
         if (hd.getMucLuongCoBan() <= 0) return "Mức lương phải lớn hơn 0!";
+        if (hd.getLanKy() <= 0) {
+        return "Số lần ký phải lớn hơn 0!";
+    }
 
         if (hd.getNgayBatDau() == null || hd.getNgayKetThuc() == null || hd.getNgayKy() == null) {
             return "Vui lòng chọn đầy đủ các loại ngày!";
@@ -52,6 +55,7 @@ public class HopDong_BUS {
     public String update(HopDong_DTO hd) {
         if (hd.getMaHD().trim().isEmpty()) return "Mã hợp đồng không được để trống!";
         if (hd.getMucLuongCoBan() <= 0) return "Lương phải lớn hơn 0!";
+        if (hd.getLanKy() <= 0) return "Số lần ký phải lớn hơn 0!";
 
         if (dao.updateHopDong(hd)) {
             return "Cập nhật hợp đồng thành công!";
@@ -70,4 +74,23 @@ public class HopDong_BUS {
             return "Lỗi: Không thể xóa dữ liệu.";
         }
     }
+   
+        public ArrayList<HopDong_DTO> getHopDongTheoMaNV(String manv) {
+            ArrayList<HopDong_DTO> list = new ArrayList<>();
+            
+            // Kiểm tra dữ liệu đầu vào cơ bản
+            if (manv == null || manv.trim().isEmpty()) {
+                return list;
+            }
+
+            // Gọi lớp DAO để lấy đối tượng DTO
+            HopDong_DTO hd = dao.gethopdongtheomanv(manv.trim());
+
+            // Nếu tìm thấy hợp đồng (khác null), thêm vào danh sách
+            if (hd != null) {
+                list.add(hd);
+            }
+
+            return list;
+        }
 }

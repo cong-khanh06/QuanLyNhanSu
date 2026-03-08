@@ -9,7 +9,7 @@ public class HopDong_DTO {
     private Date ngayBatDau;
     private Date ngayKetThuc;
     private Date ngayKy;
-    private long mucLuongCoBan;
+    private double mucLuongCoBan;
     private String noiDung;
     private String trangThai;
     private String maNV;
@@ -20,7 +20,7 @@ public class HopDong_DTO {
     }
 
     public HopDong_DTO(String maHD, String loaiHopDong, Date ngayBatDau,
-                       Date ngayKetThuc, Date ngayKy, long mucLuongCoBan,
+                       Date ngayKetThuc, Date ngayKy, double mucLuongCoBan,
                        String noiDung, String trangThai, String maNV,
                        int lanKy, Date ngayLenLuongGanNhat) {
 
@@ -52,8 +52,8 @@ public class HopDong_DTO {
     public Date getNgayKy() { return ngayKy; }
     public void setNgayKy(Date ngayKy) { this.ngayKy = ngayKy; }
 
-    public long getMucLuongCoBan() { return mucLuongCoBan; }
-    public void setMucLuongCoBan(long mucLuongCoBan) { this.mucLuongCoBan = mucLuongCoBan; }
+    public double getMucLuongCoBan() { return mucLuongCoBan; }
+    public void setMucLuongCoBan(double mucLuongCoBan) { this.mucLuongCoBan = mucLuongCoBan; }
 
     public String getNoiDung() { return noiDung; }
     public void setNoiDung(String noiDung) { this.noiDung = noiDung; }

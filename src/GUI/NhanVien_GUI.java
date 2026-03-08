@@ -37,13 +37,11 @@ public class NhanVien_GUI extends JPanel{
     JComboBox<ChucVu_DTO> cbChucVu;
     JLabel lblTitle;
     NhanVien_DAO dao=new NhanVien_DAO();
-<<<<<<< Updated upstream
+
     List<Phongban_DTO> dsPhongBan;
     List<ChucVu_DTO> dsChucVu;
-=======
 	 NhanVien2_GUI pndetail;
-    
->>>>>>> Stashed changes
+
     
     public NhanVien_GUI(){
         setLayout(new BorderLayout());
@@ -145,15 +143,11 @@ public class NhanVien_GUI extends JPanel{
         tableNV.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         tableNV.setPreferredSize(new Dimension(1080,690));
         
-        
         add(new JScrollPane(tableNV),BorderLayout.CENTER);
-        
-<<<<<<< Updated upstream
-        NhanVien2_GUI pndetail=new NhanVien2_GUI();
-        pndetail.setParentGUI(this);
-=======
+     
         pndetail=new NhanVien2_GUI();
->>>>>>> Stashed changes
+        pndetail.setParentGUI(this);
+
         
         tableNV.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -265,7 +259,7 @@ public class NhanVien_GUI extends JPanel{
             cbPhongBan.addItem(pb);
         }
     }
-<<<<<<< Updated upstream
+
     
     private void loadComboChucVuSearch(){
         List<ChucVu_DTO> list=dao.layDanhSachCV();
@@ -299,7 +293,7 @@ public class NhanVien_GUI extends JPanel{
             }
         }
         return maCV; // Nếu không tìm thấy thì hiện mã luôn
-=======
+    }
     public void Loaddatatheoma(String manv){
         modelNV.setRowCount(0);
         
@@ -318,7 +312,7 @@ public class NhanVien_GUI extends JPanel{
                 nv.getTrangThai()
             });
     }
-    public void setphanquyenuser(boolean kiemtra)
+    public void setphanquyenuser(boolean kiemtra,String manv)
     {
     	btnAdd.setEnabled(kiemtra);
     	btnDown.setEnabled(kiemtra);
@@ -327,10 +321,11 @@ public class NhanVien_GUI extends JPanel{
     	cbGioiTinh.setEnabled(kiemtra);
     	cbPhongBan.setEnabled(kiemtra);
     	btnrefresh.setEnabled(kiemtra);
+    	Loaddatatheoma(manv);
     }
-    public void setphanquyenManager(boolean kq)
+    public void setphanquyennut(boolean kq,String quyen)
     {
-    	pndetail.phanquyenManager(kq);
->>>>>>> Stashed changes
+    	pndetail.setphanquyennut(kq,quyen);
+
     }
 }
