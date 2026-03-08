@@ -83,7 +83,6 @@ public class TaiKhoan_BUS {
             return "Không xác định được mã tài khoản cần sửa!";
         }
         
-        // --- THÊM KIỂM TRA MẬT KHẨU KHI CẬP NHẬT (Nếu có nhập pass mới) ---
         if (tk.getMatkhau() != null && !tk.getMatkhau().isEmpty() && tk.getMatkhau().length() < 6) {
             return "Mật khẩu mới phải có ít nhất 6 ký tự!";
         }
