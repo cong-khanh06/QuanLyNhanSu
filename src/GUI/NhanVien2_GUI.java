@@ -21,22 +21,43 @@ import java.time.LocalDate;
 import DTO.Phongban_DTO;
 import DTO.ChucVu_DTO;
 import java.util.List;
+import java.awt.Dimension;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class NhanVien2_GUI extends JPanel {
     JTextField txtMa, txtTen, txtDiaChi, txtSDT, txtEmail, txtCCCD;
     JTextField txtNgaySinh, txtNgayVaoLam;
 
-    JComboBox<String> cbGioiTinh, cbTrangThai;
+    JComboBox<NhanVien_DTO.GioiTinh> cbGioiTinh;
+    JComboBox<NhanVien_DTO.TrangThaiNhanVien> cbTrangThai;
     JComboBox<Phongban_DTO> cbPhongBan;
     JComboBox<ChucVu_DTO> cbChucVu;
-    JButton btnSua, btnXoa, btnHuy, btnLuu;
+    JButton btnSua, btnXoa, btnHuy, btnLuu,btnChonAnh,btnChonNgaySinh,btnChonNgayVaoLam;
+    
+    JLabel lblAvatar;
+    File selectedFile=null;
+    String currentAvatarPath=null;
+    
     NhanVien_DAO dao = new NhanVien_DAO();
+    private NhanVien_GUI parentGUI;
     // Sửa Constructor thành Không tham số
     public NhanVien2_GUI() {
         initComponents();
         setEditable(false);
     }
-
+    
+    public void setParentGUI(NhanVien_GUI parentGUI) {
+        this.parentGUI = parentGUI;
+    }
+    
     private void initComponents() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder(
@@ -53,41 +74,60 @@ public class NhanVien2_GUI extends JPanel {
         txtCCCD = new JTextField();
         txtNgaySinh = new JTextField();
         txtNgayVaoLam = new JTextField();
-
+        txtNgaySinh.setToolTipText("Nhập theo định dạng: yyyy-MM-dd (VD: 2000-12-30)");
+        txtNgayVaoLam.setToolTipText("Nhập theo định dạng: yyyy-MM-dd (VD: 2024-01-15)");   
+        
         txtMa.setEditable(false);
 
         // ===== ComboBox =====
-        cbGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
+        cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values());
         cbPhongBan = new JComboBox<>();
         loadComboPhongBan();
         
         cbChucVu = new JComboBox<>();
         loadComboChucVu();
         
-        cbTrangThai = new JComboBox<>(new String[]{"Đang Làm", "Tạm Nghỉ", "Nghỉ Việc"});
+        cbTrangThai = new JComboBox<>(NhanVien_DTO.TrangThaiNhanVien.values());
 
         // ===== Buttons =====
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
         btnHuy = new JButton("Hủy");
+        btnChonNgaySinh = new JButton("📅");
+        btnChonNgaySinh.addActionListener(e -> new CalendarGrid(txtNgaySinh).setVisible(true));
+        
+        btnChonNgayVaoLam = new JButton("📅");
+        btnChonNgayVaoLam.addActionListener(e -> new CalendarGrid(txtNgayVaoLam).setVisible(true));
         
         btnLuu.setEnabled(false);
         btnHuy.setEnabled(false);
 
         // ===== Bố cục Form (Center) =====
-        JPanel panelForm = new JPanel(new GridLayout(0, 4, 15, 10)); // 4 cột cho gọn, đỡ bị dài ngoẵng
+        JPanel panelForm = new JPanel(new GridLayout(0, 4, 15, 10)); 
         panelForm.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         panelForm.add(new JLabel("Mã NV:")); panelForm.add(txtMa);
         panelForm.add(new JLabel("Họ tên:")); panelForm.add(txtTen);
         panelForm.add(new JLabel("Giới tính:")); panelForm.add(cbGioiTinh);
-        panelForm.add(new JLabel("Ngày sinh:")); panelForm.add(txtNgaySinh);
+        
+        JPanel pnNgaySinh = new JPanel(new BorderLayout());
+        pnNgaySinh.add(txtNgaySinh, BorderLayout.CENTER);
+        pnNgaySinh.add(btnChonNgaySinh, BorderLayout.EAST);
+        panelForm.add(new JLabel("Ngày sinh:")); 
+        panelForm.add(pnNgaySinh);
+            
         panelForm.add(new JLabel("Địa chỉ:")); panelForm.add(txtDiaChi);
         panelForm.add(new JLabel("SĐT:")); panelForm.add(txtSDT);
         panelForm.add(new JLabel("Email:")); panelForm.add(txtEmail);
         panelForm.add(new JLabel("CCCD:")); panelForm.add(txtCCCD);
-        panelForm.add(new JLabel("Ngày vào làm:")); panelForm.add(txtNgayVaoLam);
+        
+        JPanel pnNgayVaoLam = new JPanel(new BorderLayout());
+        pnNgayVaoLam.add(txtNgayVaoLam, BorderLayout.CENTER);
+        pnNgayVaoLam.add(btnChonNgayVaoLam, BorderLayout.EAST);
+        panelForm.add(new JLabel("Ngày vào làm:")); 
+        panelForm.add(pnNgayVaoLam);
+        
         panelForm.add(new JLabel("Phòng ban:")); panelForm.add(cbPhongBan);
         panelForm.add(new JLabel("Chức vụ:")); panelForm.add(cbChucVu);
         panelForm.add(new JLabel("Trạng thái:")); panelForm.add(cbTrangThai);
@@ -99,33 +139,50 @@ public class NhanVien2_GUI extends JPanel {
         panelButtons.add(btnHuy);
         panelButtons.add(btnXoa);
 
+        JPanel panelAvatar = new JPanel(new BorderLayout(5, 5));
+        panelAvatar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 0));
+        lblAvatar = new JLabel("Không có ảnh", JLabel.CENTER);
+        lblAvatar.setPreferredSize(new Dimension(150, 200));
+        lblAvatar.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        btnChonAnh = new JButton("Đổi ảnh");
+        btnChonAnh.setEnabled(false); // Khóa lúc đầu
+        panelAvatar.add(lblAvatar, BorderLayout.CENTER);
+        panelAvatar.add(btnChonAnh, BorderLayout.SOUTH);
+        
+        add(panelAvatar, BorderLayout.WEST);
         add(panelForm, BorderLayout.CENTER);
         add(panelButtons, BorderLayout.SOUTH);
 
         // ===== Gán Sự Kiện =====
-//        btnXoa.addActionListener(e -> {
-//            if(txtMa.getText().isEmpty()) {
-//                JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên để xóa!");
-//                return;
-//            }
-//            int confirm = JOptionPane.showConfirmDialog(
-//                    this,
-//                    "Bạn có chắc muốn xóa nhân viên " + txtTen.getText() + "?",
-//                    "Xác nhận",
-//                    JOptionPane.YES_NO_OPTION
-//            );
-//
-//            if (confirm == JOptionPane.YES_OPTION) {
-//                if (dao.deleteNhanVien(txtMa.getText())) {
-//                    JOptionPane.showMessageDialog(this, "Xóa thành công");
-//                    // Xóa xong thì xóa trắng form
-//                    clearForm();
-//                    
-//                } else {
-//                    JOptionPane.showMessageDialog(this, "Xóa thất bại");
-//                }
-//            }
-//        });
+        btnXoa.addActionListener(e -> {
+            String maNV = txtMa.getText();
+            if(maNV.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên để xóa!");
+                return;
+            }
+            
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có chắc muốn xóa nhân viên " + txtTen.getText() + "?",
+                    "Xác nhận",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean status = dao.DeleteNhanVien(maNV);
+                
+                if (status == true) {
+                    JOptionPane.showMessageDialog(this, "Nhân viên này có dữ liệu Lương/Hợp đồng liên quan.\nHệ thống đã tự động chuyển trạng thái thành 'Nghỉ Việc' để bảo toàn lịch sử.");
+                    if (parentGUI != null) parentGUI.taiDuLieuLenBang(); // Load lại bảng
+                } else if (status == false) {
+                    JOptionPane.showMessageDialog(this, "Đã xóa hoàn toàn nhân viên khỏi hệ thống.");
+                    clearForm(); // Làm trống form
+                    if (parentGUI != null) parentGUI.taiDuLieuLenBang(); // Load lại bảng
+                } else {
+                    JOptionPane.showMessageDialog(this, "Xóa thất bại. Vui lòng kiểm tra Console!");
+                }
+            }
+        });
         
         btnSua.addActionListener(e -> {
             if(txtMa.getText().isEmpty()) {
@@ -153,7 +210,10 @@ public class NhanVien2_GUI extends JPanel {
                 btnXoa.setEnabled(true);
                 btnLuu.setEnabled(false);
                 btnHuy.setEnabled(false);
-                // Lưu ý: Cần gọi NhanVien_GUI cập nhật lại bảng ở đây
+                
+                if(parentGUI!=null){
+                    parentGUI.taiDuLieuLenBang();
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Cập nhật thất bại. Vui lòng kiểm tra Console!");
             }
@@ -170,6 +230,18 @@ public class NhanVien2_GUI extends JPanel {
             btnLuu.setEnabled(false);
             btnHuy.setEnabled(false);
         });
+        
+        btnChonAnh.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Hình ảnh", "jpg", "png", "jpeg"));
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                selectedFile = fileChooser.getSelectedFile();
+                ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+                Image img = icon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+                lblAvatar.setIcon(new ImageIcon(img));
+                lblAvatar.setText("");
+            }
+        });
     }
 
     // ===== HÀM ĐỂ NHẬN DỮ LIỆU TỪ BẢNG Ở TRÊN =====
@@ -185,7 +257,7 @@ public class NhanVien2_GUI extends JPanel {
         txtNgaySinh.setText(nv.getNgaySinh() != null ? nv.getNgaySinh().toString() : "");
         txtNgayVaoLam.setText(nv.getNgayVaoLam() != null ? nv.getNgayVaoLam().toString() : "");
 
-        cbGioiTinh.setSelectedItem(nv.getGioiTinh().equals("Nu") ? "Nữ" : "Nam");
+        cbGioiTinh.setSelectedItem(nv.getGioiTinh());
         
         // Chọn ComboBox Phòng Ban
         for (int i = 0; i < cbPhongBan.getItemCount(); i++) {
@@ -204,12 +276,25 @@ public class NhanVien2_GUI extends JPanel {
         }
         
         // Chọn ComboBox Trạng Thái
-        if(nv.getTrangThai() != null) {
-            switch(nv.getTrangThai()) {
-                case "DangLam": cbTrangThai.setSelectedItem("Đang Làm"); break;
-                case "TamNghi": cbTrangThai.setSelectedItem("Tạm Nghỉ"); break;
-                case "NghiViec": cbTrangThai.setSelectedItem("Nghỉ Việc"); break;
+        cbTrangThai.setSelectedItem(nv.getTrangThai());
+        
+        currentAvatarPath = nv.getAvatar();
+        selectedFile = null; // Reset file được chọn
+
+        if (currentAvatarPath != null && !currentAvatarPath.isEmpty()) {
+            File imgFile = new File(currentAvatarPath);
+            if (imgFile.exists()) {
+                ImageIcon icon = new ImageIcon(imgFile.getAbsolutePath());
+                Image img = icon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+                lblAvatar.setIcon(new ImageIcon(img));
+                lblAvatar.setText("");
+            } else {
+                lblAvatar.setIcon(null);
+                lblAvatar.setText("Ảnh bị lỗi/xóa");
             }
+        } else {
+            lblAvatar.setIcon(null);
+            lblAvatar.setText("Không có ảnh");
         }
         
         // Đảm bảo Form đang bị khóa khi mới hiện
@@ -240,18 +325,10 @@ public class NhanVien2_GUI extends JPanel {
         nv.setCccd(txtCCCD.getText());
 
         // 1. XỬ LÝ GIỚI TÍNH 
-        String gioiTinhHienThi = cbGioiTinh.getSelectedItem().toString();
-        if (gioiTinhHienThi.equals("Nữ")) {
-            nv.setGioiTinh("Nu"); 
-        } else {
-            nv.setGioiTinh("Nam");
-        }
+        nv.setGioiTinh((NhanVien_DTO.GioiTinh) cbGioiTinh.getSelectedItem());
 
         // 2. XỬ LÝ TRẠNG THÁI 
-        String trangThaiHienThi = cbTrangThai.getSelectedItem().toString();
-        if (trangThaiHienThi.equals("Đang Làm")) nv.setTrangThai("DangLam");
-        else if (trangThaiHienThi.equals("Tạm Nghỉ")) nv.setTrangThai("TamNghi");
-        else if (trangThaiHienThi.equals("Nghỉ Việc")) nv.setTrangThai("NghiViec");
+        nv.setTrangThai((NhanVien_DTO.TrangThaiNhanVien) cbTrangThai.getSelectedItem());
 
         // 3. XỬ LÝ PHÒNG BAN 
         Phongban_DTO pbSelected = (Phongban_DTO) cbPhongBan.getSelectedItem();
@@ -270,7 +347,21 @@ public class NhanVien2_GUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng: Năm-Tháng-Ngày (VD: 2000-12-30)");
             return null; 
         }
+        
+        String finalAvatarPath = currentAvatarPath;
 
+        if (selectedFile != null) { // Nếu có chọn ảnh mới
+            try {
+                String newFileName = nv.getMaNV() + "_" + selectedFile.getName();
+                Path targetPath = Paths.get("avatars", newFileName);
+                Files.createDirectories(targetPath.getParent());
+                Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+                finalAvatarPath = targetPath.toString();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        nv.setAvatar(finalAvatarPath);
         return nv;
     }
     
@@ -282,11 +373,14 @@ public class NhanVien2_GUI extends JPanel {
         txtCCCD.setEditable(enable);
         txtNgaySinh.setEditable(enable);
         txtNgayVaoLam.setEditable(enable);
+        btnChonNgaySinh.setEnabled(enable);
+        btnChonNgayVaoLam.setEnabled(enable);
 
         cbGioiTinh.setEnabled(enable);
         cbPhongBan.setEnabled(enable);
         cbChucVu.setEnabled(enable);
         cbTrangThai.setEnabled(enable);
+        btnChonAnh.setEnabled(enable);
     }
     
     private void loadComboPhongBan() {
@@ -303,5 +397,20 @@ public class NhanVien2_GUI extends JPanel {
         for (ChucVu_DTO cv:list){
             cbChucVu.addItem(cv);
         }
+    }
+    
+    private JPanel createDateField(JTextField txt) {
+        JPanel pDate = new JPanel(new BorderLayout());
+        pDate.add(txt, BorderLayout.CENTER);
+        JButton btn = new JButton("📅");
+        btn.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        
+        // GỌI CLASS CALENDAR GRID RIÊNG Ở ĐÂY
+        btn.addActionListener(e -> {
+            new CalendarGrid(txt).setVisible(true);
+        });
+        
+        pDate.add(btn, BorderLayout.EAST);
+        return pDate;
     }
 }

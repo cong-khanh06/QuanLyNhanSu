@@ -244,10 +244,18 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
             NhanVien_DTO nv = list.get(row);
             jlvaluemaso.setText(nv.getMaNV());
             jlvaluehoten.setText(nv.getHoTen());
-            jlvaluegioitinh.setText(nv.getGioiTinh());
+            if (nv.getGioiTinh() != null) {
+                jlvaluegioitinh.setText(nv.getGioiTinh().getTenHienThi());
+            } else {
+                jlvaluegioitinh.setText(""); 
+            }
             jlvaluesdt.setText(nv.getSdt());
             jlvaluedc.setText(nv.getDiaChi());
-            jlvaluengayvaolam.setText(pbb.Dinhdangngay(nv.getNgayVaoLam()));
+            if (nv.getNgayVaoLam() != null) {
+                jlvaluengayvaolam.setText(pbb.Dinhdangngay(nv.getNgayVaoLam()));
+            } else {
+                jlvaluengayvaolam.setText("");
+            }
             jlvaluephongban.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
         }
     }

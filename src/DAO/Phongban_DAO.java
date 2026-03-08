@@ -52,7 +52,8 @@ public class Phongban_DAO {
 	public String gettentuma(String ma)
 	{
 		Connection_DAO conn=new Connection_DAO();
-		Connection con;
+		Connection con=null;
+                String hoTen=null;
 		try
 		{
 			con=conn.getCon();
@@ -63,15 +64,18 @@ public class Phongban_DAO {
 			ResultSet rs=ps.executeQuery();
 			while(rs.next())
 			{
-				return rs.getString("ho_ten");
+                            return rs.getString("ho_ten");
 			}
-			conn.Closeconnection(con);
+			
 			
 		}catch(SQLException e)
 		{
 			e.printStackTrace();
 		}
-		return null;
+                finally{
+                    if (con != null) conn.Closeconnection(con);
+                }
+		return hoTen;
 		
 	}
 	public int getsoluong(String maphongban) {
@@ -245,12 +249,19 @@ public class Phongban_DAO {
 	            NhanVien_DTO nv = new NhanVien_DTO();
 	            nv.setMaNV(rs.getString("ma_nv"));
 	            nv.setHoTen(rs.getString("ho_ten"));
-	            nv.setGioiTinh(rs.getString("gioi_tinh"));
 	            nv.setSdt(rs.getString("sdt"));
 	            nv.setDiaChi(rs.getString("dia_chi"));
 	            if(rs.getDate("ngay_vao_lam") != null) {
 	                nv.setNgayVaoLam(rs.getDate("ngay_vao_lam").toLocalDate());
 	            }
+                    String strGioiTinh = rs.getString("gioi_tinh");
+                    if (strGioiTinh != null) {
+                        try {
+                            nv.setGioiTinh(NhanVien_DTO.GioiTinh.valueOf(strGioiTinh.trim()));
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
+                    }
 	            listnhanvien.add(nv);
 	        }
 	        return listnhanvien;

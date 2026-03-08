@@ -18,39 +18,9 @@ public class NhanVien_BUS {
 
     public static boolean isValidEmail(String email) {
         if (email == null) return false;
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        return email.matches("^[A-Za-z0-9+_.-]+@gmail\\.com$");
     }
-    public enum GioiTinh {
-        Nam("Nam"),
-        Nu("Nữ");
-
-        private String gioiTinhHienThi;
-
-        GioiTinh(String gioiTinhHienThi){
-            this.gioiTinhHienThi=gioiTinhHienThi;
-        }
-
-        public String getGioiTinhHienThi() {
-            return gioiTinhHienThi;
-        }
-    }
-    public enum TrangThaiNhanVien {
-        DangLam("Đang Làm"),
-        TamNghi("Tạm Nghỉ"),
-        NghiViec("Nghỉ Việc");
-
-        private String trangThaiHienThi;
-
-
-        TrangThaiNhanVien(String trangThaiHienThi) {
-            this.trangThaiHienThi = trangThaiHienThi;
-        }
-
-
-        public String getTrangThaiHienThi() {
-            return trangThaiHienThi;
-        }
-    }
+    
     
     public String taoMaMoiNhat(){
         return dao.getNewestMaNV();
@@ -66,7 +36,7 @@ public class NhanVien_BUS {
         return dao.insertNhanVien(nv);
     }
     
-    public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB) {
+    public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB, String maCV) {
         // Xử lý logic nếu cần (ví dụ loại bỏ khoảng trắng thừa của từ khóa)
         if (tuKhoa == null) {
             tuKhoa = "";
@@ -74,6 +44,6 @@ public class NhanVien_BUS {
             tuKhoa = tuKhoa.trim();
         }
 
-        return dao.timKiemNhanVien(tuKhoa, gioiTinh, maPB);
+        return dao.timKiemNhanVien(tuKhoa, gioiTinh, maPB, maCV);
     }
 }

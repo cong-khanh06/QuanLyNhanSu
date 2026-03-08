@@ -3,38 +3,39 @@ package DTO;
 import java.time.LocalDate;
 
 public class NhanVien_DTO {
+    public enum GioiTinh {
+        Nam("Nam"), Nu("Nữ");
+        private String tenHienThi;
+        GioiTinh(String tenHienThi) { this.tenHienThi = tenHienThi; }
+        public String getTenHienThi() { return tenHienThi; }
+        @Override public String toString() { return tenHienThi; } // Giúp JComboBox tự hiện tiếng Việt
+    }
+    
+    public enum TrangThaiNhanVien {
+        DangLam("Đang Làm"), TamNghi("Tạm Nghỉ"), NghiViec("Nghỉ Việc");
+        private String tenHienThi;
+        TrangThaiNhanVien(String tenHienThi) { this.tenHienThi = tenHienThi; }
+        public String getTenHienThi() { return tenHienThi; }
+        @Override public String toString() { return tenHienThi; } // Giúp JComboBox tự hiện tiếng Việt
+    }
     private String maNV;
     private String hoTen;
     private LocalDate ngaySinh;
-    private String gioiTinh;
+    private GioiTinh gioiTinh;
     private String diaChi;
     private String sdt;
     private String email;
     private String cccd;
     private LocalDate ngayVaoLam;
-    private String trangThai;
+    private TrangThaiNhanVien trangThai;
     private String maPB;
     private String maCV;
+    private String avatar;
 
-    public NhanVien_DTO() {
-    }
-    public NhanVien_DTO(String manv, String hoTen){
-        this.maNV = manv;
-        this.hoTen = hoTen;
-    }
-    public NhanVien_DTO(String maNV,
-                   String hoTen,
-                   String gioiTinh,
-                   LocalDate ngaySinh,
-                   String diaChi,
-                   String sdt,
-                   String email,
-                   String cccd,
-                   LocalDate ngayVaoLam,
-                   String maPB,
-                   String maCV,
-                   String trangThai) {
-        this.maNV=maNV;
+    public NhanVien_DTO() {}
+
+    public NhanVien_DTO(String maNV, String hoTen, LocalDate ngaySinh, GioiTinh gioiTinh, String diaChi, String sdt, String email, String cccd, LocalDate ngayVaoLam, TrangThaiNhanVien trangThai, String maPB, String maCV, String avatar) {
+        this.maNV = maNV;
         this.hoTen = hoTen;
         this.ngaySinh = ngaySinh;
         this.gioiTinh = gioiTinh;
@@ -46,20 +47,9 @@ public class NhanVien_DTO {
         this.trangThai = trangThai;
         this.maPB = maPB;
         this.maCV = maCV;
+        this.avatar = avatar;
     }
-
-    public NhanVien_DTO(String maNV, String hoTen, LocalDate ngaySinh, String gioiTinh, String diaChi, String sdt, String maPB, String maCV, String trangThai) {
-        this.maNV = maNV;
-        this.hoTen = hoTen;
-        this.ngaySinh = ngaySinh;
-        this.gioiTinh = gioiTinh;
-        this.diaChi = diaChi;
-        this.sdt = sdt;
-        this.trangThai = trangThai;
-        this.maPB = maPB;
-        this.maCV = maCV;
-        
-    }
+    
     public String getMaNV(){
         return maNV;
     }
@@ -84,13 +74,23 @@ public class NhanVien_DTO {
         this.ngaySinh = ngaySinh;
     }
 
-    public String getGioiTinh() {
+    public GioiTinh getGioiTinh() {
         return gioiTinh;
     }
 
-    public void setGioiTinh(String gioiTinh) {
+    public void setGioiTinh(GioiTinh gioiTinh) {
         this.gioiTinh = gioiTinh;
     }
+
+    public TrangThaiNhanVien getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(TrangThaiNhanVien trangThai) {
+        this.trangThai = trangThai;
+    }
+
+    
 
     public String getDiaChi() {
         return diaChi;
@@ -132,13 +132,7 @@ public class NhanVien_DTO {
         this.ngayVaoLam = ngayVaoLam;
     }
 
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
-    }
+    
 
     public String getMaPB() {
         return maPB;
@@ -154,6 +148,14 @@ public class NhanVien_DTO {
 
     public void setMaCV(String maCV) {
         this.maCV = maCV;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     

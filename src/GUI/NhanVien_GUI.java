@@ -37,7 +37,8 @@ public class NhanVien_GUI extends JPanel{
     JComboBox<ChucVu_DTO> cbChucVu;
     JLabel lblTitle;
     NhanVien_DAO dao=new NhanVien_DAO();
-    
+    List<Phongban_DTO> dsPhongBan;
+    List<ChucVu_DTO> dsChucVu;
     
     public NhanVien_GUI(){
         setLayout(new BorderLayout());
@@ -54,7 +55,7 @@ public class NhanVien_GUI extends JPanel{
 
         pnHeader.add(lblTitle);
         
-        pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        pnToolBar = new JPanel(new java.awt.GridBagLayout());
         pnToolBar.setBackground(new Color(150,214,255));
         pnToolBar.setBorder(
             BorderFactory.createEmptyBorder(5, 15, 10, 15)
@@ -74,20 +75,38 @@ public class NhanVien_GUI extends JPanel{
         
         cbPhongBan = new JComboBox<>();
         loadComboPhongBanSearch();
-        cbChucVu=new JComboBox<>();     
-        cbGioiTinh = new JComboBox<>(new String[]{"Tat ca", "Nam", "Nu"});
+        cbChucVu=new JComboBox<>();   
+        loadComboChucVuSearch();
+        dsPhongBan = dao.layDanhSachPB();
+        dsChucVu = dao.layDanhSachCV();
+        cbGioiTinh = new JComboBox<>(new String[]{"Tất cả", "Nam", "Nữ"});
         cbPhongBan.setPreferredSize(new Dimension(150, 36));
         cbGioiTinh.setPreferredSize(new Dimension(120, 36));
         cbPhongBan.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cbGioiTinh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        cbChucVu.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
-        pnToolBar.add(txtSearch);
-        pnToolBar.add(btnSearch);
-        pnToolBar.add(cbPhongBan);
-        pnToolBar.add(cbGioiTinh);
-        pnToolBar.add(btnAdd);
-        pnToolBar.add(btnDown);
-        pnToolBar.add(btnrefresh);
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL; // Cho phép co giãn theo chiều ngang
+        gbc.insets = new java.awt.Insets(0, 0, 0, 10); // Tạo khoảng cách (margin) 10px bên phải mỗi component
+        gbc.gridy = 0; // Đặt tất cả trên cùng 1 hàng ngang (row 0)
+
+        // 3. Cấu hình riêng cho Ô tìm kiếm (txtSearch) giãn ra chiếm toàn bộ khoảng trống
+        gbc.weightx = 1.0; // Trọng số 1.0 nghĩa là nó sẽ hút hết không gian thừa
+        pnToolBar.add(txtSearch, gbc);
+
+        // 4. Các nút và ComboBox còn lại giữ nguyên kích thước (weightx = 0)
+        gbc.weightx = 0;
+        pnToolBar.add(btnSearch, gbc);
+        pnToolBar.add(cbPhongBan, gbc);
+        pnToolBar.add(cbChucVu, gbc);
+        pnToolBar.add(cbGioiTinh, gbc);
+        pnToolBar.add(btnAdd, gbc);
+        pnToolBar.add(btnDown, gbc);
+        
+        // Nút cuối cùng không cần khoảng cách bên phải nữa
+        gbc.insets = new java.awt.Insets(0, 0, 0, 0); 
+        pnToolBar.add(btnrefresh, gbc);
         
         pnSearchNV = new JPanel(new BorderLayout());
         pnSearchNV.setBackground(Color.WHITE);
@@ -125,6 +144,7 @@ public class NhanVien_GUI extends JPanel{
         add(new JScrollPane(tableNV),BorderLayout.CENTER);
         
         NhanVien2_GUI pndetail=new NhanVien2_GUI();
+        pndetail.setParentGUI(this);
         
         tableNV.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -153,45 +173,49 @@ public class NhanVien_GUI extends JPanel{
             modelNV.addRow(new Object[]{
                 nv.getMaNV(),
                 nv.getHoTen(),
-                nv.getGioiTinh(),
+                nv.getGioiTinh() != null ? nv.getGioiTinh().getTenHienThi() : "",
                 nv.getNgaySinh(),
                 nv.getDiaChi(),
                 nv.getSdt(),
-                nv.getMaPB(),
-                nv.getMaCV(),
-                nv.getTrangThai()
+                getTenPhongBan(nv.getMaPB()),
+                getTenChucVu(nv.getMaCV()),
+                nv.getTrangThai() != null ? nv.getTrangThai().getTenHienThi() : ""
             });
         }
     }
     
     public void addEventSearch() {
         btnSearch.addActionListener(e -> {
-            // Lấy từ khóa
             String tuKhoa = txtSearch.getText().trim();
 
             // Lấy giới tính (Nếu chọn "Tất cả" thì gán bằng rỗng để DAO không lọc)
             String gioiTinh = cbGioiTinh.getSelectedItem().toString();
             if (gioiTinh.equals("Tất cả")) {
-                gioiTinh = ""; 
+                gioiTinh = "Tat ca";
+            } else if (gioiTinh.equals("Nữ")) {
+                gioiTinh = "Nu";
             }
 
             // Lấy mã phòng ban từ Object cực nhàn
             Phongban_DTO pbSelected = (Phongban_DTO) cbPhongBan.getSelectedItem();
-            String maPB = pbSelected != null ? pbSelected.getMaphongban() : "";
-
+            String maPB = (pbSelected != null && !pbSelected.getTenphongban().equals("Tất cả")) 
+                      ? pbSelected.getMaphongban() : "Tat ca";
+            ChucVu_DTO cvSelected =(ChucVu_DTO) cbChucVu.getSelectedItem();
+            String maCV=(cvSelected != null && !cvSelected.getTenCV().equals("Tất cả"))?cvSelected.getMaCV():"Tat ca";
             // Gọi BUS để tìm kiếm
             NhanVien_BUS bus = new NhanVien_BUS();
-            List<NhanVien_DTO> ketQua = bus.timKiemNhanVien(tuKhoa, gioiTinh, maPB);
+            List<NhanVien_DTO> ketQua = bus.timKiemNhanVien(tuKhoa, gioiTinh, maPB, maCV);
 
             // Cập nhật lại JTable
             modelNV.setRowCount(0);
             for (NhanVien_DTO nv : ketQua) {
                 modelNV.addRow(new Object[]{
-                    nv.getMaNV(), nv.getHoTen(), nv.getGioiTinh(),
+                    nv.getMaNV(), nv.getHoTen(), nv.getGioiTinh() != null ? nv.getGioiTinh().getTenHienThi() : "",
                     nv.getNgaySinh(), nv.getDiaChi(), nv.getSdt(),
-                    nv.getMaPB(), nv.getMaCV(), nv.getTrangThai()
+                    getTenPhongBan(nv.getMaPB()), getTenChucVu(nv.getMaCV()), nv.getTrangThai() != null ? nv.getTrangThai().getTenHienThi() : ""
                 });
             }
+            
         });
     }
     
@@ -231,5 +255,39 @@ public class NhanVien_GUI extends JPanel{
         for (Phongban_DTO pb : list) {
             cbPhongBan.addItem(pb);
         }
+    }
+    
+    private void loadComboChucVuSearch(){
+        List<ChucVu_DTO> list=dao.layDanhSachCV();
+        
+        cbChucVu.removeAllItems();
+        ChucVu_DTO tatCa=new ChucVu_DTO();
+        tatCa.setMaCV("");
+        tatCa.setTenCV("Tất cả");
+        
+        cbChucVu.addItem(tatCa);
+        for(ChucVu_DTO cv:list){
+            cbChucVu.addItem(cv);
+        }
+    }
+    
+    private String getTenPhongBan(String maPB) {
+        if (maPB == null || maPB.isEmpty()) return "";
+        for (Phongban_DTO pb : dsPhongBan) {
+            if (pb.getMaphongban().equals(maPB)) {
+                return pb.getTenphongban();
+            }
+        }
+        return maPB; // Nếu không tìm thấy thì hiện mã luôn
+    }
+
+    private String getTenChucVu(String maCV) {
+        if (maCV == null || maCV.isEmpty()) return "";
+        for (ChucVu_DTO cv : dsChucVu) {
+            if (cv.getMaCV().equals(maCV)) {
+                return cv.getTenCV();
+            }
+        }
+        return maCV; // Nếu không tìm thấy thì hiện mã luôn
     }
 }

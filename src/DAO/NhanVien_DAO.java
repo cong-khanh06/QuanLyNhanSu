@@ -29,14 +29,12 @@ public class NhanVien_DAO extends Connection_DAO{
         super();
     }
     
-    @SuppressWarnings("empty-statement")
+    
     public List<NhanVien_DTO> layDanhSachNV(){
         List<NhanVien_DTO> listResult=new ArrayList<>();
         
         try {
-            String sqlNV="SELECT ma_nv, ho_ten, gioi_tinh, "
-                    + "ngay_sinh, dia_chi, sdt, ma_pb, "
-                    + "ma_cv, trang_thai FROM NhanVien nv ";
+            String sqlNV="SELECT * FROM NhanVien ORDER BY CAST(SUBSTRING(ma_nv, 3, LEN(ma_nv)) AS INT) ASC";
             ResultSet rsNV=stmt.executeQuery(sqlNV);
 
             while(rsNV.next()){
@@ -46,30 +44,36 @@ public class NhanVien_DAO extends Connection_DAO{
                 Date sqlNgaySinh=rsNV.getDate("ngay_sinh");
                 LocalDate ngaySinh=(sqlNgaySinh != null) ? sqlNgaySinh.toLocalDate():null;
                 String diaChi=rsNV.getString("dia_chi");
+                String cccd=rsNV.getString("cccd");
+                String email=rsNV.getString("email");
                 String sdt=rsNV.getString("sdt");
+                Date sqlNgayVaoLam=rsNV.getDate("ngay_vao_lam");
+                LocalDate ngayvaolam=(sqlNgayVaoLam !=null) ? sqlNgayVaoLam.toLocalDate():null;
                 String maPB=rsNV.getString("ma_pb");
                 String maCV=rsNV.getString("ma_cv");
                 String trangThai=rsNV.getString("trang_thai");
-
+                
+                NhanVien_DTO.GioiTinh enumGioiTinh = null;
+                NhanVien_DTO.TrangThaiNhanVien enumTrangThai = null;
+                
                 if(gioiTinh != null){
                     try {
-                        NhanVien_BUS.GioiTinh gt= NhanVien_BUS.GioiTinh.valueOf(gioiTinh.trim());
-                        gioiTinh= gt.getGioiTinhHienThi();
+                        enumGioiTinh = NhanVien_DTO.GioiTinh.valueOf(gioiTinh.trim());
                     } catch (IllegalArgumentException e) {
-                        System.out.println(e);
+                        System.out.println("Lỗi parse giới tính: " + e.getMessage());
                     }
                 }
 
                 if(trangThai != null){
                     try {
-                        NhanVien_BUS.TrangThaiNhanVien ttnv=NhanVien_BUS.TrangThaiNhanVien.valueOf(trangThai.trim());
-                        trangThai=ttnv.getTrangThaiHienThi();
+                        enumTrangThai = NhanVien_DTO.TrangThaiNhanVien.valueOf(trangThai.trim());
                     } catch (IllegalArgumentException e) {
-                        System.out.println(e);
+                        System.out.println("Lỗi parse trạng thái: " + e.getMessage());
                     }
                 }
-
-                   NhanVien_DTO rowData=new NhanVien_DTO(maNV,hoTen,ngaySinh,gioiTinh,diaChi,sdt,maPB,maCV,trangThai);
+                
+                   String avatar=rsNV.getString("avatar");
+                   NhanVien_DTO rowData=new NhanVien_DTO(maNV,hoTen,ngaySinh,enumGioiTinh,diaChi,sdt,email,cccd,ngayvaolam,enumTrangThai,maPB,maCV,avatar);
                    listResult.add(rowData);
                 }
         } catch (SQLException e) {
@@ -100,13 +104,11 @@ public class NhanVien_DAO extends Connection_DAO{
              ResultSet rs = ps.executeQuery()) {
              
             if (rs.next()) {
-                String lastID = rs.getString("ma_nv"); // Ví dụ: "HD005"
-                // Cắt bỏ 2 chữ cái đầu ("HD"), lấy phần số ("005")
+                String lastID = rs.getString("ma_nv"); 
                 String numberPart = lastID.substring(2);
                 int number = Integer.parseInt(numberPart);
-                number++; // Tăng lên 1 thành 6
+                number++; 
                 
-                // Ghép lại với định dạng 3 chữ số (HD006)
                 return String.format("NV%03d", number);
             }
         } catch (Exception e) {
@@ -133,7 +135,9 @@ public class NhanVien_DAO extends Connection_DAO{
 
                     nv.setMaNV(rs.getString("ma_nv"));
                     nv.setHoTen(rs.getString("ho_ten"));
-                    nv.setGioiTinh(rs.getString("gioi_tinh"));
+                    if (rs.getString("gioi_tinh") != null) {
+                        nv.setGioiTinh(NhanVien_DTO.GioiTinh.valueOf(rs.getString("gioi_tinh").trim()));
+                    }
 
                     java.sql.Date ns = rs.getDate("ngay_sinh");
                     if (ns != null) nv.setNgaySinh(ns.toLocalDate());
@@ -148,7 +152,10 @@ public class NhanVien_DAO extends Connection_DAO{
 
                     nv.setMaPB(rs.getString("ma_pb"));
                     nv.setMaCV(rs.getString("ma_cv"));
-                    nv.setTrangThai(rs.getString("trang_thai"));
+                    if (rs.getString("trang_thai") != null) {
+                        nv.setTrangThai(NhanVien_DTO.TrangThaiNhanVien.valueOf(rs.getString("trang_thai").trim()));
+                    }
+                    nv.setAvatar(rs.getString("avatar"));
                 }
 
             } catch (Exception e) {
@@ -157,17 +164,77 @@ public class NhanVien_DAO extends Connection_DAO{
 
             return nv;
         }
-//    public boolean deleteNhanVien(String maNV) {
-//        String sql = "UPDATE NhanVien SET trang_thai = 'NghiViec' WHERE ma_nv = ?";
-//    
-//        try {
-//            // ... Code chạy câu lệnh PreparedStatement của bạn ...
-//            // Nếu executeUpdate() > 0 thì return true;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
+    
+    public boolean DeleteNhanVien(String maNV){
+        boolean result=true;
+        try {
+            String checkSql="SELECT " +
+                    "(SELECT COUNT(*) FROM BangLuong WHERE ma_nv = ?) + " +
+                    "(SELECT COUNT(*) FROM HopDong WHERE ma_nv = ?) + " +
+                    "(SELECT COUNT(*) FROM BangChamCong WHERE ma_nv = ?) AS Total";
+            
+            PreparedStatement ps=con.prepareStatement(checkSql);
+            ps.setString(1, maNV);
+            ps.setString(2,maNV);
+            ps.setString(3,maNV);
+            ResultSet rs=ps.executeQuery();
+            
+            int totalConstraints = 0;
+            if (rs.next()) {
+                totalConstraints = rs.getInt("Total");
+            }
+            
+            if(totalConstraints >0){
+                String updateSql="UPDATE NhanVien SET trang_thai = 'NghiViec' WHERE ma_nv = ?";
+                PreparedStatement psUpdate=con.prepareStatement(updateSql);
+                psUpdate.setString(1,maNV);
+                if(psUpdate.executeUpdate()>0){
+                    return result;
+                }
+            }
+            else{
+                con.setAutoCommit(false);
+                try {
+                    String[] tablesToDelete = {"TaiKhoan", "BangCap", "ChiTietBaoHiem", "PhanCongDuAn", "ChiTietDon"};
+                    for (String table : tablesToDelete) {
+                        String delSubSql = "DELETE FROM " + table + " WHERE ma_nv = ?";
+                        PreparedStatement psDelSub = con.prepareStatement(delSubSql);
+                        psDelSub.setString(1, maNV);
+                        psDelSub.executeUpdate();
+                    }
+                    
+                    String updatePhongBan = "UPDATE PhongBan SET ma_tp = NULL WHERE ma_tp = ?";
+                    PreparedStatement psUpPB = con.prepareStatement(updatePhongBan);
+                    psUpPB.setString(1, maNV);
+                    psUpPB.executeUpdate();
+                    
+                    String updateChiTietDon = "UPDATE ChiTietDon SET nguoi_duyet_id = NULL WHERE nguoi_duyet_id = ?";
+                    PreparedStatement psUpDon = con.prepareStatement(updateChiTietDon);
+                    psUpDon.setString(1, maNV);
+                    psUpDon.executeUpdate();
+                    
+                    String delNVSql = "DELETE FROM NhanVien WHERE ma_nv = ?";
+                    PreparedStatement psDelNV = con.prepareStatement(delNVSql);
+                    psDelNV.setString(1, maNV);
+                    psDelNV.executeUpdate();
+                    
+                    con.commit();
+                    result=false;
+                } catch (Exception e) {
+                    con.rollback();
+                    e.printStackTrace();
+                }
+                finally{
+                    con.setAutoCommit(true);
+                }
+            }
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
     public boolean updateNhanVien(NhanVien_DTO nv) {
         String sql = "UPDATE NhanVien SET "
         + "ho_ten = ?, "
@@ -180,27 +247,29 @@ public class NhanVien_DAO extends Connection_DAO{
         + "ngay_vao_lam = ?, "
         + "ma_pb = ?, "
         + "ma_cv = ?, "
-        + "trang_thai = ? "
+        + "trang_thai = ?, "
+        + "avatar = ? "
         + "WHERE ma_nv = ?";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, nv.getHoTen());
-            ps.setString(2, nv.getGioiTinh());
+            ps.setString(2, nv.getGioiTinh() != null ? nv.getGioiTinh().name() : null);
             ps.setString(3, nv.getDiaChi());
             ps.setString(4, nv.getSdt());
             ps.setString(5, nv.getEmail());
             ps.setString(6, nv.getCccd());
 
-            ps.setDate(7, java.sql.Date.valueOf(nv.getNgaySinh()));
-            ps.setDate(8, java.sql.Date.valueOf(nv.getNgayVaoLam()));
+            ps.setDate(7, nv.getNgaySinh() != null ? java.sql.Date.valueOf(nv.getNgaySinh()) : null);
+            ps.setDate(8, nv.getNgayVaoLam() != null ? java.sql.Date.valueOf(nv.getNgayVaoLam()) : null);
 
             ps.setString(9, nv.getMaPB());
             ps.setString(10, nv.getMaCV());
-            ps.setString(11, nv.getTrangThai());
-
-            ps.setString(12, nv.getMaNV());
+            ps.setString(11, nv.getTrangThai() != null ? nv.getTrangThai().name() : null);
+            ps.setString(12, nv.getAvatar());
+            ps.setString(13, nv.getMaNV());
+            
 
             return ps.executeUpdate() > 0;
 
@@ -237,17 +306,17 @@ public class NhanVien_DAO extends Connection_DAO{
         }
     
         public boolean insertNhanVien(NhanVien_DTO nv) {
-        String sql = "INSERT INTO NhanVien (ma_nv, ho_ten, gioi_tinh, ngay_sinh, dia_chi, sdt, email, cccd, ngay_vao_lam, ma_pb, ma_cv, trang_thai) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO NhanVien (ma_nv, ho_ten, ngay_sinh, gioi_tinh,  dia_chi, sdt, email, cccd, ngay_vao_lam, ma_pb, ma_cv, trang_thai, avatar) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, nv.getMaNV());
             ps.setString(2, nv.getHoTen());
-            ps.setString(3, nv.getGioiTinh());
+            
 
             // Chuyển đổi từ LocalDate sang java.sql.Date
-            ps.setDate(4, nv.getNgaySinh() != null ? java.sql.Date.valueOf(nv.getNgaySinh()) : null);
-
+            ps.setDate(3, nv.getNgaySinh() != null ? java.sql.Date.valueOf(nv.getNgaySinh()) : null);
+            ps.setString(4, nv.getGioiTinh() != null ? nv.getGioiTinh().name() : null);
             ps.setString(5, nv.getDiaChi());
             ps.setString(6, nv.getSdt());
             ps.setString(7, nv.getEmail());
@@ -258,7 +327,8 @@ public class NhanVien_DAO extends Connection_DAO{
 
             ps.setString(10, nv.getMaPB());
             ps.setString(11, nv.getMaCV());
-            ps.setString(12, nv.getTrangThai());
+            ps.setString(12, nv.getTrangThai() != null ? nv.getTrangThai().name() : null);
+            ps.setString(13, nv.getAvatar());
 
             return ps.executeUpdate() > 0; // Trả về true nếu chèn thành công ít nhất 1 dòng
         } catch (SQLException e) {
@@ -279,12 +349,12 @@ public class NhanVien_DAO extends Connection_DAO{
         return list;
     }
     
-        public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB) {
+        public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB, String maCV) {
         List<NhanVien_DTO> listResult = new ArrayList<>();
 
         
         StringBuilder sql = new StringBuilder(
-            "SELECT * FROM NhanVien WHERE (ma_nv LIKE ? OR ho_ten LIKE ? OR sdt LIKE ?)"
+            "SELECT * FROM NhanVien WHERE (ma_nv LIKE ? OR ho_ten LIKE ? OR sdt LIKE ?) ORDER BY CAST(SUBSTRING(ma_nv, 3, LEN(ma_nv)) AS INT) ASC"
         );
 
         // Nếu có lọc theo giới tính (Khác "Tat ca")
@@ -296,7 +366,11 @@ public class NhanVien_DAO extends Connection_DAO{
         if (maPB != null && !maPB.equalsIgnoreCase("Tat ca") && !maPB.isEmpty()) {
             sql.append(" AND ma_pb = ?");
         }
-
+        
+        if (maCV != null && !maCV.equalsIgnoreCase("Tat ca") && !maCV.isEmpty()) {
+            sql.append(" AND ma_cv = ?");
+        }
+        
         try (Connection conn = getCon();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
@@ -317,15 +391,20 @@ public class NhanVien_DAO extends Connection_DAO{
             if (maPB != null && !maPB.equalsIgnoreCase("Tat ca") && !maPB.isEmpty()) {
                 ps.setString(paramIndex++, maPB);
             }
-
+            
+            if (maCV != null && !maCV.equalsIgnoreCase("Tat ca") && !maCV.isEmpty()) {
+                ps.setString(paramIndex++, maCV);
+            }
+            
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 NhanVien_DTO nv = new NhanVien_DTO();
                 nv.setMaNV(rs.getString("ma_nv"));
                 nv.setHoTen(rs.getString("ho_ten"));
-                nv.setGioiTinh(rs.getString("gioi_tinh"));
-
+                if (rs.getString("gioi_tinh") != null) {
+                    nv.setGioiTinh(NhanVien_DTO.GioiTinh.valueOf(rs.getString("gioi_tinh").trim()));
+                }
                 java.sql.Date ns = rs.getDate("ngay_sinh");
                 if (ns != null) nv.setNgaySinh(ns.toLocalDate());
 
@@ -339,7 +418,10 @@ public class NhanVien_DAO extends Connection_DAO{
 
                 nv.setMaPB(rs.getString("ma_pb"));
                 nv.setMaCV(rs.getString("ma_cv"));
-                nv.setTrangThai(rs.getString("trang_thai"));
+                if (rs.getString("trang_thai") != null) {
+                    nv.setTrangThai(NhanVien_DTO.TrangThaiNhanVien.valueOf(rs.getString("trang_thai").trim()));
+                }
+                nv.setAvatar(rs.getString("avatar"));
 
                 listResult.add(nv);
             }

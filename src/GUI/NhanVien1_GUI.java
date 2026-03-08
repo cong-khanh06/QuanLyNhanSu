@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -6,7 +6,6 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
@@ -27,30 +26,44 @@ import java.time.ZoneId;
 import DTO.Phongban_DTO;
 import DAO.NhanVien_DAO;
 import DTO.ChucVu_DTO;
+import java.awt.Dimension;
 import java.util.List;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author khanh
  */
 public class NhanVien1_GUI extends JDialog{
-    JTextField txtTen, txtDiaChi, txtSDT,txtEmail,txtCCCD,txtMaNV;
-    JComboBox<String> cbGioiTinh, cbTrangThai;
+    JTextField txtTen, txtDiaChi, txtSDT,txtEmail,txtCCCD,txtMaNV,txtNgaySinh,txtNgayVaoLam;
+    JComboBox<NhanVien_DTO.GioiTinh> cbGioiTinh;
+    JComboBox<NhanVien_DTO.TrangThaiNhanVien>  cbTrangThai;
     JComboBox<Phongban_DTO> cbPhongBan;
     JComboBox<ChucVu_DTO> cbChucVu;
-    JButton  btnLuu,btnHuy;
+    JButton  btnLuu,btnHuy,btnChonAnh;
     JSpinner spNgaySinh,spNgayVaoLam;
+    JLabel lblAvatar;
+    File selectedFile=null;
     NhanVien_BUS bus = new NhanVien_BUS();
     NhanVien_DAO dao=new NhanVien_DAO();
     public NhanVien1_GUI(){
         setTitle("Thêm nhân viên");
-        setSize(500,400);
+        setSize(850,500);
         setModal(true);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null); 
         
         
-        JPanel pnForm=new JPanel(new GridLayout(12,2,10,10));
-        pnForm.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        JPanel pnForm = new JPanel(new GridLayout(0, 4, 15, 15));
+        pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         txtTen = new JTextField();
         txtDiaChi = new JTextField();
@@ -62,17 +75,15 @@ public class NhanVien1_GUI extends JDialog{
         txtMaNV.setEditable(false);
         txtMaNV.setBackground(Color.LIGHT_GRAY);
         
-        spNgaySinh=new JSpinner(new SpinnerDateModel());
-        spNgaySinh.setEditor(new JSpinner.DateEditor(spNgaySinh,"dd/MM/yyyy"));
-        spNgayVaoLam=new JSpinner(new SpinnerDateModel());
-        spNgayVaoLam.setEditor(new JSpinner.DateEditor(spNgayVaoLam,"dd/MM/yyyy"));
+        txtNgaySinh = new JTextField();
+        txtNgayVaoLam = new JTextField();
 
-        cbGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
+        cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values());
         cbPhongBan = new JComboBox<>();
         loadComboPhongBan();
         cbChucVu = new JComboBox<>();
         loadComboChucVu();
-        cbTrangThai = new JComboBox<>(new String[]{"Đang Làm", "Nghỉ Việc","Tạm Nghỉ"});
+        cbTrangThai = new JComboBox<>(NhanVien_DTO.TrangThaiNhanVien.values());
         
         pnForm.add(new JLabel("Mã nhân viên"));
         pnForm.add(txtMaNV);
@@ -81,10 +92,10 @@ public class NhanVien1_GUI extends JDialog{
         pnForm.add(txtTen);
         
         pnForm.add(new JLabel("Ngày sinh"));
-        pnForm.add(spNgaySinh);
+        pnForm.add(createDateField(txtNgaySinh));
 
         pnForm.add(new JLabel("Ngày vào làm"));
-        pnForm.add(spNgayVaoLam);
+        pnForm.add(createDateField(txtNgayVaoLam));
         
         pnForm.add(new JLabel("Giới tính"));
         pnForm.add(cbGioiTinh);
@@ -116,13 +127,24 @@ public class NhanVien1_GUI extends JDialog{
         JPanel pnBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pnBottom.add(btnLuu);
         pnBottom.add(btnHuy);
-
+        
+        JPanel pnAvatar = new JPanel(new BorderLayout(5, 5));
+        pnAvatar.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 0)); 
+        lblAvatar = new JLabel("Chưa có ảnh", JLabel.CENTER);
+        lblAvatar.setPreferredSize(new Dimension(180, 240)); 
+        lblAvatar.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        btnChonAnh = new JButton("Chọn ảnh");
+        pnAvatar.add(lblAvatar, BorderLayout.CENTER);
+        pnAvatar.add(btnChonAnh, BorderLayout.SOUTH);
+        
+        add(pnAvatar, BorderLayout.WEST);
         add(pnForm, BorderLayout.CENTER);
         add(pnBottom, BorderLayout.SOUTH);
         
         loadComboPhongBan(); 
         txtMaNV.setText(bus.taoMaMoiNhat());
         
+        addEventChonAnh();
         addEventClose();
         addEventLuu();
     }
@@ -180,7 +202,7 @@ public class NhanVien1_GUI extends JDialog{
             try {
                 String maNV = txtMaNV.getText();
                 String ten = txtTen.getText();
-                String gioiTinh = cbGioiTinh.getSelectedItem().toString();
+                NhanVien_DTO.GioiTinh gioiTinh = (NhanVien_DTO.GioiTinh) cbGioiTinh.getSelectedItem();
                 String diaChi = txtDiaChi.getText();
                 String sdt = txtSDT.getText();
                 String email = txtEmail.getText();
@@ -189,33 +211,41 @@ public class NhanVien1_GUI extends JDialog{
                 String maPB = pbSelected != null ? pbSelected.getMaphongban() : "";
                 ChucVu_DTO cvSelected = (ChucVu_DTO) cbChucVu.getSelectedItem();
                 String maCV = cvSelected != null ? cvSelected.getMaCV(): "";
-                String trangThaiHienThi = cbTrangThai.getSelectedItem().toString();
-                String trangThai = "";
+                NhanVien_DTO.TrangThaiNhanVien trangThai = (NhanVien_DTO.TrangThaiNhanVien) cbTrangThai.getSelectedItem();
+                
+                String avatarPath = null;
+                if (selectedFile != null) {
+                    try {
+                        // Tạo tên file mới: maNV_tenfilegoc.jpg (Tránh trùng lặp)
+                        String newFileName = maNV + "_" + selectedFile.getName();
+                        Path targetPath = Paths.get("avatars", newFileName);
 
-                if (trangThaiHienThi.equals("Đang Làm")) {
-                    trangThai = "DangLam";
-                } else if (trangThaiHienThi.equals("Tạm Nghỉ")) {
-                    trangThai = "TamNghi";
-                } else if (trangThaiHienThi.equals("Nghỉ Việc")) {
-                    trangThai = "NghiViec";
+                        // Tạo thư mục nếu chưa có và copy file
+                        Files.createDirectories(targetPath.getParent());
+                        Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+                        // Lưu đường dẫn vào database
+                        avatarPath = targetPath.toString();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Lỗi khi lưu file ảnh!");
+                    }
+                }
+                
+                LocalDate ngaySinh = null;
+                LocalDate ngayVaoLam = null;
+                try {
+                    ngaySinh = LocalDate.parse(txtNgaySinh.getText().trim());
+                    ngayVaoLam = LocalDate.parse(txtNgayVaoLam.getText().trim());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng Năm-Tháng-Ngày hoặc chọn từ biểu tượng lịch!");
+                    return; 
                 }
 
-                // Lấy ngày từ JSpinner
-                Date d1 = (Date) spNgaySinh.getValue();
-                Date d2 = (Date) spNgayVaoLam.getValue();
-
-                LocalDate ngaySinh = d1.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
-
-                LocalDate ngayVaoLam = d2.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
-
                 NhanVien_DTO nv = new NhanVien_DTO(
-                        maNV, ten, gioiTinh, ngaySinh,
+                        maNV, ten, ngaySinh, gioiTinh,
                         diaChi, sdt, email, cccd,
-                        ngayVaoLam, maPB, maCV, trangThai
+                        ngayVaoLam,trangThai, maPB,maCV,  avatarPath
                 );
 
                 if (bus.themNhanVien(nv)) {
@@ -249,6 +279,35 @@ public class NhanVien1_GUI extends JDialog{
         for (ChucVu_DTO cv:list){
             cbChucVu.addItem(cv);
         }
+    }
+    
+    private void addEventChonAnh() {
+        btnChonAnh.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Hình ảnh (JPG, PNG)", "jpg", "png", "jpeg"));
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                selectedFile = fileChooser.getSelectedFile();
+                // Hiển thị ảnh thu nhỏ lên Label
+                ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+                Image img = icon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+                lblAvatar.setIcon(new ImageIcon(img));
+                lblAvatar.setText("");
+            }
+        });
+    }
+    private JPanel createDateField(JTextField txt) {
+        JPanel pDate = new JPanel(new BorderLayout());
+        pDate.add(txt, BorderLayout.CENTER);
+        JButton btn = new JButton("📅");
+        btn.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        
+        // GỌI CLASS CALENDAR GRID RIÊNG Ở ĐÂY
+        btn.addActionListener(e -> {
+            new CalendarGrid(txt).setVisible(true);
+        });
+        
+        pDate.add(btn, BorderLayout.EAST);
+        return pDate;
     }
 }
 //
