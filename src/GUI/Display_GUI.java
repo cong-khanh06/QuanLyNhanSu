@@ -24,7 +24,7 @@ import javax.swing.BoxLayout;
 public class Display_GUI extends JFrame{
     JPanel pnLeft,pnRight,pnRAN,pnCard;
     JLabel name,role,nameValue,roleValue;
-    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnDA;
+    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnDA,btnTK;
     CardLayout cardlayout=new CardLayout();
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
@@ -70,7 +70,8 @@ public class Display_GUI extends JFrame{
         pnCard.add(btnPB);
         btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
         pnCard.add(btnDA);
-        
+        btnDA=new ButtonSidebar("Tài khoản", loadIcon("/GUI/icon/taikhoan.png"));
+        pnCard.add(btnDA);
         pnLeft.add(pnCard);
         
         pnRight=new JPanel(cardlayout);
@@ -79,7 +80,8 @@ public class Display_GUI extends JFrame{
         pnRight.add(new NhanVien_GUI(),"panelNV");
         pnRight.add(new Phongban1_GUI(),"panelPB");
         pnRight.add(new HopDong_GUI(), "panelHD");
-        pnRight.add(new DuAn_GUI(),"panelDA");
+        //pnRight.add(new DuAn_GUI(),"panelDA");
+        pnRight.add(new TaiKhoan_GUI(), "panelTK");
         
         btnNV.addActionListener(e->{
             cardlayout.show(pnRight,"panelNV");
@@ -97,6 +99,10 @@ public class Display_GUI extends JFrame{
         
         btnDA.addActionListener(e->{
             cardlayout.show(pnRight, "panelDA");
+        });
+        
+        btnDA.addActionListener(e->{
+            cardlayout.show(pnRight, "panelTK");
         });
         
         add(pnLeft,BorderLayout.WEST);

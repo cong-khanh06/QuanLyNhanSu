@@ -24,7 +24,7 @@ public class HopDong_DAO {
                 hd.setNgayBatDau(rs.getDate("ngay_bat_dau"));
                 hd.setNgayKetThuc(rs.getDate("ngay_ket_thuc"));
                 hd.setNgayKy(rs.getDate("ngay_ky"));
-                hd.setMucLuongCoBan(rs.getLong("muc_luong_co_ban"));
+                hd.setMucLuongCoBan(rs.getDouble("muc_luong_co_ban"));
                 hd.setNoiDung(rs.getString("noi_dung"));
                 hd.setTrangThai(rs.getString("trang_thai"));
                 hd.setMaNV(rs.getString("ma_nv"));
@@ -123,7 +123,7 @@ public class HopDong_DAO {
                     hd.setNgayBatDau(rs.getDate("ngay_bat_dau"));
                     hd.setNgayKetThuc(rs.getDate("ngay_ket_thuc"));
                     hd.setNgayKy(rs.getDate("ngay_ky"));
-                    hd.setMucLuongCoBan(rs.getLong("muc_luong_co_ban"));
+                    hd.setMucLuongCoBan(rs.getDouble("muc_luong_co_ban"));
                     hd.setNoiDung(rs.getString("noi_dung"));
                     hd.setTrangThai(rs.getString("trang_thai"));
                     hd.setMaNV(rs.getString("ma_nv"));
