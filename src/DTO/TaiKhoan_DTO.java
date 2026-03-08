@@ -20,7 +20,7 @@ public class TaiKhoan_DTO {
         this.quyentruycap = quyentruycap;
     }
 
-    // --- Giữ nguyên các Getter/Setter cũ của mày ---
+
     public String getMataikhoan() {
         return mataikhoan;
     }
@@ -61,7 +61,6 @@ public class TaiKhoan_DTO {
         this.quyentruycap = quyentruycap;
     }
 
-    // --- Bổ sung các hàm hệ thống để hoàn thiện DTO ---
 
     @Override
     public String toString() {
@@ -73,7 +72,6 @@ public class TaiKhoan_DTO {
                 '}';
     }
 
-    // Dùng để so sánh đối tượng khi tìm kiếm hoặc xóa trong ArrayList
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

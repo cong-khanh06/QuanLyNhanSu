@@ -209,7 +209,6 @@ public class TaiKhoan_DAO {
         return list;
     }
 
-    // Kiểm tra nhân viên này đã có tài khoản chưa (vì quan hệ 1-1)
     public boolean checkExistMaNV(String manv) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -228,7 +227,6 @@ public class TaiKhoan_DAO {
         return false;
     }
 
-    // Lấy tên chức vụ qua JOIN 3 bảng
     public String getTenchucvu(String user) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
