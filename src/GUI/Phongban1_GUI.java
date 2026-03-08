@@ -437,4 +437,12 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
 		});
 
 	}
+    public void setupquyen()
+    {
+    	btthem.setEnabled(false);
+    	btsua.setEnabled(false);
+    	btxoa.setEnabled(false);
+    	btsearch.setEnabled(false);
+    }
+    
 }

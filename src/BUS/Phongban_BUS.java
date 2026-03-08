@@ -1,9 +1,12 @@
 	package BUS;
-	import java.time.LocalDate;
+	import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-	
-	import DAO.Phongban_DAO;
+import java.util.Locale;
+
+import DAO.Phongban_DAO;
 	import DTO.Phongban_DTO;
 	import DTO.NhanVien_DTO;
 	public class Phongban_BUS {
@@ -23,6 +26,13 @@ import java.util.ArrayList;
 	{
 		return arr;
 	}
+	// Thêm hàm này vào cuối lớp Phongban_BUS để dùng chung
+	public String dinhDangLuong(double luong) {
+	    DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
+	    symbols.setGroupingSeparator('.'); // Dấu chấm phân cách hàng nghìn
+	    DecimalFormat df = new DecimalFormat("#,###", symbols); 
+	    return df.format(luong);
+	}
 	public Object[][] getObjectToRender() {
 		getdatabase();
 		Object[][] ob = new Object[arr.size()][5];
@@ -36,7 +46,7 @@ import java.util.ArrayList;
 			int soluong=pbdao.getsoluong(temp.getMaphongban());
 			double tongluong=pbdao.gettongluong(temp.getMaphongban());
 			double luongtb=(tongluong>0)?(tongluong/soluong):0;
-			ob[i]=new Object[] {i+1+"",temp.getMaphongban(),temp.getTenphongban(),tenTruongPhong,pbdao.getsoluong(temp.getMaphongban()),String.format("%.2f", luongtb)};	
+			ob[i]=new Object[] {i+1+"",temp.getMaphongban(),temp.getTenphongban(),tenTruongPhong,pbdao.getsoluong(temp.getMaphongban()),dinhDangLuong(luongtb)};	
 		}
 		return ob;
 	}
@@ -150,7 +160,7 @@ import java.util.ArrayList;
 	    double tongluong = pbdao.gettongluong(temp.getMaphongban());
 	    double luongtb = (soluong > 0) ? (tongluong / soluong) : 0;
 	    
-	    return new Object[] {stt + "", temp.getMaphongban(), temp.getTenphongban(), tenTruongPhong, soluong, String.format("%.2f", luongtb)};
+	    return new Object[] {stt + "", temp.getMaphongban(), temp.getTenphongban(), tenTruongPhong, soluong, dinhDangLuong(luongtb)};
 	}
 	public String Dinhdangngay(LocalDate ngay)
 	{

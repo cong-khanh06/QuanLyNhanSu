@@ -37,8 +37,13 @@ public class NhanVien_GUI extends JPanel{
     JComboBox<ChucVu_DTO> cbChucVu;
     JLabel lblTitle;
     NhanVien_DAO dao=new NhanVien_DAO();
+<<<<<<< Updated upstream
     List<Phongban_DTO> dsPhongBan;
     List<ChucVu_DTO> dsChucVu;
+=======
+	 NhanVien2_GUI pndetail;
+    
+>>>>>>> Stashed changes
     
     public NhanVien_GUI(){
         setLayout(new BorderLayout());
@@ -143,8 +148,12 @@ public class NhanVien_GUI extends JPanel{
         
         add(new JScrollPane(tableNV),BorderLayout.CENTER);
         
+<<<<<<< Updated upstream
         NhanVien2_GUI pndetail=new NhanVien2_GUI();
         pndetail.setParentGUI(this);
+=======
+        pndetail=new NhanVien2_GUI();
+>>>>>>> Stashed changes
         
         tableNV.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -256,6 +265,7 @@ public class NhanVien_GUI extends JPanel{
             cbPhongBan.addItem(pb);
         }
     }
+<<<<<<< Updated upstream
     
     private void loadComboChucVuSearch(){
         List<ChucVu_DTO> list=dao.layDanhSachCV();
@@ -289,5 +299,38 @@ public class NhanVien_GUI extends JPanel{
             }
         }
         return maCV; // Nếu không tìm thấy thì hiện mã luôn
+=======
+    public void Loaddatatheoma(String manv){
+        modelNV.setRowCount(0);
+        
+        NhanVien_DTO nv= dao.getNhanVienById(manv);
+        
+       
+            modelNV.addRow(new Object[]{
+                nv.getMaNV(),
+                nv.getHoTen(),
+                nv.getGioiTinh(),
+                nv.getNgaySinh(),
+                nv.getDiaChi(),
+                nv.getSdt(),
+                nv.getMaPB(),
+                nv.getMaCV(),
+                nv.getTrangThai()
+            });
+    }
+    public void setphanquyenuser(boolean kiemtra)
+    {
+    	btnAdd.setEnabled(kiemtra);
+    	btnDown.setEnabled(kiemtra);
+    	btnSearch.setEnabled(kiemtra);
+    	cbChucVu.setEnabled(kiemtra);
+    	cbGioiTinh.setEnabled(kiemtra);
+    	cbPhongBan.setEnabled(kiemtra);
+    	btnrefresh.setEnabled(kiemtra);
+    }
+    public void setphanquyenManager(boolean kq)
+    {
+    	pndetail.phanquyenManager(kq);
+>>>>>>> Stashed changes
     }
 }

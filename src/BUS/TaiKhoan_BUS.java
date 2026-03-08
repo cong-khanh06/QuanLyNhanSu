@@ -62,6 +62,27 @@ private TaiKhoan_DAO taikhoandao;
         
         return chucvu;
     }
+	public String getQuyen(String user)
+	{
+		String quyen=taikhoandao.getQuyen(user);
+		if(quyen==null|| quyen.isEmpty())
+		{
+			return"User";
+		}
+		return quyen;
+	}
+	public TaiKhoan_DTO getTaiKhoantuuser(String user)
+	{
+		TaiKhoan_DTO tk=taikhoandao.getTaiKhoantheouser(user);
+		if(tk!=null)
+		{
+			if(tk.getQuyentruycap()==null)
+			{
+				tk.setQuyentruycap("User");
+			}
+		}
+		return tk;
+	}
 	
 
 }

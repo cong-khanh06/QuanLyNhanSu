@@ -214,5 +214,72 @@ public class TaiKhoan_DAO {
         }
         return ketqua;
     }
+    public String getQuyen(String user)
+    {
+    	Connection_DAO conn = new Connection_DAO();
+        Connection con = null;
+        String quyen=null;
+        try
+        {
+        	con=conn.getCon();
+        	String query="Select quyen_truy_cap from TaiKhoan WHERE ten_dang_nhap=?";
+        	PreparedStatement ps=con.prepareStatement(query);
+        	ps.setString(1, user);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+            {
+            	quyen=rs.getString("quyen_truy_cap");
+            }
+            return quyen;
+        }
+        catch(SQLException e)
+        {
+        	e.printStackTrace();
+        }
+        finally {
+        	if(con!=null)
+        	{
+        		conn.Closeconnection(con);
+        	}
+        }
+        return quyen;
+    }
+    public TaiKhoan_DTO getTaiKhoantheouser(String user)
+    {
+
+    	Connection_DAO conn = new Connection_DAO();
+        Connection con = null;
+        TaiKhoan_DTO tk=null;
+        try
+        {
+        	con=conn.getCon();
+        	String query="Select * from TaiKhoan WHERE ten_dang_nhap=?";
+        	PreparedStatement ps=con.prepareStatement(query);
+        	ps.setString(1, user);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+            {
+            	String matk=rs.getString("ma_tk");
+            	String tendn=rs.getString("ten_dang_nhap");
+            	String pass=rs.getString("mat_khau");
+            	String quyen=rs.getString("quyen_truy_cap");
+            	String manv=rs.getString("ma_nv");
+            	tk=new TaiKhoan_DTO(matk,tendn,pass,quyen,manv);
+            }
+            return tk;
+        }
+        catch(SQLException e)
+        {
+        	e.printStackTrace();
+        }
+        finally {
+        	if(con!=null)
+        	{
+        		conn.Closeconnection(con);
+        	}
+        }
+        return tk;
+    	
+    }
     
 }

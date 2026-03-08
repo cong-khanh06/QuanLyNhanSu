@@ -47,7 +47,11 @@ public class NhanVien2_GUI extends JPanel {
     String currentAvatarPath=null;
     
     NhanVien_DAO dao = new NhanVien_DAO();
+<<<<<<< Updated upstream
     private NhanVien_GUI parentGUI;
+=======
+    private boolean isDeleteAllowed = true; 
+>>>>>>> Stashed changes
     // Sửa Constructor thành Không tham số
     public NhanVien2_GUI() {
         initComponents();
@@ -300,7 +304,7 @@ public class NhanVien2_GUI extends JPanel {
         // Đảm bảo Form đang bị khóa khi mới hiện
         setEditable(false);
         btnSua.setEnabled(true);
-        btnXoa.setEnabled(true);
+        btnXoa.setEnabled(isDeleteAllowed);
         btnLuu.setEnabled(false);
         btnHuy.setEnabled(false);
     }
@@ -398,6 +402,7 @@ public class NhanVien2_GUI extends JPanel {
             cbChucVu.addItem(cv);
         }
     }
+<<<<<<< Updated upstream
     
     private JPanel createDateField(JTextField txt) {
         JPanel pDate = new JPanel(new BorderLayout());
@@ -412,5 +417,11 @@ public class NhanVien2_GUI extends JPanel {
         
         pDate.add(btn, BorderLayout.EAST);
         return pDate;
+=======
+    public void phanquyenManager(boolean kq)
+    {
+    	this.isDeleteAllowed = kq;
+    	btnXoa.setEnabled(kq);
+>>>>>>> Stashed changes
     }
 }

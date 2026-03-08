@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import BUS.TaiKhoan_BUS;
+import DTO.TaiKhoan_DTO;
 
 public class Login_GUI extends JFrame implements ActionListener {
 
@@ -103,8 +104,12 @@ public class Login_GUI extends JFrame implements ActionListener {
             if (message.contains("thành công")) {
                 this.dispose();
                 Display_GUI ds=new Display_GUI();
+                TaiKhoan_DTO taikhoan=taikhoanbus.getTaiKhoantuuser(user);
                 ds.getnameValue().setText(user);
                 ds.getroleValue().setText(taikhoanbus.getTenchucvu(user));
+                ds.PhanQuyen(taikhoan.getQuyentruycap(),taikhoan.getManv());
+                ds.revalidate();
+                ds.repaint();
             } else {
                 JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             }
