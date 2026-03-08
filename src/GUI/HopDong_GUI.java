@@ -28,7 +28,6 @@ public class HopDong_GUI extends JPanel {
     private JTextArea txtNoiDungChiTiet;
 
     private final Color PRIMARY_COLOR = new Color(63, 81, 181);
-    private final Color HOVER_COLOR = new Color(92, 107, 192);
     private final Color TABLE_HEADER_COLOR = new Color(83, 109, 254);
     private final Color GRID_COLOR = new Color(230, 230, 230);
 	private JButton bttiemkiem;
@@ -341,20 +340,23 @@ public class HopDong_GUI extends JPanel {
             btnExit.setPreferredSize(new Dimension(110, 35));
 
             btnSave.addActionListener(e -> {
-                if (validateForm()) {
-                    try {
-                        HopDong_DTO dto = collectData();
-                        String res = isEdit ? bus.update(dto) : bus.insert(dto);
-                        JOptionPane.showMessageDialog(this, res);
-                        if (res.toLowerCase().contains("thành công")) { dataChanged = true; dispose(); }
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage());
+                try {
+                    HopDong_DTO dto = collectData(); 
+                    String res = isEdit ? bus.update(dto) : bus.insert(dto);
+                    JOptionPane.showMessageDialog(this, res);
+                    if (res.toLowerCase().contains("thành công")) { 
+                        dataChanged = true; 
+                        dispose(); 
                     }
+                } catch (NumberFormatException nfe) {
+                    JOptionPane.showMessageDialog(this, "Lương và Lần ký phải là định dạng số!");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Lỗi xử lý: " + ex.getMessage());
                 }
             });
 
             btnExit.addActionListener(e -> dispose());
-            pBottom.add(btnExit); pBottom.add(btnSave);
+            pBottom.add(btnSave); pBottom.add(btnExit);
             add(pBottom, BorderLayout.SOUTH);
         }
 
@@ -377,36 +379,9 @@ public class HopDong_GUI extends JPanel {
             DecimalFormat df = new DecimalFormat("#");
             txtLuong.setText(df.format(d.getMucLuongCoBan())); 
             txtMaNV.setText(d.getMaNV()); 
-            txtLanKy.setText(String.valueOf(d.getLanKy())); // Đã đảm bảo hiện thị lần ký khi Edit
+            txtLanKy.setText(String.valueOf(d.getLanKy())); 
             cbTrangThai.setSelectedItem(d.getTrangThai()); 
             txtNoiDung.setText(d.getNoiDung());
-        }
-
-        private boolean validateForm() {
-            // 1. Kiểm tra để trống các trường bắt buộc
-            if(txtMaHD.getText().trim().isEmpty() || txtMaNV.getText().trim().isEmpty()){
-                JOptionPane.showMessageDialog(this, "Mã Hợp đồng và Mã Nhân viên không được để trống!");
-                return false;
-            }
-            
-            // 2. Kiểm tra Mức lương (Phải là số > 0)
-            try {
-                if (Double.parseDouble(txtLuong.getText().trim()) <= 0) throw new Exception();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Mức lương phải là số lớn hơn 0!");
-                return false;
-            }
-
-            // 3. Kiểm tra Lần ký (Phải là số nguyên >= 1) - CẬP NHẬT TẠI ĐÂY
-            try {
-                int lanky = Integer.parseInt(txtLanKy.getText().trim());
-                if (lanky < 1) throw new Exception();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Lần ký phải là số nguyên lớn hơn hoặc bằng 1!");
-                return false;
-            }
-
-            return true;
         }
 
         private void addLabel(JPanel p, String text, int row, int col, GridBagConstraints gbc) {
@@ -426,12 +401,23 @@ public class HopDong_GUI extends JPanel {
 
         private HopDong_DTO collectData() {
             HopDong_DTO hd = new HopDong_DTO();
-            hd.setMaHD(txtMaHD.getText().trim()); hd.setLoaiHopDong(txtLoaiHD.getText().trim());
-            hd.setNgayBatDau(parseDate(txtNgayBD.getText())); hd.setNgayKetThuc(parseDate(txtNgayKT.getText()));
-            hd.setNgayKy(parseDate(txtNgayKy.getText())); hd.setNgayLenLuongGanNhat(parseDate(txtNgayLenLuong.getText()));
-            hd.setMucLuongCoBan(Double.parseDouble(txtLuong.getText().trim()));
-            hd.setMaNV(txtMaNV.getText().trim()); hd.setLanKy(Integer.parseInt(txtLanKy.getText().trim()));
-            hd.setTrangThai(cbTrangThai.getSelectedItem().toString()); hd.setNoiDung(txtNoiDung.getText().trim());
+            hd.setMaHD(txtMaHD.getText().trim()); 
+            hd.setLoaiHopDong(txtLoaiHD.getText().trim());
+            hd.setNgayBatDau(parseDate(txtNgayBD.getText())); 
+            hd.setNgayKetThuc(parseDate(txtNgayKT.getText()));
+            hd.setNgayKy(parseDate(txtNgayKy.getText())); 
+            hd.setNgayLenLuongGanNhat(parseDate(txtNgayLenLuong.getText()));
+            
+            String luongStr = txtLuong.getText().trim();
+            hd.setMucLuongCoBan(luongStr.isEmpty() ? 0 : Double.parseDouble(luongStr));
+            
+            hd.setMaNV(txtMaNV.getText().trim()); 
+            
+            String lanKyStr = txtLanKy.getText().trim();
+            hd.setLanKy(lanKyStr.isEmpty() ? 0 : Integer.parseInt(lanKyStr));
+            
+            hd.setTrangThai(cbTrangThai.getSelectedItem().toString()); 
+            hd.setNoiDung(txtNoiDung.getText().trim());
             return hd;
         }
         public boolean isDataChanged() { return dataChanged; }

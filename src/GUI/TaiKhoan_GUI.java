@@ -183,14 +183,12 @@ public class TaiKhoan_GUI extends JPanel {
                 txtUser.setText(data.getTendangnhap()); txtUser.setEditable(false);
                 txtMaNV.setText(data.getManv());
                 cbQuyen.setSelectedItem(data.getQuyentruycap());
-                // Lúc sửa, Password để trống để Admin nhập nếu muốn đổi
             }
 
             addComp(pMain, "Mã TK:", 0, 0, gbc); gbc.gridx = 1; pMain.add(txtMaTK, gbc);
             addComp(pMain, "Username:", 1, 0, gbc); gbc.gridx = 1; pMain.add(txtUser, gbc);
             addComp(pMain, "Mật khẩu:", 2, 0, gbc); gbc.gridx = 1; pMain.add(txtPass, gbc);
-            
-            // Thêm dòng thông báo nếu là chế độ chỉnh sửa
+
             if (isEdit) {
                 gbc.gridy = 3; gbc.gridx = 1;
                 JLabel lbNote = new JLabel("(*) Để trống nếu muốn giữ nguyên mật khẩu cũ");
@@ -213,9 +211,7 @@ public class TaiKhoan_GUI extends JPanel {
             btnSave.addActionListener(e -> {
                 String password = txtPass.getText().trim();
                 
-                // --- LOGIC KIỂM TRA MẬT KHẨU THEO Ý MÀY ---
                 if (!isEdit) { 
-                    // Khi THÊM MỚI: Bắt buộc phải có và >= 6 ký tự
                     if (password.isEmpty()) {
                         JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu khởi tạo!");
                         txtPass.requestFocus();
@@ -227,8 +223,6 @@ public class TaiKhoan_GUI extends JPanel {
                         return;
                     }
                 } else { 
-                    // Khi CHỈNH SỬA: 
-                    // Nếu người dùng nhập gì đó vào ô pass thì mới check độ dài
                     if (!password.isEmpty() && password.length() < 6) {
                         JOptionPane.showMessageDialog(this, "Mật khẩu mới phải có ít nhất 6 ký tự!");
                         txtPass.requestFocus();

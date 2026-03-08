@@ -26,6 +26,7 @@ public class Display_GUI extends JFrame{
     NhanVien_GUI nhanvien;
     HopDong_GUI hopdong;
     TaiKhoan_GUI taikhoan;
+    DuAn_GUI duan;
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
         setSize(1400,800);
@@ -36,7 +37,7 @@ public class Display_GUI extends JFrame{
         nhanvien=new NhanVien_GUI();
         hopdong=new HopDong_GUI();
         taikhoan=new TaiKhoan_GUI();
-        
+        duan=new DuAn_GUI();
         
         pnLeft=new JPanel();
         pnLeft.setPreferredSize(new Dimension(250,800));
@@ -72,18 +73,15 @@ public class Display_GUI extends JFrame{
         pnCard.add(btnHD);
         btnPB=new ButtonSidebar("Phòng ban", loadIcon("/GUI/icon/phongban.png"));
         pnCard.add(btnPB);
-//        btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
-//        pnCard.add(btnDA);
-
-       
         btnL=new ButtonSidebar("Lương", loadIcon("/GUI/icon/salary.png"));        
         pnCard.add(btnL);
         btnCC=new ButtonSidebar("Chấm công", loadIcon("/GUI/icon/timesheets.png"));        
         pnCard.add(btnCC);
         btnTK=new ButtonSidebar("Tài khoản", loadIcon("/GUI/icon/account.png"));        
         pnCard.add(btnTK);
+        btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
+        pnCard.add(btnDA);
         
-
         btnHome.setHorizontalAlignment(SwingConstants.LEFT);
         btnNV.setHorizontalAlignment(SwingConstants.LEFT);
         btnPB.setHorizontalAlignment(SwingConstants.LEFT);
@@ -91,19 +89,21 @@ public class Display_GUI extends JFrame{
         btnL.setHorizontalAlignment(SwingConstants.LEFT);
         btnCC.setHorizontalAlignment(SwingConstants.LEFT);
         btnTK.setHorizontalAlignment(SwingConstants.LEFT);
+        btnDA.setHorizontalAlignment(SwingConstants.LEFT);
+
 
         pnLeft.add(pnCard);
 
         pnRight=new JPanel(cardlayout);
         pnRight.setBackground(Color.white);
         
-
         pnRight.add(nhanvien,"panelNV");
         pnRight.add(phongban,"panelPB");
         pnRight.add(hopdong,"panelHD");
 
-        //pnRight.add(new DuAn_GUI(),"panelDA");
+        pnRight.add(duan,"panelDA");
         pnRight.add(taikhoan, "panelTK");
+
 
         
         btnNV.addActionListener(e->{
@@ -115,18 +115,15 @@ public class Display_GUI extends JFrame{
             pnRight.revalidate();
             pnRight.repaint();
         });
-        btnHD.addActionListener(e->{
-            cardlayout.show(pnRight,"panelHD");
-        });
         
         
         btnHD.addActionListener(e->{
             cardlayout.show(pnRight,"panelHD");
         });
         
-//        btnDA.addActionListener(e->{
-//            cardlayout.show(pnRight, "panelDA");
-//        });
+        btnDA.addActionListener(e->{
+            cardlayout.show(pnRight, "panelDA");
+        });
         
         btnTK.addActionListener(e->{
             cardlayout.show(pnRight, "panelTK");
@@ -134,9 +131,7 @@ public class Display_GUI extends JFrame{
         
         add(pnLeft,BorderLayout.WEST);
         add(pnRight,BorderLayout.CENTER);
-        
-        
-        
+
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
     }
@@ -168,6 +163,7 @@ public class Display_GUI extends JFrame{
     	{
     		btnPB.setVisible(false);
     		btnTK.setVisible(false);
+    		btnDA.setVisible(false);
     		pnCard.revalidate();
     		nhanvien.setphanquyenuser(false,manv);
     		nhanvien.setphanquyennut(false,quyen);
@@ -180,6 +176,7 @@ public class Display_GUI extends JFrame{
     		nhanvien.setphanquyennut(false,quyen);
     		hopdong.setphanquyenManager(false);
     		btnTK.setVisible(false);
+    		btnDA.setVisible(false);
     		pnCard.revalidate();
     		pnCard.repaint();
     		

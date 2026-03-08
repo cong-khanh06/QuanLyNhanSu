@@ -354,7 +354,7 @@ public class NhanVien_DAO extends Connection_DAO{
 
         
         StringBuilder sql = new StringBuilder(
-            "SELECT * FROM NhanVien WHERE (ma_nv LIKE ? OR ho_ten LIKE ? OR sdt LIKE ?) ORDER BY CAST(SUBSTRING(ma_nv, 3, LEN(ma_nv)) AS INT) ASC"
+            "SELECT * FROM NhanVien WHERE (ma_nv LIKE ? OR ho_ten LIKE ? OR sdt LIKE ?)"
         );
 
         // Nếu có lọc theo giới tính (Khác "Tat ca")
@@ -370,6 +370,8 @@ public class NhanVien_DAO extends Connection_DAO{
         if (maCV != null && !maCV.equalsIgnoreCase("Tat ca") && !maCV.isEmpty()) {
             sql.append(" AND ma_cv = ?");
         }
+        
+        sql.append(" ORDER BY CAST(SUBSTRING(ma_nv, 3, LEN(ma_nv)) AS INT) ASC");
         
         try (Connection conn = getCon();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {

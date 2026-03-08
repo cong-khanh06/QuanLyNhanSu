@@ -108,7 +108,7 @@ public class NhanVien_GUI extends JPanel{
         pnToolBar.add(btnDown, gbc);
         
         // Nút cuối cùng không cần khoảng cách bên phải nữa
-        gbc.insets = new java.awt.Insets(0, 0, 0, 0); 
+//        gbc.insets = new java.awt.Insets(0, 0, 0, 0); 
         pnToolBar.add(btnrefresh, gbc);
         
         pnSearchNV = new JPanel(new BorderLayout());

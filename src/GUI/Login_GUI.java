@@ -39,7 +39,7 @@ public class Login_GUI extends JFrame implements ActionListener {
         
         JLabel jlimage = new JLabel("", SwingConstants.CENTER);
         try {
-            ImageIcon icon = new ImageIcon(getClass().getResource("/quanlynhansu.png"));
+            ImageIcon icon = new ImageIcon(getClass().getResource("/img/quanlynhansu.png"));
             Image image = icon.getImage().getScaledInstance(170, 90, Image.SCALE_SMOOTH);
             jlimage.setIcon(new ImageIcon(image));
         } catch (Exception e) {
@@ -115,10 +115,14 @@ public class Login_GUI extends JFrame implements ActionListener {
             }
         }
     }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new Login_GUI().setVisible(true);
+            try {
+                Login_GUI frame = new Login_GUI();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 }
