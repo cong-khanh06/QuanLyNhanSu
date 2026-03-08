@@ -320,7 +320,6 @@ public class Phongban_DAO {
 		
 		return 0;
 	}
-<<<<<<< HEAD
 	public DefaultPieDataset getThongKeGioiTinh(String mapb) {
 	    DefaultPieDataset dataset = new DefaultPieDataset();
 	    Connection_DAO conn = new Connection_DAO();
@@ -401,9 +400,7 @@ public class Phongban_DAO {
 	        if (con != null) conn.Closeconnection(con);
 	    }
 	    return dataset;
-	}
-=======
-        
+	}        
         public int soLuongPhongBan(){
             String sql="SELECT COUNT(ma_pb) FROM PhongBan";
             int count=0;
@@ -422,5 +419,4 @@ public class Phongban_DAO {
             }
             return count;
         }
->>>>>>> 77de35b269f221e08fd6344262f655efac3d6f10
 }

@@ -176,8 +176,7 @@ import DAO.Phongban_DAO;
 			return ngay.format(dtf);
 		}
 	}
-<<<<<<< HEAD
-	// Trong lớp Phongban_BUS.java
+
 	public DefaultPieDataset layThongKeGioiTinh(String mapb) {
 	    return pbdao.getThongKeGioiTinh(mapb);
 	}
@@ -188,10 +187,8 @@ import DAO.Phongban_DAO;
 	public DefaultPieDataset layThongKeDoTuoi(String mapb) {
 	    return pbdao.getThongKeDoTuoi(mapb);
 	}
-=======
         
         public int soLuongPhongban(){
             return pbdao.soLuongPhongBan();
         }
->>>>>>> 77de35b269f221e08fd6344262f655efac3d6f10
 }
