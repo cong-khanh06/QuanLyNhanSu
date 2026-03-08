@@ -4,12 +4,13 @@
  */
 package run;
 import GUI.Display_GUI;
+import GUI.Login_GUI;
 /**
  *
  * @author khanh
  */
 public class App {
     public static void main(String[] args) {
-        new Display_GUI();
+        new Login_GUI().setVisible(true);
     }
 }

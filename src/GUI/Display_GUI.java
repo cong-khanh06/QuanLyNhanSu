@@ -70,8 +70,8 @@ public class Display_GUI extends JFrame{
         pnCard.add(btnPB);
         btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
         pnCard.add(btnDA);
-        btnDA=new ButtonSidebar("Tài khoản", loadIcon("/GUI/icon/taikhoan.png"));
-        pnCard.add(btnDA);
+        btnTK=new ButtonSidebar("Tài khoản", loadIcon("/GUI/icon/taikhoan.png"));
+        pnCard.add(btnTK);
         pnLeft.add(pnCard);
         
         pnRight=new JPanel(cardlayout);
@@ -80,7 +80,7 @@ public class Display_GUI extends JFrame{
         pnRight.add(new NhanVien_GUI(),"panelNV");
         pnRight.add(new Phongban1_GUI(),"panelPB");
         pnRight.add(new HopDong_GUI(), "panelHD");
-        //pnRight.add(new DuAn_GUI(),"panelDA");
+        pnRight.add(new DuAn_GUI(),"panelDA");
         pnRight.add(new TaiKhoan_GUI(), "panelTK");
         
         btnNV.addActionListener(e->{
@@ -101,7 +101,7 @@ public class Display_GUI extends JFrame{
             cardlayout.show(pnRight, "panelDA");
         });
         
-        btnDA.addActionListener(e->{
+        btnTK.addActionListener(e->{
             cardlayout.show(pnRight, "panelTK");
         });
         
