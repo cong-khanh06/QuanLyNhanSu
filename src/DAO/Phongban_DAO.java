@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import DTO.NhanVien_DTO;
 import DAO.Connection_DAO;
+import org.jfree.data.general.DefaultPieDataset;
 public class Phongban_DAO {
 	public ArrayList<Phongban_DTO>getList()
 	{
@@ -318,5 +319,86 @@ public class Phongban_DAO {
 		}
 		
 		return 0;
+	}
+	public DefaultPieDataset getThongKeGioiTinh(String mapb) {
+	    DefaultPieDataset dataset = new DefaultPieDataset();
+	    Connection_DAO conn = new Connection_DAO();
+	    Connection con = null;
+	    try {
+	        con = conn.getCon();
+	        String sql = "SELECT gioi_tinh, COUNT(*) FROM NhanVien WHERE ma_pb = ? GROUP BY gioi_tinh";
+	        PreparedStatement ps = con.prepareStatement(sql);
+	        ps.setString(1, mapb);
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	            String label = rs.getString(1);
+	            if (label == null) label = "Chưa xác định";
+	            dataset.setValue(label, rs.getInt(2));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (con != null) conn.Closeconnection(con);
+	    }
+	    return dataset;
+	}
+
+	/**
+	 * Thống kê cơ cấu chức vụ trong một phòng ban
+	 */
+	public DefaultPieDataset getThongKeChucVu(String mapb) {
+	    DefaultPieDataset dataset = new DefaultPieDataset();
+	    Connection_DAO conn = new Connection_DAO();
+	    Connection con = null;
+	    try {
+	        con = conn.getCon();
+	        String sql = "SELECT cv.ten_cv, COUNT(*) FROM NhanVien nv "
+	                   + "JOIN ChucVu cv ON nv.ma_cv = cv.ma_cv "
+	                   + "WHERE nv.ma_pb = ? GROUP BY cv.ten_cv";
+	        PreparedStatement ps = con.prepareStatement(sql);
+	        ps.setString(1, mapb);
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	            dataset.setValue(rs.getString(1), rs.getInt(2));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (con != null) conn.Closeconnection(con);
+	    }
+	    return dataset;
+	}
+
+	
+	public DefaultPieDataset getThongKeDoTuoi(String mapb) {
+	    DefaultPieDataset dataset = new DefaultPieDataset();
+	    Connection_DAO conn = new Connection_DAO();
+	    Connection con = null;
+	    try {
+	        con = conn.getCon();
+	        // SQL phân nhóm tuổi dựa trên năm hiện tại và năm sinh
+	        String sql = "SELECT CASE " +
+	                     "WHEN DATEDIFF(YEAR, ngay_sinh, GETDATE()) <= 25 THEN '16-25' " +
+	                     "WHEN DATEDIFF(YEAR, ngay_sinh, GETDATE()) BETWEEN 26 AND 40 THEN '26-40' " +
+	                     "WHEN DATEDIFF(YEAR, ngay_sinh, GETDATE()) BETWEEN 41 AND 55 THEN '41-55' " +
+	                     "ELSE '56-65' END AS NhomTuoi, COUNT(*) " +
+	                     "FROM NhanVien WHERE ma_pb = ? " +
+	                     "GROUP BY CASE " +
+	                     "WHEN DATEDIFF(YEAR, ngay_sinh, GETDATE()) <= 25 THEN '16-25' " +
+	                     "WHEN DATEDIFF(YEAR, ngay_sinh, GETDATE()) BETWEEN 26 AND 40 THEN '26-40' " +
+	                     "WHEN DATEDIFF(YEAR, ngay_sinh, GETDATE()) BETWEEN 41 AND 55 THEN '41-55' " +
+	                     "ELSE '56-65' END";
+	        PreparedStatement ps = con.prepareStatement(sql);
+	        ps.setString(1, mapb);
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	            dataset.setValue(rs.getString(1), rs.getInt(2));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (con != null) conn.Closeconnection(con);
+	    }
+	    return dataset;
 	}
 }

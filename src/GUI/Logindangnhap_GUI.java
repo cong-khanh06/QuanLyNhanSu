@@ -36,7 +36,7 @@ public class Logindangnhap_GUI extends JPanel {
 
         // Hàng 2: Nhãn Username
         JLabel jluser = new JLabel("Username");
-        jluser.setFont(new Font("Arial", Font.PLAIN, 12));
+        jluser.setFont(new Font("Arial", Font.BOLD, 12));
         formPanel.add(jluser);
 
         // Hàng 3: Ô nhập Username
@@ -45,7 +45,7 @@ public class Logindangnhap_GUI extends JPanel {
 
         // Hàng 4: Nhãn Password
         JLabel jlpassword = new JLabel("Password");
-        jlpassword.setFont(new Font("Arial", Font.PLAIN, 12));
+        jlpassword.setFont(new Font("Arial", Font.BOLD, 12));
         formPanel.add(jlpassword);
 
         // Hàng 5: Ô nhập Password

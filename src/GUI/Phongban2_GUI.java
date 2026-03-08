@@ -155,7 +155,7 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
     private void handleSave() {
     	if(jtfMaPhong.getText().equals("")||jtfTenPhong.getText().equals("")
     	|| jtfdiachi.getText().equals("")||jtfsdt.getText().equals("")){
-    		JOptionPane.showMessageDialog(this,"Vui lòng điền đầy đủ thông tin!");
+    		JOptionPane.showMessageDialog(this,"Vui lòng điền đầy đủ thông tin!","Thông báo",JOptionPane.ERROR_MESSAGE);
     		return;
     	}
     	else
@@ -196,7 +196,7 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
 	    	{
 	    		message=pbb.updatePhongBan(pb);
 	    	}
-	    	JOptionPane.showMessageDialog(this, message);
+	    	JOptionPane.showMessageDialog(this, message,"Thông báo",JOptionPane.INFORMATION_MESSAGE);
 	
 	    	if (message.contains("thành công")) {
 	

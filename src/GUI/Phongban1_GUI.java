@@ -22,7 +22,8 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
     private JLabel jlnhanvien, jlthongtin;
     private JTextField jtfSearch;
     private JLabel jlvaluemaso, jlvaluehoten, jlvaluegioitinh, jlvaluesdt, jlvaluedc, jlvaluephongban, jlvaluengayvaolam;
-    private JButton btthem, btxoa, btsua, btsearch, btrefresh;
+    private JButton btthem, btxoa, btsua, btsearch, btrefresh,btthongke;
+	
 
     public Phongban1_GUI() {
         pbb = new Phongban_BUS();
@@ -64,6 +65,7 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         btthem = createStyledButton("Thêm", "/img/addpb.png");
         btsua = createStyledButton("Sửa", "/img/fixpb.png");
         btxoa = createStyledButton("Xóa", "/img/deletepb.png");
+        btthongke = createStyledButton("Thống kê", "/img/thongke.png");
 
         pnlButtons.add(jtfSearch);
         pnlButtons.add(btsearch);
@@ -71,6 +73,7 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         pnlButtons.add(btthem);
         pnlButtons.add(btsua);
         pnlButtons.add(btxoa);
+        pnlButtons.add(btthongke);
 
         panelTopToolbar.add(pnlButtons, BorderLayout.EAST);
         panelTop.add(panelTopToolbar, BorderLayout.NORTH);
@@ -171,6 +174,7 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         btxoa.addActionListener(this);
         btsearch.addActionListener(this);
         btrefresh.addActionListener(this);
+        btthongke.addActionListener(this);
     }
 
     // Hàm bổ trợ tạo nút bấm có style đồng nhất
@@ -419,6 +423,19 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
 				LoaddataNhanVien(madautien);
 			}
 		}
+		else if(src.equals("Thống kê"))
+		{
+			int row = table.getSelectedRow();
+		    if (row != -1) {
+		        String mapb = table.getValueAt(row, 1).toString();
+		        String tenpb = table.getValueAt(row, 2).toString();
+		        
+		        PhongbanThongKe_GUI gdThongKe = new PhongbanThongKe_GUI(mapb, tenpb);
+		        gdThongKe.setVisible(true);
+		    } else {
+		        JOptionPane.showMessageDialog(this, "Vui lòng chọn một phòng ban trên bảng!");
+		    }
+		}
 	}  
     public void setMouse(JButton bt)
 	{
@@ -437,12 +454,11 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
 		});
 
 	}
-    public void setupquyen()
+    public void setphanquyenManager(boolean kq)
     {
-    	btthem.setEnabled(false);
-    	btsua.setEnabled(false);
-    	btxoa.setEnabled(false);
-    	btsearch.setEnabled(false);
+    	
+    	btxoa.setEnabled(kq);
+    	
     }
     
 }

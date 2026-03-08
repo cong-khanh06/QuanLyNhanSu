@@ -300,4 +300,10 @@ public class DuAn_GUI extends JPanel {
             }
         });
     }
+    public void setphanquyenManager(boolean kq)
+    {
+    	 btnAdd.setEnabled(kq);
+    	 btnDelete.setEnabled(kq);
+    	 btnEdit.setEnabled(kq);
+    }
 }

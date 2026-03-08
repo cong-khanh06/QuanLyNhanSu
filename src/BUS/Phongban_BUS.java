@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.jfree.data.general.DefaultPieDataset;
+
 import DAO.Phongban_DAO;
 	import DTO.Phongban_DTO;
 	import DTO.NhanVien_DTO;
@@ -173,5 +175,16 @@ import DAO.Phongban_DAO;
 			DateTimeFormatter dtf=DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			return ngay.format(dtf);
 		}
+	}
+	// Trong lớp Phongban_BUS.java
+	public DefaultPieDataset layThongKeGioiTinh(String mapb) {
+	    return pbdao.getThongKeGioiTinh(mapb);
+	}
+
+	public DefaultPieDataset layThongKeChucVu(String mapb) {
+	    return pbdao.getThongKeChucVu(mapb);
+	}
+	public DefaultPieDataset layThongKeDoTuoi(String mapb) {
+	    return pbdao.getThongKeDoTuoi(mapb);
 	}
 }

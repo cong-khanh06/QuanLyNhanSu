@@ -175,11 +175,11 @@ public class Display_GUI extends JFrame{
     	{
     		nhanvien.setphanquyennut(false,quyen);
     		hopdong.setphanquyenManager(false);
+    		phongban.setphanquyenManager(false);
+    		duan.setphanquyenManager(false);
     		btnTK.setVisible(false);
-    		btnDA.setVisible(false);
     		pnCard.revalidate();
     		pnCard.repaint();
-    		
     	}
     	
     }

@@ -96,7 +96,7 @@ public class Login_GUI extends JFrame implements ActionListener {
             String password = new String(logindangnhap.getPasswordField().getPassword());
             
             if (user.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Không được để trống tài khoản hoặc mật khẩu!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Không được để trống tài khoản hoặc mật khẩu!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -111,7 +111,7 @@ public class Login_GUI extends JFrame implements ActionListener {
                 ds.revalidate();
                 ds.repaint();
             } else {
-                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
