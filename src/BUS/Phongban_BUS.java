@@ -174,4 +174,8 @@ import DAO.Phongban_DAO;
 			return ngay.format(dtf);
 		}
 	}
+        
+        public int soLuongPhongban(){
+            return pbdao.soLuongPhongBan();
+        }
 }

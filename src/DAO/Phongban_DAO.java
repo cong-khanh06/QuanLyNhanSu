@@ -319,4 +319,23 @@ public class Phongban_DAO {
 		
 		return 0;
 	}
+        
+        public int soLuongPhongBan(){
+            String sql="SELECT COUNT(ma_pb) FROM PhongBan";
+            int count=0;
+            try {
+                Connection_DAO conn=new Connection_DAO();
+                Connection con=conn.getCon();
+                PreparedStatement ps=con.prepareStatement(sql);
+                ResultSet rsPb=ps.executeQuery();
+                
+                if(rsPb.next()){
+                    count=rsPb.getInt(1);
+                }
+                return count;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return count;
+        }
 }
