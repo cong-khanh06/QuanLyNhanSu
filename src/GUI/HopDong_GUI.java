@@ -75,14 +75,12 @@ public class HopDong_GUI extends JPanel {
         pHeader.add(pRight, BorderLayout.CENTER); 
         add(pHeader, BorderLayout.NORTH);
 
-        // --- 2. CENTER: TABLE ---
         setupTable();
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(new LineBorder(GRID_COLOR));
         scrollPane.getViewport().setBackground(Color.WHITE);
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- 3. SOUTH: DETAIL DASHBOARD ---
         add(createDetailDashboard(), BorderLayout.SOUTH);
 
         setupEvents();
