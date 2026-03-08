@@ -244,6 +244,7 @@ CREATE TABLE quanlynhansu.dbo.NhanVien (
 	trang_thai nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS DEFAULT N'DangLam' NULL,
 	ma_pb varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ma_cv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	avatar varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	CONSTRAINT PK__NhanVien__0FE15F7C2B00B1E0 PRIMARY KEY (ma_nv),
 	CONSTRAINT UQ__NhanVien__37D42BFA55736D49 UNIQUE (cccd),
 	CONSTRAINT UQ__NhanVien__AB6E6164E17D232E UNIQUE (email)
