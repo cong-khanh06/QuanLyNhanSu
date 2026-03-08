@@ -37,7 +37,6 @@ public class NhanVien_BUS {
     }
     
     public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB, String maCV) {
-        // Xử lý logic nếu cần (ví dụ loại bỏ khoảng trắng thừa của từ khóa)
         if (tuKhoa == null) {
             tuKhoa = "";
         } else {
@@ -45,5 +44,9 @@ public class NhanVien_BUS {
         }
 
         return dao.timKiemNhanVien(tuKhoa, gioiTinh, maPB, maCV);
+    }
+    
+    public int soLuongNhanVien(){
+        return dao.soLuongNhanVien();
     }
 }

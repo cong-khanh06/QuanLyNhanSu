@@ -37,12 +37,12 @@ public class NhanVien_GUI extends JPanel{
     JComboBox<ChucVu_DTO> cbChucVu;
     JLabel lblTitle;
     NhanVien_DAO dao=new NhanVien_DAO();
-
+    
     List<Phongban_DTO> dsPhongBan;
     List<ChucVu_DTO> dsChucVu;
 	 NhanVien2_GUI pndetail;
-
-    
+        
+    private java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public NhanVien_GUI(){
         setLayout(new BorderLayout());
         
@@ -177,7 +177,7 @@ public class NhanVien_GUI extends JPanel{
                 nv.getMaNV(),
                 nv.getHoTen(),
                 nv.getGioiTinh() != null ? nv.getGioiTinh().getTenHienThi() : "",
-                nv.getNgaySinh(),
+                nv.getNgaySinh() != null ? nv.getNgaySinh().format(dtf) : "",
                 nv.getDiaChi(),
                 nv.getSdt(),
                 getTenPhongBan(nv.getMaPB()),
@@ -214,7 +214,7 @@ public class NhanVien_GUI extends JPanel{
             for (NhanVien_DTO nv : ketQua) {
                 modelNV.addRow(new Object[]{
                     nv.getMaNV(), nv.getHoTen(), nv.getGioiTinh() != null ? nv.getGioiTinh().getTenHienThi() : "",
-                    nv.getNgaySinh(), nv.getDiaChi(), nv.getSdt(),
+                    nv.getNgaySinh() != null ? nv.getNgaySinh().format(dtf) : "", nv.getDiaChi(), nv.getSdt(),
                     getTenPhongBan(nv.getMaPB()), getTenChucVu(nv.getMaCV()), nv.getTrangThai() != null ? nv.getTrangThai().getTenHienThi() : ""
                 });
             }
@@ -304,7 +304,7 @@ public class NhanVien_GUI extends JPanel{
                 nv.getMaNV(),
                 nv.getHoTen(),
                 nv.getGioiTinh(),
-                nv.getNgaySinh(),
+                nv.getNgaySinh() != null ? nv.getNgaySinh().format(dtf) : "",
                 nv.getDiaChi(),
                 nv.getSdt(),
                 nv.getMaPB(),

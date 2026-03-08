@@ -203,4 +203,21 @@ public class HopDong_DAO {
         }
         return hd;
     }
+    
+    public int soLuonghopDongSapHetHan(){
+        String sql="SELECT COUNT(*) FROM HopDong WHERE ngay_ket_thuc BETWEEN GETDATE() AND DATEADD(DAY,7,GETDATE())";
+        int count=0;
+        try {
+            Connection con=connDAO.getCon();
+            PreparedStatement ps= con.prepareStatement(sql);
+            ResultSet rs=ps.executeQuery();
+            if(rs.next()){
+                count=rs.getInt(1);
+            }
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }

@@ -312,25 +312,19 @@ public class NhanVien_DAO extends Connection_DAO{
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, nv.getMaNV());
             ps.setString(2, nv.getHoTen());
-            
-
-            // Chuyển đổi từ LocalDate sang java.sql.Date
             ps.setDate(3, nv.getNgaySinh() != null ? java.sql.Date.valueOf(nv.getNgaySinh()) : null);
             ps.setString(4, nv.getGioiTinh() != null ? nv.getGioiTinh().name() : null);
             ps.setString(5, nv.getDiaChi());
             ps.setString(6, nv.getSdt());
             ps.setString(7, nv.getEmail());
             ps.setString(8, nv.getCccd());
-
-            // Chuyển đổi từ LocalDate sang java.sql.Date
             ps.setDate(9, nv.getNgayVaoLam() != null ? java.sql.Date.valueOf(nv.getNgayVaoLam()) : null);
-
             ps.setString(10, nv.getMaPB());
             ps.setString(11, nv.getMaCV());
             ps.setString(12, nv.getTrangThai() != null ? nv.getTrangThai().name() : null);
             ps.setString(13, nv.getAvatar());
 
-            return ps.executeUpdate() > 0; // Trả về true nếu chèn thành công ít nhất 1 dòng
+            return ps.executeUpdate() > 0; 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -349,7 +343,7 @@ public class NhanVien_DAO extends Connection_DAO{
         return list;
     }
     
-        public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB, String maCV) {
+    public List<NhanVien_DTO> timKiemNhanVien(String tuKhoa, String gioiTinh, String maPB, String maCV) {
         List<NhanVien_DTO> listResult = new ArrayList<>();
 
         
@@ -375,29 +369,21 @@ public class NhanVien_DAO extends Connection_DAO{
         
         try (Connection conn = getCon();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-            // Thêm ký tự % để tìm kiếm gần đúng (chứa từ khóa)
             String searchPattern = "%" + tuKhoa + "%";
             ps.setString(1, searchPattern);
             ps.setString(2, searchPattern);
             ps.setString(3, searchPattern);
 
             int paramIndex = 4;
-
-            // Gắn giá trị tham số cho Giới tính nếu có
             if (gioiTinh != null && !gioiTinh.equalsIgnoreCase("Tat ca")) {
                 ps.setString(paramIndex++, gioiTinh);
             }
-
-            // Gắn giá trị tham số cho Phòng ban nếu có
             if (maPB != null && !maPB.equalsIgnoreCase("Tat ca") && !maPB.isEmpty()) {
                 ps.setString(paramIndex++, maPB);
             }
-            
             if (maCV != null && !maCV.equalsIgnoreCase("Tat ca") && !maCV.isEmpty()) {
                 ps.setString(paramIndex++, maCV);
             }
-            
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -431,5 +417,22 @@ public class NhanVien_DAO extends Connection_DAO{
             e.printStackTrace();
         }
         return listResult;
+    }
+    
+    public int soLuongNhanVien(){
+        String sql="SELECT COUNT(ma_nv) FROM NhanVien";
+        int count=0;
+        try {
+            PreparedStatement ps=con.prepareStatement(sql);
+            ResultSet rs=ps.executeQuery();
+            
+            if(rs.next()){
+                count=rs.getInt(1);
+            }
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 }

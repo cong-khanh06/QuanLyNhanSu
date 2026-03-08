@@ -48,15 +48,10 @@ public class TaiKhoan_BUS {
     }
 
      
-	public String getQuyen(String user)
-	{
-		String quyen=taikhoandao.getQuyen(user);
-		if(quyen==null|| quyen.isEmpty())
-		{
-			return"User";
-		}
-		return quyen;
-	}
+        public String getQuyen(String user) {
+            String quyen = taikhoandao.getQuyen(user);
+            return (quyen == null || quyen.isEmpty()) ? "User" : quyen;
+        }
 	public TaiKhoan_DTO getTaiKhoantuuser(String user)
 	{
 		TaiKhoan_DTO tk=taikhoandao.getTaiKhoantheouser(user);

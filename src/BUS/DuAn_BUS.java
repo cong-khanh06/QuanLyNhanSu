@@ -34,4 +34,8 @@ public class DuAn_BUS {
     public List<DuAn_DTO> timKiemDuAn(String tuKhoa) {
         return dao.timKiemDuAn(tuKhoa);
     }
+    
+    public int soLuongDuAnDangThucHien(){
+        return dao.soLuongDuAnDangThucHien();
+    }
 }

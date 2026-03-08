@@ -14,12 +14,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
 
 public class Display_GUI extends JFrame{
     JPanel pnLeft,pnRight,pnRAN,pnCard;
     JLabel name,role,nameValue,roleValue;
 
-    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnL,btnCC,btnTK,btnDA;
+    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnL,btnCC,btnTK,btnDA,btnLogout;
 
     CardLayout cardlayout=new CardLayout();
     Phongban1_GUI phongban;
@@ -27,6 +28,7 @@ public class Display_GUI extends JFrame{
     HopDong_GUI hopdong;
     TaiKhoan_GUI taikhoan;
     DuAn_GUI duan;
+    TrangChu_GUI trangchu;
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
         setSize(1400,800);
@@ -38,6 +40,7 @@ public class Display_GUI extends JFrame{
         hopdong=new HopDong_GUI();
         taikhoan=new TaiKhoan_GUI();
         duan=new DuAn_GUI();
+        trangchu=new TrangChu_GUI();
         
         pnLeft=new JPanel();
         pnLeft.setPreferredSize(new Dimension(250,800));
@@ -81,6 +84,8 @@ public class Display_GUI extends JFrame{
         pnCard.add(btnTK);
         btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
         pnCard.add(btnDA);
+        btnLogout = new ButtonSidebar("Đăng xuất", loadIcon("/GUI/icon/logout.png")); 
+        pnCard.add(btnLogout);
         
         btnHome.setHorizontalAlignment(SwingConstants.LEFT);
         btnNV.setHorizontalAlignment(SwingConstants.LEFT);
@@ -90,6 +95,7 @@ public class Display_GUI extends JFrame{
         btnCC.setHorizontalAlignment(SwingConstants.LEFT);
         btnTK.setHorizontalAlignment(SwingConstants.LEFT);
         btnDA.setHorizontalAlignment(SwingConstants.LEFT);
+        btnLogout.setHorizontalAlignment(SwingConstants.LEFT);
 
 
         pnLeft.add(pnCard);
@@ -97,14 +103,18 @@ public class Display_GUI extends JFrame{
         pnRight=new JPanel(cardlayout);
         pnRight.setBackground(Color.white);
         
+        pnRight.add(trangchu,"panelTC");
         pnRight.add(nhanvien,"panelNV");
         pnRight.add(phongban,"panelPB");
         pnRight.add(hopdong,"panelHD");
-
         pnRight.add(duan,"panelDA");
         pnRight.add(taikhoan, "panelTK");
 
-
+        cardlayout.show(pnRight,"panelTC");
+        
+        btnHome.addActionListener(e->{
+            cardlayout.show(pnRight,"panelTC");
+        });
         
         btnNV.addActionListener(e->{
             cardlayout.show(pnRight,"panelNV");
@@ -131,7 +141,9 @@ public class Display_GUI extends JFrame{
         
         add(pnLeft,BorderLayout.WEST);
         add(pnRight,BorderLayout.CENTER);
-
+        
+        DangXuat();
+        
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
     }
@@ -183,8 +195,25 @@ public class Display_GUI extends JFrame{
     	}
     	
     }
+    
+    public void DangXuat(){
+        btnLogout.addActionListener(e->{
+            int confirm=JOptionPane.showConfirmDialog(
+                    this, "Bạn có chắc chắn muốn đăng xuất không?",
+                    "Xác nhận đăng xuất",
+                    JOptionPane.YES_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            
+            if(confirm ==JOptionPane.YES_OPTION){
+                this.dispose();
+                new Login_GUI().setVisible(true);
+            }
+        });
+    }
+    
     public static void main(String []args)
     {
     	Display_GUI ds=new Display_GUI();
     }
+    
 }

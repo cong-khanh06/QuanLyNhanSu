@@ -82,4 +82,8 @@ public class HopDong_BUS {
 
             return list;
         }
+        
+        public int soLuongHopDongHetHan(){
+            return dao.soLuonghopDongSapHetHan();
+        }
 }

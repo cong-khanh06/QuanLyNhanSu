@@ -151,4 +151,20 @@ public class DuAn_DAO extends Connection_DAO{
         }
         return list;
     }
+    
+    public int soLuongDuAnDangThucHien(){
+        String sql="SELECT COUNT(*) FROM DuAn WHERE trang_thai= N'Đang thực hiện' ";
+        int count=0;
+        try {
+            PreparedStatement ps=con.prepareStatement(sql);
+            ResultSet rsDa=ps.executeQuery();
+            if(rsDa.next()){
+                count=rsDa.getInt(1);
+            }
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }
