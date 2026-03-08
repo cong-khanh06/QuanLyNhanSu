@@ -37,6 +37,8 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 
 /**
  *
@@ -44,7 +46,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class NhanVien1_GUI extends JDialog{
     private java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    JTextField txtTen, txtDiaChi, txtSDT,txtEmail,txtCCCD,txtMaNV,txtNgaySinh,txtNgayVaoLam;
+    JTextField txtTen, txtDiaChi, txtSDT,txtEmail,txtCCCD,txtMaNV;
+    DatePicker dpNgaySinh, dpNgayVaoLam;
     JComboBox<NhanVien_DTO.GioiTinh> cbGioiTinh;
     JComboBox<NhanVien_DTO.TrangThaiNhanVien>  cbTrangThai;
     JComboBox<Phongban_DTO> cbPhongBan;
@@ -76,10 +79,13 @@ public class NhanVien1_GUI extends JDialog{
         txtMaNV.setEditable(false);
         txtMaNV.setBackground(Color.LIGHT_GRAY);
         
-        txtNgaySinh = new JTextField();
-        txtNgayVaoLam = new JTextField();
-        txtNgaySinh.setToolTipText("Ví dụ: 30-12-2000");
-        txtNgayVaoLam.setToolTipText("Ví dụ: 08-03-2026");
+        DatePickerSettings settingsNS = new DatePickerSettings();
+        settingsNS.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgaySinh = new DatePicker(settingsNS);
+
+        DatePickerSettings settingsNVL = new DatePickerSettings();
+        settingsNVL.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgayVaoLam = new DatePicker(settingsNVL);
         
         cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values());
         cbPhongBan = new JComboBox<>();
@@ -95,10 +101,10 @@ public class NhanVien1_GUI extends JDialog{
         pnForm.add(txtTen);
         
         pnForm.add(new JLabel("Ngày sinh"));
-        pnForm.add(createDateField(txtNgaySinh));
+        pnForm.add(dpNgaySinh);
 
         pnForm.add(new JLabel("Ngày vào làm"));
-        pnForm.add(createDateField(txtNgayVaoLam));
+        pnForm.add(dpNgayVaoLam);
         
         pnForm.add(new JLabel("Giới tính"));
         pnForm.add(cbGioiTinh);
@@ -235,19 +241,8 @@ public class NhanVien1_GUI extends JDialog{
                     }
                 }
                 
-                LocalDate ngaySinh = null;
-                LocalDate ngayVaoLam = null;
-                try {
-                    String nsStr = txtNgaySinh.getText().trim();
-                    String nvlStr = txtNgayVaoLam.getText().trim();
-
-                    if (!nsStr.isEmpty()) ngaySinh = LocalDate.parse(nsStr, dtf);
-                    if (!nvlStr.isEmpty()) ngayVaoLam = LocalDate.parse(nvlStr, dtf);
-
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng Ngày-Tháng-Năm (VD: 30-12-2000)");
-                    return; 
-                }
+                LocalDate ngaySinh = dpNgaySinh.getDate();
+                LocalDate ngayVaoLam = dpNgayVaoLam.getDate();
 
                 NhanVien_DTO nv = new NhanVien_DTO(
                         maNV, ten, ngaySinh, gioiTinh,
@@ -301,20 +296,6 @@ public class NhanVien1_GUI extends JDialog{
                 lblAvatar.setText("");
             }
         });
-    }
-    private JPanel createDateField(JTextField txt) {
-        JPanel pDate = new JPanel(new BorderLayout());
-        pDate.add(txt, BorderLayout.CENTER);
-        JButton btn = new JButton("📅");
-        btn.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        
-        // GỌI CLASS CALENDAR GRID RIÊNG Ở ĐÂY
-        btn.addActionListener(e -> {
-            new CalendarGrid(txt).setVisible(true);
-        });
-        
-        pDate.add(btn, BorderLayout.EAST);
-        return pDate;
     }
 }
 //

@@ -8,9 +8,12 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 
 public class DuAn1_GUI extends JDialog {
-    private JTextField txtMaDA, txtTenDA, txtNgayBD, txtNgayKT;
+    private JTextField txtMaDA, txtTenDA;
+    private DatePicker dpNgayBD, dpNgayKT;
     private JComboBox<String> cbTrangThai;
     private JButton btnLuu, btnHuy;
     
@@ -38,8 +41,8 @@ public class DuAn1_GUI extends JDialog {
         
         txtMaDA.setText(daEdit.getMaDa());
         txtTenDA.setText(daEdit.getTenDuAn());
-        txtNgayBD.setText(daEdit.getNgayBatDau().format(dtfGUI));
-        txtNgayKT.setText(daEdit.getNgayKetThuc().format(dtfGUI));
+        dpNgayBD.setDate(daEdit.getNgayBatDau());
+        dpNgayKT.setDate(daEdit.getNgayKetThuc());
         cbTrangThai.setSelectedItem(daEdit.getTrangThai());
         }
 
@@ -64,29 +67,19 @@ public class DuAn1_GUI extends JDialog {
         txtTenDA = new JTextField();
         pnForm.add(txtTenDA);
 
+        // --- NGÀY BẮT ĐẦU ---
         pnForm.add(new JLabel("Ngày Bắt Đầu:"));
-        JPanel pnNgayBD = new JPanel(new BorderLayout());
-        txtNgayBD = new JTextField();
-        txtNgayBD.setEditable(false);
-        txtNgayBD.setBackground(Color.WHITE);
-        JButton btnChonNgayBD = new JButton("...");
-        btnChonNgayBD.setPreferredSize(new Dimension(40, 0));
-        btnChonNgayBD.addActionListener(e -> new CalendarGrid(txtNgayBD).setVisible(true));
-        pnNgayBD.add(txtNgayBD, BorderLayout.CENTER);
-        pnNgayBD.add(btnChonNgayBD, BorderLayout.EAST);
-        pnForm.add(pnNgayBD);
+        DatePickerSettings setBD = new DatePickerSettings();
+        setBD.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgayBD = new DatePicker(setBD);
+        pnForm.add(dpNgayBD);
 
+        // --- NGÀY KẾT THÚC ---
         pnForm.add(new JLabel("Ngày Kết Thúc:"));
-        JPanel pnNgayKT = new JPanel(new BorderLayout());
-        txtNgayKT = new JTextField();
-        txtNgayKT.setEditable(false);
-        txtNgayKT.setBackground(Color.WHITE);
-        JButton btnChonNgayKT = new JButton("...");
-        btnChonNgayKT.setPreferredSize(new Dimension(40, 0));
-        btnChonNgayKT.addActionListener(e -> new CalendarGrid(txtNgayKT).setVisible(true));
-        pnNgayKT.add(txtNgayKT, BorderLayout.CENTER);
-        pnNgayKT.add(btnChonNgayKT, BorderLayout.EAST);
-        pnForm.add(pnNgayKT);
+        DatePickerSettings setKT = new DatePickerSettings();
+        setKT.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgayKT = new DatePicker(setKT);
+        pnForm.add(dpNgayKT);
 
         pnForm.add(new JLabel("Trạng Thái:"));
         cbTrangThai = new JComboBox<>(new String[]{"Chuẩn bị", "Đang thực hiện", "Hoàn thành"});
@@ -111,18 +104,14 @@ public class DuAn1_GUI extends JDialog {
         try {
             String ma = txtMaDA.getText();
             String ten = txtTenDA.getText().trim();
-            String ngayBDStr = txtNgayBD.getText().trim();
-            String ngayKTStr = txtNgayKT.getText().trim();
+            LocalDate ngayBD = dpNgayBD.getDate();
+            LocalDate ngayKT = dpNgayKT.getDate();
             String trangThai = cbTrangThai.getSelectedItem().toString();
             
-            if (ten.isEmpty() || ngayBDStr.isEmpty() || ngayKTStr.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            if (ten.isEmpty() || ngayBD == null || ngayKT == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin và chọn ngày!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate ngayBD = LocalDate.parse(ngayBDStr, formatter);
-            LocalDate ngayKT = LocalDate.parse(ngayKTStr, formatter);
 
             if (ngayKT.isBefore(ngayBD)) {
                 JOptionPane.showMessageDialog(this, "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu!", "Lỗi logic", JOptionPane.ERROR_MESSAGE);

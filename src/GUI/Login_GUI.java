@@ -115,14 +115,5 @@ public class Login_GUI extends JFrame implements ActionListener {
             }
         }
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                Login_GUI frame = new Login_GUI();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    
 }

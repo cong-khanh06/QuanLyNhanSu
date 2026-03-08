@@ -34,12 +34,12 @@ public class PhongbanThongKe_GUI extends JDialog {
         pnlCharts.setBackground(Color.WHITE);
 
         // Biểu đồ 1: Giới tính
-        pnlCharts.add(taoChartPanel(pbb.layThongKeGioiTinh(mapb), "Tỷ lệ Giới tính"));
+        pnlCharts.add(taoChartPanel(pbb.layThongKeGioiTinh(), "Tỷ lệ Giới tính"));
         
         // Biểu đồ 2: Chức vụ
-        pnlCharts.add(taoChartPanel(pbb.layThongKeChucVu(mapb), "Cơ cấu Chức vụ"));
+        pnlCharts.add(taoChartPanel(pbb.layThongKeChucVu(), "Cơ cấu Chức vụ"));
         
-        pnlCharts.add(taoChartPanel(pbb.layThongKeDoTuoi(mapb), "Độ tuổi"));
+        pnlCharts.add(taoChartPanel(pbb.layThongKeDoTuoi(), "Độ tuổi"));
 
 
         add(pnlCharts, BorderLayout.CENTER);

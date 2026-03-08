@@ -8,6 +8,10 @@ import BUS.NhanVien_BUS;
 import BUS.Phongban_BUS;
 import BUS.DuAn_BUS;
 import BUS.HopDong_BUS;
+import org.jfree.chart.*;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 
 public class TrangChu_GUI extends JPanel {
     NhanVien_BUS busNv=new NhanVien_BUS();
@@ -46,13 +50,14 @@ public class TrangChu_GUI extends JPanel {
                 new EmptyBorder(10, 10, 10, 10)
         ));
         
-        JLabel lblChartTitle = new JLabel("Thống kê nhân sự theo phòng ban");
-        lblChartTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        pnChart.add(lblChartTitle, BorderLayout.NORTH);
-        
-        JLabel lblChartPlaceholder = new JLabel("(Khu vực này để vẽ biểu đồ JFreeChart)", SwingConstants.CENTER);
-        lblChartPlaceholder.setForeground(Color.GRAY);
-        pnChart.add(lblChartPlaceholder, BorderLayout.CENTER);
+        JPanel pnBieuDo = new JPanel(new GridLayout(2, 2, 10, 10));
+        pnBieuDo.setBackground(Color.WHITE);
+
+        pnBieuDo.add(taoChartPanel(busPb.layThongKeGioiTinh(), "Tỷ lệ Giới tính"));
+        pnBieuDo.add(taoChartPanel(busPb.layThongKeChucVu(), "Cơ cấu Chức vụ"));
+        pnBieuDo.add(taoChartPanel(busPb.layThongKeDoTuoi(), "Độ tuổi"));
+
+        pnChart.add(pnBieuDo, BorderLayout.CENTER);
 
         // --- Cột Phải: Bảng Nhắc nhở / Cảnh báo ---
         JPanel pnAlerts = new JPanel(new BorderLayout(0, 10));
@@ -112,5 +117,27 @@ public class TrangChu_GUI extends JPanel {
         panel.add(lblValue);
 
         return panel;
+    }
+    
+    private ChartPanel taoChartPanel(DefaultPieDataset dataset, String title) {
+        JFreeChart chart = ChartFactory.createRingChart(title, dataset, true, true, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+        org.jfree.chart.title.LegendTitle legend = chart.getLegend();
+        if (legend != null) {
+            Font legendFont = new Font("Arial", Font.BOLD, 14); 
+            legend.setItemFont(legendFont);
+            legend.setItemPaint(Color.DARK_GRAY); 
+        }
+        
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{2}")); 
+        plot.setLabelFont(new Font("SansSerif", Font.BOLD, 12));
+        plot.setLabelBackgroundPaint(new Color(255, 255, 255, 0)); 
+        plot.setLabelOutlinePaint(null); 
+        plot.setLabelShadowPaint(null); 
+        
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setSectionOutlinesVisible(false);
+        
+        return new ChartPanel(chart);
     }
 }

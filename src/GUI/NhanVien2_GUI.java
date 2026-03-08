@@ -31,18 +31,20 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 
 
 public class NhanVien2_GUI extends JPanel {
     private java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
     JTextField txtMa, txtTen, txtDiaChi, txtSDT, txtEmail, txtCCCD;
-    JTextField txtNgaySinh, txtNgayVaoLam;
+    DatePicker dpNgaySinh,dpNgayVaoLam;
 
     JComboBox<NhanVien_DTO.GioiTinh> cbGioiTinh;
     JComboBox<NhanVien_DTO.TrangThaiNhanVien> cbTrangThai;
     JComboBox<Phongban_DTO> cbPhongBan;
     JComboBox<ChucVu_DTO> cbChucVu;
-    JButton btnSua, btnXoa, btnHuy, btnLuu,btnChonAnh,btnChonNgaySinh,btnChonNgayVaoLam;
+    JButton btnSua, btnXoa, btnHuy, btnLuu,btnChonAnh;
     
     JLabel lblAvatar;
     File selectedFile=null;
@@ -77,10 +79,13 @@ public class NhanVien2_GUI extends JPanel {
         txtSDT = new JTextField();
         txtEmail = new JTextField();
         txtCCCD = new JTextField();
-        txtNgaySinh = new JTextField();
-        txtNgayVaoLam = new JTextField();
-        txtNgaySinh.setToolTipText("Nhập theo định dạng: dd-MM-yyyy (VD: 30-12-2000)");
-        txtNgayVaoLam.setToolTipText("Nhập theo định dạng: dd-MM-yyyy (VD: 15-01-2024)"); 
+        DatePickerSettings settingsNS = new DatePickerSettings();
+        settingsNS.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgaySinh = new DatePicker(settingsNS);
+
+        DatePickerSettings settingsNVL = new DatePickerSettings();
+        settingsNVL.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgayVaoLam = new DatePicker(settingsNVL); 
         
         txtMa.setEditable(false);
 
@@ -99,11 +104,6 @@ public class NhanVien2_GUI extends JPanel {
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
         btnHuy = new JButton("Hủy");
-        btnChonNgaySinh = new JButton("📅");
-        btnChonNgaySinh.addActionListener(e -> new CalendarGrid(txtNgaySinh).setVisible(true));
-        
-        btnChonNgayVaoLam = new JButton("📅");
-        btnChonNgayVaoLam.addActionListener(e -> new CalendarGrid(txtNgayVaoLam).setVisible(true));
         
         btnLuu.setEnabled(false);
         btnHuy.setEnabled(false);
@@ -116,22 +116,16 @@ public class NhanVien2_GUI extends JPanel {
         panelForm.add(new JLabel("Họ tên:")); panelForm.add(txtTen);
         panelForm.add(new JLabel("Giới tính:")); panelForm.add(cbGioiTinh);
         
-        JPanel pnNgaySinh = new JPanel(new BorderLayout());
-        pnNgaySinh.add(txtNgaySinh, BorderLayout.CENTER);
-        pnNgaySinh.add(btnChonNgaySinh, BorderLayout.EAST);
+        
         panelForm.add(new JLabel("Ngày sinh:")); 
-        panelForm.add(pnNgaySinh);
+        panelForm.add(dpNgaySinh);
             
         panelForm.add(new JLabel("Địa chỉ:")); panelForm.add(txtDiaChi);
         panelForm.add(new JLabel("SĐT:")); panelForm.add(txtSDT);
         panelForm.add(new JLabel("Email:")); panelForm.add(txtEmail);
         panelForm.add(new JLabel("CCCD:")); panelForm.add(txtCCCD);
-        
-        JPanel pnNgayVaoLam = new JPanel(new BorderLayout());
-        pnNgayVaoLam.add(txtNgayVaoLam, BorderLayout.CENTER);
-        pnNgayVaoLam.add(btnChonNgayVaoLam, BorderLayout.EAST);
         panelForm.add(new JLabel("Ngày vào làm:")); 
-        panelForm.add(pnNgayVaoLam);
+        panelForm.add(dpNgayVaoLam);
         
         panelForm.add(new JLabel("Phòng ban:")); panelForm.add(cbPhongBan);
         panelForm.add(new JLabel("Chức vụ:")); panelForm.add(cbChucVu);
@@ -259,8 +253,8 @@ public class NhanVien2_GUI extends JPanel {
         txtSDT.setText(nv.getSdt());
         txtEmail.setText(nv.getEmail());
         txtCCCD.setText(nv.getCccd());
-        txtNgaySinh.setText(nv.getNgaySinh() != null ? nv.getNgaySinh().format(dtf) : "");
-        txtNgayVaoLam.setText(nv.getNgayVaoLam() != null ? nv.getNgayVaoLam().format(dtf) : "");
+        dpNgaySinh.setDate(nv.getNgaySinh());
+        dpNgayVaoLam.setDate(nv.getNgayVaoLam());
 
         cbGioiTinh.setSelectedItem(nv.getGioiTinh());
         
@@ -313,7 +307,7 @@ public class NhanVien2_GUI extends JPanel {
     private void clearForm() {
         txtMa.setText(""); txtTen.setText(""); txtDiaChi.setText("");
         txtSDT.setText(""); txtEmail.setText(""); txtCCCD.setText("");
-        txtNgaySinh.setText(""); txtNgayVaoLam.setText("");
+        dpNgaySinh.clear(); dpNgayVaoLam.clear(); 
         cbGioiTinh.setSelectedIndex(0); cbTrangThai.setSelectedIndex(0);
         if(cbPhongBan.getItemCount() > 0) cbPhongBan.setSelectedIndex(0);
         if(cbChucVu.getItemCount() > 0) cbChucVu.setSelectedIndex(0);
@@ -345,20 +339,8 @@ public class NhanVien2_GUI extends JPanel {
         nv.setMaCV(maCV);
         
         // 5. XỬ LÝ NGÀY THÁNG 
-            try {
-            String ngaySinhStr = txtNgaySinh.getText().trim();
-            String ngayVaoLamStr = txtNgayVaoLam.getText().trim();
-
-            if (!ngaySinhStr.isEmpty()) {
-                nv.setNgaySinh(LocalDate.parse(ngaySinhStr, dtf)); // Thêm dtf vào đây
-            }
-            if (!ngayVaoLamStr.isEmpty()) {
-                nv.setNgayVaoLam(LocalDate.parse(ngayVaoLamStr, dtf)); // Thêm dtf vào đây
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng: Ngày-Tháng-Năm (VD: 30-12-2000)");
-            return null; 
-        }
+        nv.setNgaySinh(dpNgaySinh.getDate());
+        nv.setNgayVaoLam(dpNgayVaoLam.getDate());
         
         String finalAvatarPath = currentAvatarPath;
 
@@ -383,10 +365,8 @@ public class NhanVien2_GUI extends JPanel {
         txtSDT.setEditable(enable);
         txtEmail.setEditable(enable);
         txtCCCD.setEditable(enable);
-        txtNgaySinh.setEditable(enable);
-        txtNgayVaoLam.setEditable(enable);
-        btnChonNgaySinh.setEnabled(enable);
-        btnChonNgayVaoLam.setEnabled(enable);
+        dpNgaySinh.setEnabled(enable);
+        dpNgayVaoLam.setEnabled(enable);
 
         cbGioiTinh.setEnabled(enable);
         cbPhongBan.setEnabled(enable);
@@ -409,21 +389,6 @@ public class NhanVien2_GUI extends JPanel {
         for (ChucVu_DTO cv:list){
             cbChucVu.addItem(cv);
         }
-    }
-
-    private JPanel createDateField(JTextField txt) {
-        JPanel pDate = new JPanel(new BorderLayout());
-        pDate.add(txt, BorderLayout.CENTER);
-        JButton btn = new JButton("📅");
-        btn.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        
-        // GỌI CLASS CALENDAR GRID RIÊNG Ở ĐÂY
-        btn.addActionListener(e -> {
-            new CalendarGrid(txt).setVisible(true);
-        });
-        
-        pDate.add(btn, BorderLayout.EAST);
-        return pDate;
     }
 
     public void setphanquyennut(boolean kq,String quyen)

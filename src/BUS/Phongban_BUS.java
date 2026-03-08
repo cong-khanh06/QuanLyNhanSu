@@ -177,15 +177,21 @@ import DAO.Phongban_DAO;
 		}
 	}
 
+
 	public DefaultPieDataset layThongKeGioiTinh(String mapb) {
-	    return pbdao.getThongKeGioiTinh(mapb);
+	    return pbdao.getThongKeGioiTinh();
+
+        }
+	public DefaultPieDataset layThongKeGioiTinh() {
+	    return pbdao.getThongKeGioiTinh();
+
 	}
 
-	public DefaultPieDataset layThongKeChucVu(String mapb) {
-	    return pbdao.getThongKeChucVu(mapb);
+	public DefaultPieDataset layThongKeChucVu() {
+	    return pbdao.getThongKeChucVu();
 	}
-	public DefaultPieDataset layThongKeDoTuoi(String mapb) {
-	    return pbdao.getThongKeDoTuoi(mapb);
+	public DefaultPieDataset layThongKeDoTuoi() {
+	    return pbdao.getThongKeDoTuoi();
 	}
         
         public int soLuongPhongban(){
