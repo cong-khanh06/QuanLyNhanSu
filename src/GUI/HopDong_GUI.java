@@ -10,11 +10,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.sql.Date;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.awt.event.*;
 
 public class HopDong_GUI extends JPanel {
@@ -30,11 +27,8 @@ public class HopDong_GUI extends JPanel {
     private final Color PRIMARY_COLOR = new Color(63, 81, 181);
     private final Color TABLE_HEADER_COLOR = new Color(83, 109, 254);
     private final Color GRID_COLOR = new Color(230, 230, 230);
-	private JButton bttiemkiem;
-	private JButton btlammoi;
-	private JButton btthem;
-	private JButton btsua;
-	private JButton btxoa;
+    
+    private JButton bttiemkiem, btlammoi, btthem, btsua, btxoa;
 
     public HopDong_GUI() {
         setLayout(new BorderLayout(0, 15));
@@ -60,11 +54,13 @@ public class HopDong_GUI extends JPanel {
         
         pActions.add(new JLabel("Mã :"));
         pActions.add(txtSearch);
-        bttiemkiem=createStyledButton("Tìm kiếm", PRIMARY_COLOR);
-        btlammoi=createStyledButton("Làm mới", PRIMARY_COLOR);
-        btthem=createStyledButton("Thêm mới", PRIMARY_COLOR);
-        btsua=createStyledButton("Chỉnh sửa", PRIMARY_COLOR);
-        btxoa=createStyledButton("Xóa", PRIMARY_COLOR);
+        
+        bttiemkiem = createStyledButton("Tìm kiếm", PRIMARY_COLOR);
+        btlammoi = createStyledButton("Làm mới", PRIMARY_COLOR);
+        btthem = createStyledButton("Thêm mới", PRIMARY_COLOR);
+        btsua = createStyledButton("Chỉnh sửa", PRIMARY_COLOR);
+        btxoa = createStyledButton("Xóa", PRIMARY_COLOR);
+        
         pActions.add(bttiemkiem);
         pActions.add(btlammoi);
         pActions.add(btthem); 
@@ -84,7 +80,7 @@ public class HopDong_GUI extends JPanel {
         // --- 3. SOUTH: DETAIL DASHBOARD ---
         add(createDetailDashboard(), BorderLayout.SOUTH);
 
-        setupEvents(pActions);
+        setupEvents();
         loadData();
     }
 
@@ -99,7 +95,6 @@ public class HopDong_GUI extends JPanel {
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setSelectionBackground(new Color(232, 234, 246));
         table.setSelectionForeground(Color.BLACK);
-        
         table.setShowGrid(true);
         table.setGridColor(GRID_COLOR);
         table.setIntercellSpacing(new Dimension(1, 1)); 
@@ -181,17 +176,16 @@ public class HopDong_GUI extends JPanel {
         return p;
     }
 
-    private void setupEvents(JPanel pActions) {
-        Component[] comps = pActions.getComponents();
-        ((JButton)comps[2]).addActionListener(e -> searchAction());
-        ((JButton)comps[3]).addActionListener(e -> { txtSearch.setText(""); loadData(); });
-        ((JButton)comps[4]).addActionListener(e -> showInputForm(null));
-        ((JButton)comps[5]).addActionListener(e -> {
+    private void setupEvents() {
+        bttiemkiem.addActionListener(e -> searchAction());
+        btlammoi.addActionListener(e -> { txtSearch.setText(""); loadData(); });
+        btthem.addActionListener(e -> showInputForm(null));
+        btsua.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) showInputForm(getDTOFromRow(row));
             else JOptionPane.showMessageDialog(this, "Vui lòng chọn hợp đồng cần sửa!");
         });
-        ((JButton)comps[6]).addActionListener(e -> deleteAction());
+        btxoa.addActionListener(e -> deleteAction());
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -269,224 +263,26 @@ public class HopDong_GUI extends JPanel {
     }
 
     private void showInputForm(HopDong_DTO data) {
-        InputFormDialog dialog = new InputFormDialog((JFrame) SwingUtilities.getWindowAncestor(this), data);
+        HopDong1_GUI dialog = new HopDong1_GUI((JFrame) SwingUtilities.getWindowAncestor(this), data);
         dialog.setVisible(true);
         if (dialog.isDataChanged()) loadData();
     }
 
-    private Date parseDate(String s) {
-        try { return new Date(sdf.parse(s).getTime()); } catch (Exception e) { return null; }
-    }
-
-    // --- DIALOG NHẬP LIỆU ---
-    class InputFormDialog extends JDialog {
-        private JTextField txtMaHD, txtLoaiHD, txtNgayBD, txtNgayKT, txtNgayKy, txtLuong, txtMaNV, txtLanKy, txtNgayLenLuong;
-        private JComboBox<String> cbTrangThai;
-        private JTextArea txtNoiDung;
-        private boolean dataChanged = false;
-        private boolean isEdit;
-
-        public InputFormDialog(JFrame parent, HopDong_DTO data) {
-            super(parent, (data == null ? "THÊM HỢP ĐỒNG MỚI" : "CẬP NHẬT HỢP ĐỒNG"), true);
-            this.isEdit = (data != null);
-            setSize(750, 600);
-            setLocationRelativeTo(parent);
-            setLayout(new BorderLayout());
-
-            JPanel pMain = new JPanel(new GridBagLayout());
-            pMain.setBorder(new EmptyBorder(20, 20, 20, 20));
-            pMain.setBackground(Color.WHITE);
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(8, 8, 8, 8);
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-
-            initFields();
-            if (isEdit) fillForm(data);
-
-            addLabel(pMain, "Mã HD:", 0, 0, gbc);
-            gbc.gridx = 1; pMain.add(txtMaHD, gbc);
-            addLabel(pMain, "Loại HD:", 0, 2, gbc);
-            gbc.gridx = 3; pMain.add(txtLoaiHD, gbc);
-
-            addLabel(pMain, "Bắt đầu:", 1, 0, gbc);
-            gbc.gridx = 1; pMain.add(createDatePanel(txtNgayBD), gbc);
-            addLabel(pMain, "Kết thúc:", 1, 2, gbc);
-            gbc.gridx = 3; pMain.add(createDatePanel(txtNgayKT), gbc);
-
-            addLabel(pMain, "Ngày ký:", 2, 0, gbc);
-            gbc.gridx = 1; pMain.add(createDatePanel(txtNgayKy), gbc);
-            addLabel(pMain, "Lên lương:", 2, 2, gbc);
-            gbc.gridx = 3; pMain.add(createDatePanel(txtNgayLenLuong), gbc);
-
-            addLabel(pMain, "Mức lương:", 3, 0, gbc);
-            gbc.gridx = 1; pMain.add(txtLuong, gbc);
-            addLabel(pMain, "Trạng thái:", 3, 2, gbc);
-            gbc.gridx = 3; pMain.add(cbTrangThai, gbc);
-
-            addLabel(pMain, "Mã NV:", 4, 0, gbc);
-            gbc.gridx = 1; pMain.add(txtMaNV, gbc);
-            addLabel(pMain, "Lần ký:", 4, 2, gbc);
-            gbc.gridx = 3; pMain.add(txtLanKy, gbc);
-
-            addLabel(pMain, "Nội dung:", 5, 0, gbc);
-            gbc.gridx = 1; gbc.gridwidth = 3;
-            pMain.add(new JScrollPane(txtNoiDung), gbc);
-
-            add(pMain, BorderLayout.CENTER);
-
-            JPanel pBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
-            JButton btnSave = createStyledButton(isEdit ? "CẬP NHẬT" : "LƯU LẠI", PRIMARY_COLOR);
-            JButton btnExit = new JButton("HỦY BỎ");
-            btnExit.setPreferredSize(new Dimension(110, 35));
-
-            btnSave.addActionListener(e -> {
-                try {
-                    HopDong_DTO dto = collectData(); 
-                    String res = isEdit ? bus.update(dto) : bus.insert(dto);
-                    JOptionPane.showMessageDialog(this, res);
-                    if (res.toLowerCase().contains("thành công")) { 
-                        dataChanged = true; 
-                        dispose(); 
-                    }
-                } catch (NumberFormatException nfe) {
-                    JOptionPane.showMessageDialog(this, "Lương và Lần ký phải là định dạng số!");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Lỗi xử lý: " + ex.getMessage());
-                }
-            });
-
-            btnExit.addActionListener(e -> dispose());
-            pBottom.add(btnSave); pBottom.add(btnExit);
-            add(pBottom, BorderLayout.SOUTH);
-        }
-
-        private void initFields() {
-            txtMaHD = new JTextField(); if(isEdit) txtMaHD.setEditable(false);
-            txtLoaiHD = new JTextField(); txtNgayBD = new JTextField(); txtNgayKT = new JTextField();
-            txtNgayKy = new JTextField(); txtNgayLenLuong = new JTextField();
-            txtLuong = new JTextField(); txtMaNV = new JTextField(); txtLanKy = new JTextField();
-            cbTrangThai = new JComboBox<>(new String[]{"HieuLuc", "HetHan", "Huy"});
-            txtNoiDung = new JTextArea(4, 15); txtNoiDung.setLineWrap(true);
-        }
-
-        private void fillForm(HopDong_DTO d) {
-            txtMaHD.setText(d.getMaHD()); 
-            txtLoaiHD.setText(d.getLoaiHopDong());
-            txtNgayBD.setText(d.getNgayBatDau() != null ? sdf.format(d.getNgayBatDau()) : "");
-            txtNgayKT.setText(d.getNgayKetThuc() != null ? sdf.format(d.getNgayKetThuc()) : "");
-            txtNgayKy.setText(d.getNgayKy() != null ? sdf.format(d.getNgayKy()) : "");
-            txtNgayLenLuong.setText(d.getNgayLenLuongGanNhat() != null ? sdf.format(d.getNgayLenLuongGanNhat()) : "");
-            DecimalFormat df = new DecimalFormat("#");
-            txtLuong.setText(df.format(d.getMucLuongCoBan())); 
-            txtMaNV.setText(d.getMaNV()); 
-            txtLanKy.setText(String.valueOf(d.getLanKy())); 
-            cbTrangThai.setSelectedItem(d.getTrangThai()); 
-            txtNoiDung.setText(d.getNoiDung());
-        }
-
-        private void addLabel(JPanel p, String text, int row, int col, GridBagConstraints gbc) {
-            gbc.gridx = col; gbc.gridy = row; gbc.gridwidth = 1;
-            JLabel lb = new JLabel(text); lb.setFont(new Font("Segoe UI", Font.BOLD, 12));
-            p.add(lb, gbc);
-        }
-
-        private JPanel createDatePanel(JTextField txt) {
-            JPanel p = new JPanel(new BorderLayout()); p.setOpaque(false);
-            txt.setPreferredSize(new Dimension(100, 30)); p.add(txt, BorderLayout.CENTER);
-            JButton btn = new JButton("📅");
-            btn.addActionListener(e -> new CalendarGrid(txt).setVisible(true));
-            p.add(btn, BorderLayout.EAST);
-            return p;
-        }
-
-        private HopDong_DTO collectData() {
-            HopDong_DTO hd = new HopDong_DTO();
-            hd.setMaHD(txtMaHD.getText().trim()); 
-            hd.setLoaiHopDong(txtLoaiHD.getText().trim());
-            hd.setNgayBatDau(parseDate(txtNgayBD.getText())); 
-            hd.setNgayKetThuc(parseDate(txtNgayKT.getText()));
-            hd.setNgayKy(parseDate(txtNgayKy.getText())); 
-            hd.setNgayLenLuongGanNhat(parseDate(txtNgayLenLuong.getText()));
-            
-            String luongStr = txtLuong.getText().trim();
-            hd.setMucLuongCoBan(luongStr.isEmpty() ? 0 : Double.parseDouble(luongStr));
-            
-            hd.setMaNV(txtMaNV.getText().trim()); 
-            
-            String lanKyStr = txtLanKy.getText().trim();
-            hd.setLanKy(lanKyStr.isEmpty() ? 0 : Integer.parseInt(lanKyStr));
-            
-            hd.setTrangThai(cbTrangThai.getSelectedItem().toString()); 
-            hd.setNoiDung(txtNoiDung.getText().trim());
-            return hd;
-        }
-        public boolean isDataChanged() { return dataChanged; }
-    }
-
-    // --- LỚP CALENDAR ---
-    class CalendarGrid extends JDialog {
-        private JTextField target; private JPanel pDays;
-        private JComboBox<Integer> cbYear; private JComboBox<String> cbMonth;
-        private Calendar cal = Calendar.getInstance();
-        private boolean isUpdating = false;
-
-        public CalendarGrid(JTextField target) {
-            this.target = target; setModal(true); setSize(350, 300);
-            setLocationRelativeTo(target); setLayout(new BorderLayout());
-            JPanel pHeader = new JPanel(new BorderLayout());
-            JButton btnPrev = new JButton("<");
-            btnPrev.addActionListener(e -> { cal.add(Calendar.MONTH, -1); updateControls(); updateCalendar(); });
-            JButton btnNext = new JButton(">");
-            btnNext.addActionListener(e -> { cal.add(Calendar.MONTH, 1); updateControls(); updateCalendar(); });
-
-            JPanel pCenterHeader = new JPanel(new FlowLayout());
-            cbMonth = new JComboBox<>(new String[]{"Th1", "Th2", "Th3", "Th4", "Th5", "Th6", "Th7", "Th8", "Th9", "Th10", "Th11", "Th12"});
-            Integer[] years = new Integer[151]; for (int i = 0; i <= 150; i++) years[i] = 1950 + i;
-            cbYear = new JComboBox<>(years);
-            pCenterHeader.add(cbMonth); pCenterHeader.add(cbYear);
-            pHeader.add(btnPrev, BorderLayout.WEST); pHeader.add(pCenterHeader, BorderLayout.CENTER); pHeader.add(btnNext, BorderLayout.EAST);
-
-            ActionListener cl = e -> { if (!isUpdating) { cal.set(Calendar.MONTH, cbMonth.getSelectedIndex()); cal.set(Calendar.YEAR, (Integer) cbYear.getSelectedItem()); updateCalendar(); } };
-            cbMonth.addActionListener(cl); cbYear.addActionListener(cl);
-
-            try { if(!target.getText().isEmpty()) cal.setTime(sdf.parse(target.getText())); } catch (Exception e) {}
-            updateControls(); pDays = new JPanel(new GridLayout(0, 7)); updateCalendar();
-            add(pHeader, BorderLayout.NORTH); add(pDays, BorderLayout.CENTER);
-        }
-        private void updateControls() { isUpdating = true; cbMonth.setSelectedIndex(cal.get(Calendar.MONTH)); cbYear.setSelectedItem(cal.get(Calendar.YEAR)); isUpdating = false; }
-        private void updateCalendar() {
-            pDays.removeAll();
-            String[] heads = {"CN", "T2", "T3", "T4", "T5", "T6", "T7"};
-            for (String h : heads) { JLabel l = new JLabel(h, JLabel.CENTER); l.setForeground(Color.RED); pDays.add(l); }
-            Calendar t = (Calendar) cal.clone(); t.set(Calendar.DAY_OF_MONTH, 1);
-            int start = t.get(Calendar.DAY_OF_WEEK) - 1;
-            for (int i = 0; i < start; i++) pDays.add(new JLabel(""));
-            int days = t.getActualMaximum(Calendar.DAY_OF_MONTH);
-            for (int i = 1; i <= days; i++) {
-                final int d = i; JButton btn = new JButton(String.valueOf(i)); btn.setBackground(Color.WHITE);
-                if (i == cal.get(Calendar.DAY_OF_MONTH)) btn.setBackground(new Color(197, 202, 233));
-                btn.addActionListener(e -> { cal.set(Calendar.DAY_OF_MONTH, d); target.setText(sdf.format(cal.getTime())); dispose(); });
-                pDays.add(btn);
-            }
-            pDays.revalidate(); pDays.repaint();
-        }
-    }
     public void renderTableuser(String manv) {
-        ArrayList list=bus.getHopDongTheoMaNV(manv);
+        ArrayList<HopDong_DTO> list = bus.getHopDongTheoMaNV(manv);
         renderTable(list);
     }
-    public void setphanquyenUser(boolean kq,String manv)
-    {
-    	btthem.setEnabled(kq);
-    	btsua.setEnabled(kq);
-    	btxoa.setEnabled(kq);
-    	bttiemkiem.setEnabled(kq);
-    	btlammoi.setEnabled(kq);
-    	renderTableuser(manv);
-    	
+
+    public void setphanquyenUser(boolean kq, String manv) {
+        btthem.setEnabled(kq);
+        btsua.setEnabled(kq);
+        btxoa.setEnabled(kq);
+        bttiemkiem.setEnabled(kq);
+        btlammoi.setEnabled(kq);
+        renderTableuser(manv);
     }
-    public void setphanquyenManager(boolean kq)
-    {
-    	btxoa.setEnabled(kq);
+
+    public void setphanquyenManager(boolean kq) {
+        btxoa.setEnabled(kq);
     }
 }

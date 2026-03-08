@@ -32,7 +32,9 @@ import java.awt.Image;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+
 public class NhanVien2_GUI extends JPanel {
+    private java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
     JTextField txtMa, txtTen, txtDiaChi, txtSDT, txtEmail, txtCCCD;
     JTextField txtNgaySinh, txtNgayVaoLam;
 
@@ -77,8 +79,8 @@ public class NhanVien2_GUI extends JPanel {
         txtCCCD = new JTextField();
         txtNgaySinh = new JTextField();
         txtNgayVaoLam = new JTextField();
-        txtNgaySinh.setToolTipText("Nhập theo định dạng: yyyy-MM-dd (VD: 2000-12-30)");
-        txtNgayVaoLam.setToolTipText("Nhập theo định dạng: yyyy-MM-dd (VD: 2024-01-15)");   
+        txtNgaySinh.setToolTipText("Nhập theo định dạng: dd-MM-yyyy (VD: 30-12-2000)");
+        txtNgayVaoLam.setToolTipText("Nhập theo định dạng: dd-MM-yyyy (VD: 15-01-2024)"); 
         
         txtMa.setEditable(false);
 
@@ -257,8 +259,8 @@ public class NhanVien2_GUI extends JPanel {
         txtSDT.setText(nv.getSdt());
         txtEmail.setText(nv.getEmail());
         txtCCCD.setText(nv.getCccd());
-        txtNgaySinh.setText(nv.getNgaySinh() != null ? nv.getNgaySinh().toString() : "");
-        txtNgayVaoLam.setText(nv.getNgayVaoLam() != null ? nv.getNgayVaoLam().toString() : "");
+        txtNgaySinh.setText(nv.getNgaySinh() != null ? nv.getNgaySinh().format(dtf) : "");
+        txtNgayVaoLam.setText(nv.getNgayVaoLam() != null ? nv.getNgayVaoLam().format(dtf) : "");
 
         cbGioiTinh.setSelectedItem(nv.getGioiTinh());
         
@@ -343,11 +345,18 @@ public class NhanVien2_GUI extends JPanel {
         nv.setMaCV(maCV);
         
         // 5. XỬ LÝ NGÀY THÁNG 
-        try {
-            nv.setNgaySinh(LocalDate.parse(txtNgaySinh.getText().trim()));
-            nv.setNgayVaoLam(LocalDate.parse(txtNgayVaoLam.getText().trim()));
+            try {
+            String ngaySinhStr = txtNgaySinh.getText().trim();
+            String ngayVaoLamStr = txtNgayVaoLam.getText().trim();
+
+            if (!ngaySinhStr.isEmpty()) {
+                nv.setNgaySinh(LocalDate.parse(ngaySinhStr, dtf)); // Thêm dtf vào đây
+            }
+            if (!ngayVaoLamStr.isEmpty()) {
+                nv.setNgayVaoLam(LocalDate.parse(ngayVaoLamStr, dtf)); // Thêm dtf vào đây
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng: Năm-Tháng-Ngày (VD: 2000-12-30)");
+            JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng: Ngày-Tháng-Năm (VD: 30-12-2000)");
             return null; 
         }
         

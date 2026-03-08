@@ -17,15 +17,14 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.awt.GridLayout;
 import java.util.List;
-
-// Import các package tương ứng của Dự án
 import DTO.DuAn_DTO;
-import BUS.DuAn_BUS; // Bỏ comment khi bạn đã tạo class BUS
+import BUS.DuAn_BUS; 
 import java.awt.Component;
 import java.time.LocalDate;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
+import java.time.format.DateTimeFormatter;
 
 public class DuAn_GUI extends JPanel {
     JPanel pnSearchDA, pnHeader, pnToolBar;
@@ -37,7 +36,8 @@ public class DuAn_GUI extends JPanel {
     JLabel lblTitle;
     DuAn_BUS bus=new DuAn_BUS();
     JLabel lblSoChuanBi, lblSoDangThucHien, lblSoHoanThanh; 
-
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    
     public DuAn_GUI() {
         setLayout(new BorderLayout());
         
@@ -152,8 +152,8 @@ public class DuAn_GUI extends JPanel {
             modelDA.addRow(new Object[]{
                 da.getMaDa(),
                 da.getTenDuAn(),
-                da.getNgayBatDau(),
-                da.getNgayKetThuc(),
+                da.getNgayBatDau().format(dtf), 
+                da.getNgayKetThuc().format(dtf),
                 da.getTrangThai()
             });
         }
@@ -284,8 +284,8 @@ public class DuAn_GUI extends JPanel {
                 // Lấy thông tin từ các cột của dòng đang chọn
                 String maDA = tableDA.getValueAt(row, 0).toString();
                 String tenDA = tableDA.getValueAt(row, 1).toString();
-                LocalDate ngayBD = LocalDate.parse(tableDA.getValueAt(row, 2).toString());
-                LocalDate ngayKT = LocalDate.parse(tableDA.getValueAt(row, 3).toString());
+                LocalDate ngayBD = LocalDate.parse(tableDA.getValueAt(row, 2).toString(), dtf);
+                LocalDate ngayKT = LocalDate.parse(tableDA.getValueAt(row, 3).toString(), dtf);
                 String trangThai = tableDA.getValueAt(row, 4).toString();
                 
                 

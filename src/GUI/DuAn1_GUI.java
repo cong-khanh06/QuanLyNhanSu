@@ -17,7 +17,7 @@ public class DuAn1_GUI extends JDialog {
     private DuAn_BUS busDA = new DuAn_BUS();
     private DuAn_GUI parentGUI;
     private boolean isEditMode = false; // Cờ đánh dấu form đang ở chế độ Sửa hay Thêm
-
+    private DateTimeFormatter dtfGUI = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     
     public DuAn1_GUI(DuAn_GUI parent) {
         this.parentGUI = parent;
@@ -38,10 +38,10 @@ public class DuAn1_GUI extends JDialog {
         
         txtMaDA.setText(daEdit.getMaDa());
         txtTenDA.setText(daEdit.getTenDuAn());
-        txtNgayBD.setText(daEdit.getNgayBatDau().toString());
-        txtNgayKT.setText(daEdit.getNgayKetThuc().toString());
+        txtNgayBD.setText(daEdit.getNgayBatDau().format(dtfGUI));
+        txtNgayKT.setText(daEdit.getNgayKetThuc().format(dtfGUI));
         cbTrangThai.setSelectedItem(daEdit.getTrangThai());
-    }
+        }
 
     
     private void khoiTaoGiaoDien() {
@@ -120,7 +120,7 @@ public class DuAn1_GUI extends JDialog {
                 return;
             }
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             LocalDate ngayBD = LocalDate.parse(ngayBDStr, formatter);
             LocalDate ngayKT = LocalDate.parse(ngayKTStr, formatter);
 

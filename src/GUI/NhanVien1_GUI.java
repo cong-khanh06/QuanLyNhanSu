@@ -43,6 +43,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author khanh
  */
 public class NhanVien1_GUI extends JDialog{
+    private java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
     JTextField txtTen, txtDiaChi, txtSDT,txtEmail,txtCCCD,txtMaNV,txtNgaySinh,txtNgayVaoLam;
     JComboBox<NhanVien_DTO.GioiTinh> cbGioiTinh;
     JComboBox<NhanVien_DTO.TrangThaiNhanVien>  cbTrangThai;
@@ -77,7 +78,9 @@ public class NhanVien1_GUI extends JDialog{
         
         txtNgaySinh = new JTextField();
         txtNgayVaoLam = new JTextField();
-
+        txtNgaySinh.setToolTipText("Ví dụ: 30-12-2000");
+        txtNgayVaoLam.setToolTipText("Ví dụ: 08-03-2026");
+        
         cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values());
         cbPhongBan = new JComboBox<>();
         loadComboPhongBan();
@@ -235,10 +238,14 @@ public class NhanVien1_GUI extends JDialog{
                 LocalDate ngaySinh = null;
                 LocalDate ngayVaoLam = null;
                 try {
-                    ngaySinh = LocalDate.parse(txtNgaySinh.getText().trim());
-                    ngayVaoLam = LocalDate.parse(txtNgayVaoLam.getText().trim());
+                    String nsStr = txtNgaySinh.getText().trim();
+                    String nvlStr = txtNgayVaoLam.getText().trim();
+
+                    if (!nsStr.isEmpty()) ngaySinh = LocalDate.parse(nsStr, dtf);
+                    if (!nvlStr.isEmpty()) ngayVaoLam = LocalDate.parse(nvlStr, dtf);
+
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng Năm-Tháng-Ngày hoặc chọn từ biểu tượng lịch!");
+                    JOptionPane.showMessageDialog(this, "Lỗi ngày tháng! Vui lòng nhập đúng định dạng Ngày-Tháng-Năm (VD: 30-12-2000)");
                     return; 
                 }
 
