@@ -87,8 +87,9 @@ public class DuAn_DAO extends Connection_DAO{
                 Date ngayketthuc=rs.getDate("ngay_ket_thuc");
                 LocalDate ngayKT=(ngayketthuc!=null) ? ngayketthuc.toLocalDate():null;
                 String trangThai=rs.getString("trang_thai");
+                String nguoiQuanLy=rs.getString("nguoi_quan_ly");
                 
-                DuAn_DTO rowdata=new DuAn_DTO(maDA,tenDA,ngayBD,ngayKT,trangThai);
+                DuAn_DTO rowdata=new DuAn_DTO(maDA, tenDA, trangThai, nguoiQuanLy, ngayBD, ngayKT);
                 list.add(rowdata);
             }
         } catch (Exception e) {
@@ -103,13 +104,12 @@ public class DuAn_DAO extends Connection_DAO{
              ResultSet rs = ps.executeQuery()) {
              
             if (rs.next()) {
-                String lastID = rs.getString("ma_da"); // Ví dụ: "HD005"
-                // Cắt bỏ 2 chữ cái đầu ("HD"), lấy phần số ("005")
+                String lastID = rs.getString("ma_da"); 
                 String numberPart = lastID.substring(2);
                 int number = Integer.parseInt(numberPart);
-                number++; // Tăng lên 1 thành 6
+                number++; 
                 
-                // Ghép lại với định dạng 3 chữ số (HD006)
+                
                 return String.format("DA%02d", number);
             }
         } catch (Exception e) {
@@ -120,11 +120,9 @@ public class DuAn_DAO extends Connection_DAO{
     
     public List<DuAn_DTO> timKiemDuAn(String tuKhoa) {
         List<DuAn_DTO> list = new ArrayList<>();
-        // Tìm kiếm theo Mã dự án HOẶC Tên dự án (có chứa từ khóa)
         String sql = "SELECT * FROM DuAn WHERE ma_da LIKE ? OR ten_du_an LIKE ?";
         
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            // Thêm ký tự % ở 2 đầu để tìm kiếm chứa chuỗi (Ví dụ: %chuyển đổi%)
             String keyword = "%" + tuKhoa + "%";
             ps.setString(1, keyword);
             ps.setString(2, keyword);
@@ -133,6 +131,7 @@ public class DuAn_DAO extends Connection_DAO{
                 while (rs.next()) {
                     String maDA = rs.getString("ma_da");
                     String tenDA = rs.getString("ten_du_an");
+                    String nguoiQuanLy=rs.getString("nguoi_quan_ly");
                     
                     Date ngaybatdau = rs.getDate("ngay_bat_dau");
                     LocalDate ngayBD = (ngaybatdau != null) ? ngaybatdau.toLocalDate() : null;
@@ -142,7 +141,7 @@ public class DuAn_DAO extends Connection_DAO{
                     
                     String trangThai = rs.getString("trang_thai");
                     
-                    DuAn_DTO rowdata = new DuAn_DTO(maDA, tenDA, ngayBD, ngayKT, trangThai);
+                    DuAn_DTO rowdata = new DuAn_DTO(maDA, tenDA, trangThai, nguoiQuanLy, ngayBD, ngayKT);
                     list.add(rowdata);
                 }
             }

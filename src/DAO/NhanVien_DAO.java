@@ -5,7 +5,6 @@
 package DAO;
 
 import java.sql.ResultSet;
-import BUS.NhanVien_BUS;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -337,7 +336,7 @@ public class NhanVien_DAO extends Connection_DAO{
         try (PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(new ChucVu_DTO(rs.getString("ma_cv"), rs.getString("ten_cv"),rs.getString("mo_ta"),rs.getString("ma_pc")));
+                list.add(new ChucVu_DTO(rs.getString("ma_cv"), rs.getString("ten_cv"),rs.getString("mo_ta")));
             }
         } catch (Exception e) { e.printStackTrace(); }
         return list;
@@ -351,12 +350,12 @@ public class NhanVien_DAO extends Connection_DAO{
             "SELECT * FROM NhanVien WHERE (ma_nv LIKE ? OR ho_ten LIKE ? OR sdt LIKE ?)"
         );
 
-        // Nếu có lọc theo giới tính (Khác "Tat ca")
+        
         if (gioiTinh != null && !gioiTinh.equalsIgnoreCase("Tat ca")) {
             sql.append(" AND gioi_tinh = ?");
         }
 
-        // Nếu có lọc theo phòng ban (Khác "Tat ca")
+        
         if (maPB != null && !maPB.equalsIgnoreCase("Tat ca") && !maPB.isEmpty()) {
             sql.append(" AND ma_pb = ?");
         }

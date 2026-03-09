@@ -49,4 +49,8 @@ public class NhanVien_BUS {
     public int soLuongNhanVien(){
         return dao.soLuongNhanVien();
     }
+    
+    public List<NhanVien_DTO> layDanhSachNhanVien(){
+        return dao.layDanhSachNV();
+    }
 }

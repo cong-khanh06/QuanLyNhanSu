@@ -20,7 +20,7 @@ public class Display_GUI extends JFrame{
     JPanel pnLeft,pnRight,pnRAN,pnCard;
     JLabel name,role,nameValue,roleValue;
 
-    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnL,btnCC,btnTK,btnDA,btnLogout;
+    ButtonSidebar btnHome,btnNV,btnHD,btnPB,btnL,btnCC,btnTK,btnDA,btnLogout,btnBC,btnCV,btnCTBH;
 
     CardLayout cardlayout=new CardLayout();
     Phongban1_GUI phongban;
@@ -29,7 +29,13 @@ public class Display_GUI extends JFrame{
     TaiKhoan_GUI taikhoan;
     DuAn_GUI duan;
     TrangChu_GUI trangchu;
+
     ChamCong_GUI chamcong;
+
+    BangCap_GUI bangcap;
+    ChucVu_GUI chucvu;
+    ChiTietBaoHiem_GUI chitietbaohiem;
+
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
         setSize(1400,800);
@@ -42,7 +48,13 @@ public class Display_GUI extends JFrame{
         taikhoan=new TaiKhoan_GUI();
         duan=new DuAn_GUI();
         trangchu=new TrangChu_GUI();
+
         chamcong=new ChamCong_GUI();
+
+        bangcap=new BangCap_GUI();
+        chucvu=new ChucVu_GUI();
+        chitietbaohiem=new ChiTietBaoHiem_GUI();
+
         
         pnLeft=new JPanel();
         pnLeft.setPreferredSize(new Dimension(250,800));
@@ -86,8 +98,15 @@ public class Display_GUI extends JFrame{
         pnCard.add(btnTK);
         btnDA=new ButtonSidebar("Dự án", loadIcon("/GUI/icon/duan.png"));
         pnCard.add(btnDA);
+        btnBC=new ButtonSidebar("Bằng cấp", loadIcon("/GUI/icon/bangcap.png"));
+        pnCard.add(btnBC);
+        btnCV=new ButtonSidebar("Chức vụ", loadIcon("/GUI/icon/chucvu.png"));
+        pnCard.add(btnCV);
+        btnCTBH=new ButtonSidebar("Chi tiết bảo hiểm", loadIcon("/GUI/icon/chitietbaohiem.png"));
+        pnCard.add(btnCTBH);
         btnLogout = new ButtonSidebar("Đăng xuất", loadIcon("/GUI/icon/logout.png")); 
         pnCard.add(btnLogout);
+        
         
         btnHome.setHorizontalAlignment(SwingConstants.LEFT);
         btnNV.setHorizontalAlignment(SwingConstants.LEFT);
@@ -98,7 +117,9 @@ public class Display_GUI extends JFrame{
         btnTK.setHorizontalAlignment(SwingConstants.LEFT);
         btnDA.setHorizontalAlignment(SwingConstants.LEFT);
         btnLogout.setHorizontalAlignment(SwingConstants.LEFT);
-
+        btnBC.setHorizontalAlignment(SwingConstants.LEFT);
+        btnCV.setHorizontalAlignment(SwingConstants.LEFT);
+        btnCTBH.setHorizontalAlignment(SwingConstants.LEFT);
 
         pnLeft.add(pnCard);
 
@@ -111,7 +132,14 @@ public class Display_GUI extends JFrame{
         pnRight.add(hopdong,"panelHD");
         pnRight.add(duan,"panelDA");
         pnRight.add(taikhoan, "panelTK");
+
         pnRight.add(chamcong,"panelCC");
+
+        pnRight.add(bangcap, "panelBC");
+        pnRight.add(chucvu, "panelCV");
+        pnRight.add(chitietbaohiem,"panelCTHD");
+
+
         cardlayout.show(pnRight,"panelTC");
         
         btnHome.addActionListener(e->{
@@ -142,6 +170,18 @@ public class Display_GUI extends JFrame{
         });
         btnCC.addActionListener(e -> {
         	cardlayout.show(pnRight, "panelCC");
+        });
+        
+        btnBC.addActionListener(e->{
+            cardlayout.show(pnRight,"panelBC");
+        });
+        
+        btnCV.addActionListener(e->{
+            cardlayout.show(pnRight,"panelCV");
+        });
+        
+        btnCTBH.addActionListener(e->{
+            cardlayout.show(pnRight, "panelCTHD");
         });
         
         add(pnLeft,BorderLayout.WEST);

@@ -11,16 +11,27 @@ package DTO;
 import java.time.LocalDate;
 
 public class DuAn_DTO {
-    private String maDa,tenDuAn,trangThai;
+    private String maDa,tenDuAn,trangThai,nguoiQuanLy;
     private LocalDate ngayBatDau,ngayKetThuc;
 
-    public DuAn_DTO(String maDa, String tenDuAn,  LocalDate ngayBatDau, LocalDate ngayKetThuc,String trangThai) {
+    public DuAn_DTO(String maDa, String tenDuAn, String trangThai, String nguoiQuanLy, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
         this.maDa = maDa;
         this.tenDuAn = tenDuAn;
         this.trangThai = trangThai;
+        this.nguoiQuanLy = nguoiQuanLy;
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
     }
+
+    public String getNguoiQuanLy() {
+        return nguoiQuanLy;
+    }
+
+    public void setNguoiQuanLy(String nguoiQuanLy) {
+        this.nguoiQuanLy = nguoiQuanLy;
+    }
+
+    
 
     public String getMaDa() {
         return maDa;

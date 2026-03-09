@@ -61,7 +61,7 @@ public class DuAn_GUI extends JPanel {
         
         btnSearch = new ButtonToolBar("Tìm kiếm");
         btnAdd = new ButtonToolBar("Thêm");
-        btnEdit = new ButtonToolBar("Sửa");     // Nút mới
+        btnEdit = new ButtonToolBar("Sửa");     
         btnDelete = new ButtonToolBar("Xóa");
         btnDown = new ButtonToolBar("Tải Xuống");
         btnrefresh = new ButtonToolBar("Tải lại trang");
@@ -102,12 +102,12 @@ public class DuAn_GUI extends JPanel {
         
         // --- BẢNG DỮ LIỆU (TABLE) ---
         String[] colsDA = {
-            "Mã Dự Án", "Tên Dự Án", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"
+            "Mã Dự Án", "Tên Dự Án", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái", "Người quản lý"
         };
         modelDA = new DefaultTableModel(colsDA, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Không cho phép edit trực tiếp trên bảng
+                return false; 
             }
         };
         tableDA = new JTable(modelDA);
@@ -144,16 +144,18 @@ public class DuAn_GUI extends JPanel {
     }
     
     public void taiDuLieuLenBang() {
-        modelDA.setRowCount(0); // Xóa trắng bảng
+        modelDA.setRowCount(0); 
         
         List<DuAn_DTO> danhsach = bus.layDanhSachDuAn();
         
         for (DuAn_DTO da : danhsach) {
+            String strNgayBD = (da.getNgayBatDau() != null) ? da.getNgayBatDau().format(dtf) : "";
+            String strNgayKT = (da.getNgayKetThuc() != null) ? da.getNgayKetThuc().format(dtf) : "";
             modelDA.addRow(new Object[]{
                 da.getMaDa(),
                 da.getTenDuAn(),
-                da.getNgayBatDau().format(dtf), 
-                da.getNgayKetThuc().format(dtf),
+                strNgayBD, 
+                strNgayKT,
                 da.getTrangThai()
             });
         }
@@ -170,16 +172,18 @@ public class DuAn_GUI extends JPanel {
 
             List<DuAn_DTO> ketQua = bus.timKiemDuAn(tuKhoa); 
             
-            // Cập nhật lại bảng
+            
             modelDA.setRowCount(0);
             for (DuAn_DTO da : ketQua) {
-                // Nếu có bộ lọc trạng thái thì kiểm tra thêm
+                
                 if(trangThai.isEmpty() || da.getTrangThai().equals(trangThai)) {
+                    String strNgayBD = (da.getNgayBatDau() != null) ? da.getNgayBatDau().format(dtf) : "";
+                    String strNgayKT = (da.getNgayKetThuc() != null) ? da.getNgayKetThuc().format(dtf) : "";
                     modelDA.addRow(new Object[]{
                         da.getMaDa(),
                         da.getTenDuAn(),
-                        da.getNgayBatDau(),
-                        da.getNgayKetThuc(),
+                        strNgayBD,
+                        strNgayKT,
                         da.getTrangThai()
                     });
                 }
@@ -198,8 +202,6 @@ public class DuAn_GUI extends JPanel {
     
     public void addEventAdd() {
         btnAdd.addActionListener(e -> {
-            // Truyền 'this' (chính là panel DuAn_GUI hiện tại) vào form thêm 
-            // để form thêm có thể gọi hàm taiDuLieuLenBang() sau khi lưu thành công
             DuAn1_GUI formThem = new DuAn1_GUI(this); 
             formThem.setVisible(true);
         });
@@ -245,18 +247,17 @@ public class DuAn_GUI extends JPanel {
     
     public void addEventDelete() {
         btnDelete.addActionListener(e -> {
-            // Lấy dòng đang được chọn trên JTable
             int row = tableDA.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn một dự án trong bảng để xóa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             
-            // Lấy Mã dự án từ cột số 0 của dòng được chọn
+            
             String maDA = tableDA.getValueAt(row, 0).toString();
             String tenDA = tableDA.getValueAt(row, 1).toString();
             
-            // Hiển thị hộp thoại xác nhận
+           
             int confirm = JOptionPane.showConfirmDialog(this, 
                     "Bạn có chắc chắn muốn xóa dự án: " + tenDA + " (" + maDA + ") không?", 
                     "Xác nhận xóa", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -264,7 +265,7 @@ public class DuAn_GUI extends JPanel {
             if (confirm == JOptionPane.YES_OPTION) {
                 if (bus.xoaDuAn(maDA)) {
                     JOptionPane.showMessageDialog(this, "Đã xóa dự án thành công!");
-                    taiDuLieuLenBang(); // Tải lại bảng và thống kê
+                    taiDuLieuLenBang(); 
                 } else {
                     JOptionPane.showMessageDialog(this, "Xóa thất bại! Có thể dự án đang có nhân viên tham gia.", "Lỗi DB", JOptionPane.ERROR_MESSAGE);
                 }
@@ -284,12 +285,16 @@ public class DuAn_GUI extends JPanel {
                 // Lấy thông tin từ các cột của dòng đang chọn
                 String maDA = tableDA.getValueAt(row, 0).toString();
                 String tenDA = tableDA.getValueAt(row, 1).toString();
-                LocalDate ngayBD = LocalDate.parse(tableDA.getValueAt(row, 2).toString(), dtf);
-                LocalDate ngayKT = LocalDate.parse(tableDA.getValueAt(row, 3).toString(), dtf);
+                
+                String strNgayBD = tableDA.getValueAt(row, 2) != null ? tableDA.getValueAt(row, 2).toString() : "";
+                String strNgayKT = tableDA.getValueAt(row, 3) != null ? tableDA.getValueAt(row, 3).toString() : "";
+                LocalDate ngayBD = strNgayBD.isEmpty() ? null : LocalDate.parse(strNgayBD, dtf);
+                LocalDate ngayKT = strNgayKT.isEmpty() ? null : LocalDate.parse(strNgayKT, dtf);
+                
                 String trangThai = tableDA.getValueAt(row, 4).toString();
                 
                 
-                DuAn_DTO daEdit = new DuAn_DTO(maDA, tenDA, ngayBD, ngayKT, trangThai);
+                DuAn_DTO daEdit = new DuAn_DTO(maDA, tenDA, trangThai, trangThai, ngayBD, ngayKT);
                 
                 
                 DuAn1_GUI formSua = new DuAn1_GUI(this, daEdit);

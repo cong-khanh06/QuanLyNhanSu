@@ -12,7 +12,7 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
 public class DuAn1_GUI extends JDialog {
-    private JTextField txtMaDA, txtTenDA;
+    private JTextField txtMaDA, txtTenDA, txtNguoiQuanLy;
     private DatePicker dpNgayBD, dpNgayKT;
     private JComboBox<String> cbTrangThai;
     private JButton btnLuu, btnHuy;
@@ -31,7 +31,7 @@ public class DuAn1_GUI extends JDialog {
     
     public DuAn1_GUI(DuAn_GUI parent, DuAn_DTO daEdit) {
         this.parentGUI = parent;
-        this.isEditMode = true; // Bật cờ chế độ Sửa
+        this.isEditMode = true; 
         khoiTaoGiaoDien();
         
         
@@ -41,6 +41,7 @@ public class DuAn1_GUI extends JDialog {
         
         txtMaDA.setText(daEdit.getMaDa());
         txtTenDA.setText(daEdit.getTenDuAn());
+        txtNguoiQuanLy.setText(daEdit.getNguoiQuanLy());
         dpNgayBD.setDate(daEdit.getNgayBatDau());
         dpNgayKT.setDate(daEdit.getNgayKetThuc());
         cbTrangThai.setSelectedItem(daEdit.getTrangThai());
@@ -54,7 +55,7 @@ public class DuAn1_GUI extends JDialog {
         setModal(true);
         setLayout(new BorderLayout());
 
-        JPanel pnForm = new JPanel(new GridLayout(5, 2, 10, 20));
+        JPanel pnForm = new JPanel(new GridLayout(6, 2, 10, 20));
         pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         pnForm.add(new JLabel("Mã Dự Án:"));
@@ -67,6 +68,9 @@ public class DuAn1_GUI extends JDialog {
         txtTenDA = new JTextField();
         pnForm.add(txtTenDA);
 
+        pnForm.add(new JLabel("Người quản lý:"));
+        txtNguoiQuanLy=new JTextField();
+        pnForm.add(txtNguoiQuanLy);
         // --- NGÀY BẮT ĐẦU ---
         pnForm.add(new JLabel("Ngày Bắt Đầu:"));
         DatePickerSettings setBD = new DatePickerSettings();
@@ -104,6 +108,7 @@ public class DuAn1_GUI extends JDialog {
         try {
             String ma = txtMaDA.getText();
             String ten = txtTenDA.getText().trim();
+            String nguoiQuanLy=txtNguoiQuanLy.getText().trim();
             LocalDate ngayBD = dpNgayBD.getDate();
             LocalDate ngayKT = dpNgayKT.getDate();
             String trangThai = cbTrangThai.getSelectedItem().toString();
@@ -118,7 +123,7 @@ public class DuAn1_GUI extends JDialog {
                 return;
             }
 
-            DuAn_DTO daObj = new DuAn_DTO(ma, ten, ngayBD, ngayKT, trangThai);
+            DuAn_DTO daObj = new DuAn_DTO(ma, ten, trangThai, nguoiQuanLy, ngayBD, ngayKT);
             
             
             boolean thanhCong = false;
@@ -130,7 +135,7 @@ public class DuAn1_GUI extends JDialog {
             
             if (thanhCong) {
                 JOptionPane.showMessageDialog(this, isEditMode ? "Cập nhật thành công!" : "Thêm thành công!");
-                parentGUI.taiDuLieuLenBang(); // Refresh lại danh sách và thống kê
+                parentGUI.taiDuLieuLenBang(); 
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Thao tác thất bại!", "Lỗi DB", JOptionPane.ERROR_MESSAGE);
