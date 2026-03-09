@@ -14,19 +14,17 @@ CREATE TABLE quanlynhansu.dbo.BoPhan (
 );
 
 
--- quanlynhansu.dbo.DuAn definition
+-- quanlynhansu.dbo.ChucVu definition
 
 -- Drop table
 
--- DROP TABLE quanlynhansu.dbo.DuAn;
+-- DROP TABLE quanlynhansu.dbo.ChucVu;
 
-CREATE TABLE quanlynhansu.dbo.DuAn (
-	ma_da varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	ten_du_an nvarchar(150) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ngay_bat_dau date NULL,
-	ngay_ket_thuc date NULL,
-	trang_thai nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__DuAn__0FE14F0E39BA0164 PRIMARY KEY (ma_da)
+CREATE TABLE quanlynhansu.dbo.ChucVu (
+	ma_cv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	ten_cv nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	mo_ta nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__ChucVu__0FE17696662F4FC4 PRIMARY KEY (ma_cv)
 );
 
 
@@ -39,6 +37,8 @@ CREATE TABLE quanlynhansu.dbo.DuAn (
 CREATE TABLE quanlynhansu.dbo.LoaiBaoHiem (
 	ma_bh varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	ten_bh nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ty_le_nv_dong decimal(5,2) NULL,
+	ty_le_cty_dong decimal(5,2) NULL,
 	CONSTRAINT PK__LoaiBaoH__0FE17EC58882FF30 PRIMARY KEY (ma_bh)
 );
 
@@ -70,19 +70,18 @@ CREATE TABLE quanlynhansu.dbo.PhuCap (
 );
 
 
--- quanlynhansu.dbo.ChucVu definition
+-- quanlynhansu.dbo.ChiTietChucVu definition
 
 -- Drop table
 
--- DROP TABLE quanlynhansu.dbo.ChucVu;
+-- DROP TABLE quanlynhansu.dbo.ChiTietChucVu;
 
-CREATE TABLE quanlynhansu.dbo.ChucVu (
+CREATE TABLE quanlynhansu.dbo.ChiTietChucVu (
 	ma_cv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	ten_cv nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	mo_ta nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ma_pc varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__ChucVu__0FE17696662F4FC4 PRIMARY KEY (ma_cv),
-	CONSTRAINT FK__ChucVu__ma_pc__3E52440B FOREIGN KEY (ma_pc) REFERENCES quanlynhansu.dbo.PhuCap(ma_pc)
+	ma_pc varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	CONSTRAINT PK_ChiTietChucVu PRIMARY KEY (ma_cv,ma_pc),
+	CONSTRAINT FK_ChiTietChucVu_ChucVu FOREIGN KEY (ma_cv) REFERENCES quanlynhansu.dbo.ChucVu(ma_cv),
+	CONSTRAINT FK_ChiTietChucVu_PhuCap FOREIGN KEY (ma_pc) REFERENCES quanlynhansu.dbo.PhuCap(ma_pc)
 );
 
 
@@ -95,10 +94,8 @@ CREATE TABLE quanlynhansu.dbo.ChucVu (
 CREATE TABLE quanlynhansu.dbo.BangCap (
 	ma_bc varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	ten_bc nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	chuyen_nganh nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	noi_cap nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ngay_cap date NULL,
-	xep_loai nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ma_nv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	CONSTRAINT PK__BangCap__0FE17EC2D51CA74E PRIMARY KEY (ma_bc)
 );
@@ -155,8 +152,6 @@ CREATE TABLE quanlynhansu.dbo.ChiTietBaoHiem (
 	so_the_bh varchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ngay_cap date NULL,
 	noi_cap nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ty_le_nv_dong float NULL,
-	ty_le_cty_dong float NULL,
 	ma_nv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ma_bh varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	CONSTRAINT PK__ChiTietB__5AE48C431966B3F0 PRIMARY KEY (ma_ctbh)
@@ -173,15 +168,30 @@ CREATE TABLE quanlynhansu.dbo.ChiTietDon (
 	ma_don varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	ngay_tao date DEFAULT getdate() NULL,
 	noi_dung nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ngay_bat_dau_nghi date NULL,
-	ngay_ket_thuc_nghi date NULL,
 	trang_thai nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS DEFAULT 'ChoDuyet' NULL,
-	nguoi_duyet_id varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	nguoi_duyet varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ma_nv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ma_loai_don varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	CONSTRAINT PK__ChiTietD__057D6CE1DA5B5587 PRIMARY KEY (ma_don)
 );
 ALTER TABLE quanlynhansu.dbo.ChiTietDon WITH NOCHECK ADD CONSTRAINT CHK_TrangThaiDon CHECK (([trang_thai]='TuChoi' OR [trang_thai]='DaDuyet' OR [trang_thai]='ChoDuyet'));
+
+
+-- quanlynhansu.dbo.DuAn definition
+
+-- Drop table
+
+-- DROP TABLE quanlynhansu.dbo.DuAn;
+
+CREATE TABLE quanlynhansu.dbo.DuAn (
+	ma_da varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	ten_du_an nvarchar(150) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ngay_bat_dau date NULL,
+	ngay_ket_thuc date NULL,
+	trang_thai nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	nguoi_quan_ly varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__DuAn__0FE14F0E39BA0164 PRIMARY KEY (ma_da)
+);
 
 
 -- quanlynhansu.dbo.HopDong definition
@@ -262,11 +272,7 @@ ALTER TABLE quanlynhansu.dbo.NhanVien WITH NOCHECK ADD CONSTRAINT CHK_TrangThaiN
 CREATE TABLE quanlynhansu.dbo.PhanCongDuAn (
 	ma_da varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	ma_nv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	nguoi_quan_ly varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	phong_quan_ly varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	vai_tro nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ngay_tham_gia date DEFAULT getdate() NULL,
-	ngay_ket_thuc date NULL,
 	CONSTRAINT PK_PhanCongDuAn PRIMARY KEY (ma_da,ma_nv)
 );
 
@@ -350,7 +356,12 @@ ALTER TABLE quanlynhansu.dbo.ChiTietBaoHiem ADD CONSTRAINT FK__ChiTietBa__ma_nv_
 
 ALTER TABLE quanlynhansu.dbo.ChiTietDon ADD CONSTRAINT FK__ChiTietDo__ma_lo__6754599E FOREIGN KEY (ma_loai_don) REFERENCES quanlynhansu.dbo.LoaiDon(ma_loai_don);
 ALTER TABLE quanlynhansu.dbo.ChiTietDon ADD CONSTRAINT FK__ChiTietDo__ma_nv__656C112C FOREIGN KEY (ma_nv) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
-ALTER TABLE quanlynhansu.dbo.ChiTietDon ADD CONSTRAINT FK__ChiTietDo__nguoi__66603565 FOREIGN KEY (nguoi_duyet_id) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
+ALTER TABLE quanlynhansu.dbo.ChiTietDon ADD CONSTRAINT FK__ChiTietDo__nguoi__66603565 FOREIGN KEY (nguoi_duyet) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
+
+
+-- quanlynhansu.dbo.DuAn foreign keys
+
+ALTER TABLE quanlynhansu.dbo.DuAn ADD CONSTRAINT FK_DuAn_NguoiQuanLy FOREIGN KEY (nguoi_quan_ly) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
 
 
 -- quanlynhansu.dbo.HopDong foreign keys
@@ -372,9 +383,7 @@ ALTER TABLE quanlynhansu.dbo.NhanVien ADD CONSTRAINT FK__NhanVien__ma_pb__440B1D
 -- quanlynhansu.dbo.PhanCongDuAn foreign keys
 
 ALTER TABLE quanlynhansu.dbo.PhanCongDuAn ADD CONSTRAINT FK_PCDA_DuAn FOREIGN KEY (ma_da) REFERENCES quanlynhansu.dbo.DuAn(ma_da);
-ALTER TABLE quanlynhansu.dbo.PhanCongDuAn ADD CONSTRAINT FK_PCDA_NguoiQuanLy FOREIGN KEY (nguoi_quan_ly) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
 ALTER TABLE quanlynhansu.dbo.PhanCongDuAn ADD CONSTRAINT FK_PCDA_NguoiThamGia FOREIGN KEY (ma_nv) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
-ALTER TABLE quanlynhansu.dbo.PhanCongDuAn ADD CONSTRAINT FK_PCDA_PhongBan FOREIGN KEY (phong_quan_ly) REFERENCES quanlynhansu.dbo.PhongBan(ma_pb);
 
 
 -- quanlynhansu.dbo.PhongBan foreign keys
