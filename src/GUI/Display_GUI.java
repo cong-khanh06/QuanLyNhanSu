@@ -189,7 +189,7 @@ public class Display_GUI extends JFrame{
     		hopdong.setphanquyenManager(false);
     		phongban.setphanquyenManager(false);
     		duan.setphanquyenManager(false);
-    		btnTK.setVisible(false);
+    		btnTK.setVisible(false);	
     		pnCard.revalidate();
     		pnCard.repaint();
     	}

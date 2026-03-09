@@ -13,7 +13,7 @@ public class PhongbanThongKe_GUI extends JDialog {
 
     public PhongbanThongKe_GUI(String mapb, String tenpb) {
         setTitle("Thống kê nhân sự");
-        setSize(900, 500);
+        setSize(1100, 500);
         setLocationRelativeTo(null);
         setModal(true);
         setLayout(new BorderLayout());
@@ -26,20 +26,18 @@ public class PhongbanThongKe_GUI extends JDialog {
         lblHeader.setForeground(Color.WHITE);
         lblHeader.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
 
-        // Thêm label vào panel nền, sau đó thêm panel vào NORTH của Dialog
         pnNorth.add(lblHeader, BorderLayout.CENTER);
         add(pnNorth, BorderLayout.NORTH);
 
-        JPanel pnlCharts = new JPanel(new GridLayout(1, 2, 20, 0));
+        JPanel pnlCharts = new JPanel(new GridLayout(1, 3, 20, 0));
         pnlCharts.setBackground(Color.WHITE);
 
-        // Biểu đồ 1: Giới tính
-        pnlCharts.add(taoChartPanel(pbb.layThongKeGioiTinh(), "Tỷ lệ Giới tính"));
         
-        // Biểu đồ 2: Chức vụ
-        pnlCharts.add(taoChartPanel(pbb.layThongKeChucVu(), "Cơ cấu Chức vụ"));
+        pnlCharts.add(taoChartPanel(pbb.layThongKeGioiTinh(mapb), "Tỷ lệ Giới tính"));
         
-        pnlCharts.add(taoChartPanel(pbb.layThongKeDoTuoi(), "Độ tuổi"));
+        pnlCharts.add(taoChartPanel(pbb.layThongKeChucVu(mapb), "Cơ cấu Chức vụ"));
+        
+        pnlCharts.add(taoChartPanel(pbb.layThongKeDoTuoi(mapb), "Độ tuổi"));
 
 
         add(pnlCharts, BorderLayout.CENTER);

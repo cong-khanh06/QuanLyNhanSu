@@ -19,8 +19,9 @@ public class Login_GUI extends JFrame implements ActionListener {
     public Login_GUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("HR Management System - Login");
-        taikhoanbus = new TaiKhoan_BUS();
+        setVisible(true);
         
+        taikhoanbus = new TaiKhoan_BUS();
         logindangnhap = new Logindangnhap_GUI();
         logindmk = new LoginDMK_GUI();
 
@@ -114,6 +115,10 @@ public class Login_GUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+    public static void main(String []args)
+    {
+    	Login_GUI log=new Login_GUI();
     }
     
 }

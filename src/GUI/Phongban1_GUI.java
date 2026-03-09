@@ -19,7 +19,7 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
     private ArrayList<Phongban_DTO> arr;
     private Phongban_BUS pbb;
     private DefaultTableModel model;
-    private JLabel jlnhanvien, jlthongtin;
+    private JLabel jlnhanvien, jlthongtin,jlAvatar;
     private JTextField jtfSearch;
     private JLabel jlvaluemaso, jlvaluehoten, jlvaluegioitinh, jlvaluesdt, jlvaluedc, jlvaluephongban, jlvaluengayvaolam;
     private JButton btthem, btxoa, btsua, btsearch, btrefresh,btthongke;
@@ -151,9 +151,14 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         pnlValues.add(jlvaluedc);
         pnlValues.add(jlvaluephongban);
         pnlValues.add(jlvaluengayvaolam);
+        
+        jlAvatar=new JLabel("Đang cập nhật",JLabel.CENTER);
+        jlAvatar.setPreferredSize(new Dimension(150,180));
+        jlAvatar.setBorder(new LineBorder(Color.GRAY));
 
         pnlContent.add(pnlLabels, BorderLayout.WEST);   
         pnlContent.add(pnlValues, BorderLayout.CENTER); 
+        pnlContent.add(jlAvatar,BorderLayout.EAST);
         
         JPanel pnlNorthWrapper = new JPanel(new BorderLayout());
         pnlNorthWrapper.setBackground(Color.WHITE);
@@ -164,9 +169,7 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         panelBottom.add(panelLeft);
         panelBottom.add(panelRight);
         this.add(panelBottom, BorderLayout.CENTER);
-        panelBottom.add(panelLeft);
-        panelBottom.add(panelRight);
-        this.add(panelBottom, BorderLayout.CENTER);
+      
 
         // Gán sự kiện
         btthem.addActionListener(this);
@@ -253,6 +256,28 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
             } else {
                 jlvaluegioitinh.setText(""); 
             }
+            String avtPath=nv.getAvatar();
+            if(avtPath!=null && !avtPath.trim().isEmpty())
+            {
+            	try
+            	{
+            		ImageIcon icon=new ImageIcon(avtPath);
+            		Image image=icon.getImage().getScaledInstance(jlAvatar.getWidth(),jlAvatar.getHeight(), Image.SCALE_SMOOTH);
+            		jlAvatar.setIcon(new ImageIcon(image));
+            		jlAvatar.setText("");
+            	}
+            	catch(Exception e)
+            	{
+            		jlAvatar.setIcon(null);
+            		jlAvatar.setText("Error");
+            	}
+            	
+            }
+            else
+            {
+            	jlAvatar.setIcon(null);
+            	jlAvatar.setText("Đang cập nhật");
+            }
             jlvaluesdt.setText(nv.getSdt());
             jlvaluedc.setText(nv.getDiaChi());
             if (nv.getNgayVaoLam() != null) {
@@ -268,6 +293,8 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         jlvaluemaso.setText(""); jlvaluehoten.setText(""); jlvaluegioitinh.setText("");
         jlvaluesdt.setText(""); jlvaluedc.setText(""); jlvaluengayvaolam.setText("");
         jlvaluephongban.setText("");
+        jlAvatar.setIcon(null);
+        jlAvatar.setText("Đang cập nhật");
     }
 
     public void addEvent() {

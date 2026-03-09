@@ -53,9 +53,9 @@ public class TrangChu_GUI extends JPanel {
         JPanel pnBieuDo = new JPanel(new GridLayout(2, 2, 10, 10));
         pnBieuDo.setBackground(Color.WHITE);
 
-        pnBieuDo.add(taoChartPanel(busPb.layThongKeGioiTinh(), "Tỷ lệ Giới tính"));
-        pnBieuDo.add(taoChartPanel(busPb.layThongKeChucVu(), "Cơ cấu Chức vụ"));
-        pnBieuDo.add(taoChartPanel(busPb.layThongKeDoTuoi(), "Độ tuổi"));
+        pnBieuDo.add(taoChartPanel(busPb.layThongKeGioiTinhToanCongTy(), "Tỷ lệ Giới tính"));
+        pnBieuDo.add(taoChartPanel(busPb.layThongKeChucVuToanCongTy(), "Cơ cấu Chức vụ"));
+        pnBieuDo.add(taoChartPanel(busPb.layThongKeDoTuoiToanCongTy(), "Độ tuổi"));
 
         pnChart.add(pnBieuDo, BorderLayout.CENTER);
 
