@@ -29,6 +29,7 @@ public class Display_GUI extends JFrame{
     TaiKhoan_GUI taikhoan;
     DuAn_GUI duan;
     TrangChu_GUI trangchu;
+    ChamCong_GUI chamcong;
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
         setSize(1400,800);
@@ -41,6 +42,7 @@ public class Display_GUI extends JFrame{
         taikhoan=new TaiKhoan_GUI();
         duan=new DuAn_GUI();
         trangchu=new TrangChu_GUI();
+        chamcong=new ChamCong_GUI();
         
         pnLeft=new JPanel();
         pnLeft.setPreferredSize(new Dimension(250,800));
@@ -109,7 +111,7 @@ public class Display_GUI extends JFrame{
         pnRight.add(hopdong,"panelHD");
         pnRight.add(duan,"panelDA");
         pnRight.add(taikhoan, "panelTK");
-
+        pnRight.add(chamcong,"panelCC");
         cardlayout.show(pnRight,"panelTC");
         
         btnHome.addActionListener(e->{
@@ -137,6 +139,9 @@ public class Display_GUI extends JFrame{
         
         btnTK.addActionListener(e->{
             cardlayout.show(pnRight, "panelTK");
+        });
+        btnCC.addActionListener(e -> {
+        	cardlayout.show(pnRight, "panelCC");
         });
         
         add(pnLeft,BorderLayout.WEST);
@@ -180,6 +185,7 @@ public class Display_GUI extends JFrame{
     		nhanvien.setphanquyenuser(false,manv);
     		nhanvien.setphanquyennut(false,quyen);
     		hopdong.setphanquyenUser(false, manv);
+    		chamcong.setphanquyenUser(false,manv);
     		pnCard.revalidate();
     		pnCard.repaint();
     	}

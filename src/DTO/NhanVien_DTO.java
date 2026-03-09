@@ -33,6 +33,10 @@ public class NhanVien_DTO {
     private String avatar;
 
     public NhanVien_DTO() {}
+    public NhanVien_DTO(String manv, String hoTen){
+        this.maNV = manv;
+        this.hoTen = hoTen;
+    }
 
     public NhanVien_DTO(String maNV, String hoTen, LocalDate ngaySinh, GioiTinh gioiTinh, String diaChi, String sdt, String email, String cccd, LocalDate ngayVaoLam, TrangThaiNhanVien trangThai, String maPB, String maCV, String avatar) {
         this.maNV = maNV;
