@@ -17,14 +17,16 @@ public class DuAn_DAO extends Connection_DAO{
     Statement stmt=getStmt();
     
     public boolean insertDuAn(DuAn_DTO da){
-        String sql="INSERT INTO DuAn (ma_da,ten_du_an,ngay_bat_dau,ngay_ket_thuc,trang_thai)"
-                + "VALUES (?,?,?,?,?)";
+        // Thêm cột nguoi_quan_ly vào SQL
+        String sql="INSERT INTO DuAn (ma_da,ten_du_an,ngay_bat_dau,ngay_ket_thuc,trang_thai,nguoi_quan_ly)"
+                + "VALUES (?,?,?,?,?,?)";
         try(PreparedStatement ps=con.prepareStatement(sql)) {
             ps.setString(1, da.getMaDa());
             ps.setString(2, da.getTenDuAn());
             ps.setDate(3, da.getNgayBatDau() != null ? java.sql.Date.valueOf(da.getNgayBatDau()) : null);
             ps.setDate(4, da.getNgayKetThuc() != null ? java.sql.Date.valueOf(da.getNgayKetThuc()) : null);
-            ps.setString(5, da.getTrangThai());
+            ps.setNString(5, da.getTrangThai());
+            ps.setString(6, da.getNguoiQuanLy()); // Truyền thêm tham số
             
             return ps.executeUpdate()>0;
         } catch (Exception e) {
@@ -46,19 +48,22 @@ public class DuAn_DAO extends Connection_DAO{
     }
     
     public boolean updateDuAn(DuAn_DTO da){
+        // Thêm cột nguoi_quan_ly = ? vào SQL
         String sql="UPDATE DuAn SET "
                 +"ten_du_an = ?, "
                 +"ngay_bat_dau = ?, "
                 +"ngay_ket_thuc = ?, "
-                +"trang_thai = ? "
+                +"trang_thai = ?, "
+                +"nguoi_quan_ly = ? " 
                 +"WHERE ma_da = ? ";
         
         try (PreparedStatement ps=con.prepareStatement(sql)){
             ps.setString(1, da.getTenDuAn());
             ps.setDate(2, java.sql.Date.valueOf(da.getNgayBatDau()));
             ps.setDate(3, java.sql.Date.valueOf(da.getNgayKetThuc()));
-            ps.setString(4, da.getTrangThai());
-            ps.setString(5, da.getMaDa());
+            ps.setNString(4, da.getTrangThai()); // Nên dùng setNString cho Tiếng Việt
+            ps.setString(5, da.getNguoiQuanLy()); // Truyền thêm biến này
+            ps.setString(6, da.getMaDa()); // ma_da bị đẩy xuống vị trí số 6
             return ps.executeUpdate()>0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,5 +163,24 @@ public class DuAn_DAO extends Connection_DAO{
             e.printStackTrace();
         }
         return count;
+    }
+    
+    public List<String> layDanhSachTruongPhong() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT nv.ma_nv, nv.ho_ten " +
+                     "FROM NhanVien nv " +
+                     "JOIN ChucVu cv ON nv.ma_cv = cv.ma_cv " +
+                     "WHERE cv.ten_cv LIKE N'%Trưởng phòng%' OR cv.ten_cv LIKE N'%Trưởng Phòng%'";
+        
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String hienThi = rs.getString("ma_nv") + " - " + rs.getString("ho_ten");
+                list.add(hienThi);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

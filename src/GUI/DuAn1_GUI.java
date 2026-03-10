@@ -8,11 +8,13 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
 public class DuAn1_GUI extends JDialog {
-    private JTextField txtMaDA, txtTenDA, txtNguoiQuanLy;
+    private JTextField txtMaDA, txtTenDA;
+    private JComboBox<String> cbNguoiQuanLy; // Thay JTextField bằng JComboBox
     private DatePicker dpNgayBD, dpNgayKT;
     private JComboBox<String> cbTrangThai;
     private JButton btnLuu, btnHuy;
@@ -28,26 +30,33 @@ public class DuAn1_GUI extends JDialog {
         txtMaDA.setText(busDA.taoMaMoi()); 
     }
 
-    
     public DuAn1_GUI(DuAn_GUI parent, DuAn_DTO daEdit) {
         this.parentGUI = parent;
         this.isEditMode = true; 
         khoiTaoGiaoDien();
         
-        
         setTitle("Sửa Thông Tin Dự Án");
         btnLuu.setText("Cập Nhật");
         
-        
         txtMaDA.setText(daEdit.getMaDa());
         txtTenDA.setText(daEdit.getTenDuAn());
-        txtNguoiQuanLy.setText(daEdit.getNguoiQuanLy());
         dpNgayBD.setDate(daEdit.getNgayBatDau());
         dpNgayKT.setDate(daEdit.getNgayKetThuc());
         cbTrangThai.setSelectedItem(daEdit.getTrangThai());
+        
+        // Logic để chọn đúng người quản lý cũ khi bấm nút Sửa
+        String maNQL = daEdit.getNguoiQuanLy();
+        if (maNQL != null && !maNQL.isEmpty()) {
+            for (int i = 0; i < cbNguoiQuanLy.getItemCount(); i++) {
+                // Nếu item (Ví dụ: "NV01 - Nguyễn Văn A") bắt đầu bằng "NV01" thì chọn item đó
+                if (cbNguoiQuanLy.getItemAt(i).startsWith(maNQL)) {
+                    cbNguoiQuanLy.setSelectedIndex(i);
+                    break;
+                }
+            }
         }
+    }
 
-    
     private void khoiTaoGiaoDien() {
         setTitle("Thêm Dự Án Mới");
         setSize(420, 350);
@@ -68,9 +77,20 @@ public class DuAn1_GUI extends JDialog {
         txtTenDA = new JTextField();
         pnForm.add(txtTenDA);
 
+        
         pnForm.add(new JLabel("Người quản lý:"));
-        txtNguoiQuanLy=new JTextField();
-        pnForm.add(txtNguoiQuanLy);        
+
+               
+
+        cbNguoiQuanLy = new JComboBox<>();
+        List<String> dsTruongPhong = busDA.layDanhSachTruongPhong();
+        for (String tp : dsTruongPhong) {
+            cbNguoiQuanLy.addItem(tp);
+        }
+        pnForm.add(cbNguoiQuanLy);
+        
+        // --- NGÀY BẮT ĐẦU ---
+
         pnForm.add(new JLabel("Ngày Bắt Đầu:"));
         DatePickerSettings setBD = new DatePickerSettings();
         setBD.setFormatForDatesCommonEra("dd-MM-yyyy");
@@ -106,13 +126,18 @@ public class DuAn1_GUI extends JDialog {
         try {
             String ma = txtMaDA.getText();
             String ten = txtTenDA.getText().trim();
-            String nguoiQuanLy=txtNguoiQuanLy.getText().trim();
             LocalDate ngayBD = dpNgayBD.getDate();
             LocalDate ngayKT = dpNgayKT.getDate();
             String trangThai = cbTrangThai.getSelectedItem().toString();
             
-            if (ten.isEmpty() || ngayBD == null || ngayKT == null) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin và chọn ngày!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            // Xử lý lấy mã nhân viên từ ComboBox (Tách lấy phần chữ trước dấu " - ")
+            String nguoiQuanLy = "";
+            if (cbNguoiQuanLy.getSelectedItem() != null) {
+                nguoiQuanLy = cbNguoiQuanLy.getSelectedItem().toString().split(" - ")[0].trim();
+            }
+            
+            if (ten.isEmpty() || ngayBD == null || ngayKT == null || nguoiQuanLy.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin và chọn người quản lý!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -122,7 +147,6 @@ public class DuAn1_GUI extends JDialog {
             }
 
             DuAn_DTO daObj = new DuAn_DTO(ma, ten, trangThai, nguoiQuanLy, ngayBD, ngayKT);
-            
             
             boolean thanhCong = false;
             if (isEditMode) {

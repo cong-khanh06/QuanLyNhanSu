@@ -38,4 +38,7 @@ public class DuAn_BUS {
     public int soLuongDuAnDangThucHien(){
         return dao.soLuongDuAnDangThucHien();
     }
+    public List<String> layDanhSachTruongPhong() {
+        return dao.layDanhSachTruongPhong();
+    }
 }

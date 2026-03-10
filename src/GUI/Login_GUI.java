@@ -104,13 +104,15 @@ public class Login_GUI extends JFrame implements ActionListener {
             String message = taikhoanbus.CheckLogin(user, password);
             if (message.contains("thành công")) {
                 this.dispose();
+                TaiKhoan_DTO taikhoan = taikhoanbus.getTaiKhoantuuser(user);
+                DTO.taiKhoanDangDangNhap.tkHienTai = taikhoan;
                 Display_GUI ds=new Display_GUI();
-                TaiKhoan_DTO taikhoan=taikhoanbus.getTaiKhoantuuser(user);
                 ds.getnameValue().setText(user);
                 ds.getroleValue().setText(taikhoanbus.getTenchucvu(user));
                 ds.PhanQuyen(taikhoan.getQuyentruycap(),taikhoan.getManv());
                 ds.revalidate();
                 ds.repaint();
+                
             } else {
                 JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
