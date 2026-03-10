@@ -178,4 +178,30 @@ public class UngLuong_DAO extends Connection_DAO {
         }
         return count;
     }
+    public List<UngLuong_DTO> layDanhSachUngLuongTheoNV(String maNV) {
+        List<UngLuong_DTO> list = new ArrayList<>();
+        String sql = "SELECT ul.* FROM UngLuong ul " +
+                     "JOIN BangLuong bl ON ul.ma_bl = bl.ma_bl " +
+                     "WHERE bl.ma_nv = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, maNV);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String trangThaiUI = dichSangUI(rs.getString("trang_thai"));
+                
+                list.add(new UngLuong_DTO(
+                    rs.getString("ma_ul"),
+                    rs.getString("ma_bl"),
+                    rs.getString("ly_do"),
+                    trangThaiUI,
+                    rs.getDate("ngay_ung") != null ? rs.getDate("ngay_ung").toLocalDate() : null,
+                    rs.getBigDecimal("so_tien")
+                ));
+            }
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        return list;
+    }
+
 }

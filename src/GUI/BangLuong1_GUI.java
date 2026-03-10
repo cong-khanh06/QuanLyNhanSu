@@ -23,7 +23,6 @@ public class BangLuong1_GUI extends JDialog {
         khoiTaoGiaoDien();
         txtMaBL.setText(busBL.taoMaMoi()); 
         
-        // Mặc định chọn tháng và năm hiện tại
         LocalDate now = LocalDate.now();
         cbThang.setSelectedItem(String.valueOf(now.getMonthValue()));
         cbNam.setSelectedItem(String.valueOf(now.getYear()));
@@ -36,7 +35,6 @@ public class BangLuong1_GUI extends JDialog {
         setTitle("Sửa Bảng Lương");
         btnLuu.setText("Cập Nhật");
         
-        // Disable các khóa để tránh vi phạm Unique
         txtMaNV.setEditable(false);
         cbThang.setEnabled(false);
         cbNam.setEnabled(false);
@@ -121,11 +119,9 @@ public class BangLuong1_GUI extends JDialog {
         btnHuy.addActionListener(e -> dispose());
         btnLuu.addActionListener(e -> xuLyLuu());
         
-        // Bật Event Tự động tính tiền
         kichHoatTuDongTinhTien();
     }
     
-    // Thuật toán lắng nghe mỗi khi người dùng gõ phím vào ô Tiền
     private void kichHoatTuDongTinhTien() {
         DocumentListener listener = new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { tinhThucLanh(); }
@@ -143,11 +139,10 @@ public class BangLuong1_GUI extends JDialog {
             BigDecimal pc = txtPhuCap.getText().trim().isEmpty() ? BigDecimal.ZERO : new BigDecimal(txtPhuCap.getText().trim());
             BigDecimal kt = txtKhauTru.getText().trim().isEmpty() ? BigDecimal.ZERO : new BigDecimal(txtKhauTru.getText().trim());
             
-            // Thực lãnh = Lương CB + Phụ cấp - Khấu trừ
             BigDecimal thucLanh = lcb.add(pc).subtract(kt);
             txtThucLanh.setText(thucLanh.toString());
         } catch (Exception ex) {
-            // Nếu người dùng nhập chữ thay vì số, bỏ qua không tính
+
         }
     }
 
