@@ -133,4 +133,28 @@ public class ChiTietBaoHiem_DAO extends Connection_DAO {
         } catch(Exception e) { e.printStackTrace(); }
         return list;
     }
+    public List<ChiTietBaoHiem_DTO> layDanhSachNhanVienBaoHiemtumanv(String manv) {
+        List<ChiTietBaoHiem_DTO> list = new ArrayList<>();
+        String sql = "SELECT nv.ma_nv, nv.ho_ten, COUNT(ct.ma_bh) as so_luong " +
+                     "FROM NhanVien nv " +
+                     "LEFT JOIN ChiTietBaoHiem ct ON nv.ma_nv = ct.ma_nv "
+                     + " Where nv.ma_nv=? " +
+                     "GROUP BY nv.ma_nv, nv.ho_ten";
+        try
+        {
+        	PreparedStatement ps=con.prepareStatement(sql);
+        	ps.setString(1,manv);
+        	ResultSet rs=ps.executeQuery();
+            while(rs.next()) {
+                list.add(new ChiTietBaoHiem_DTO(
+                    rs.getString("ma_nv"),
+                    rs.getString("ho_ten"),
+                    rs.getInt("so_luong")));
+                }      
+           }
+        catch(Exception e) { 
+        	e.printStackTrace();
+        }
+        return list;
+    }
 }

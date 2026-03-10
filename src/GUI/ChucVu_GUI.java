@@ -15,6 +15,8 @@ public class ChucVu_GUI extends JPanel {
     JTextField txtSearch;
     JButton btnSearch, btnAdd, btnEdit, btnDelete, btnRefresh, btnQuanLyPhuCap;
     JLabel lblTitle;
+    private String currentRole = "Admin";
+    private String currentMaNV = "";
     
     ChucVu_BUS bus = new ChucVu_BUS();
 
@@ -156,7 +158,50 @@ public class ChucVu_GUI extends JPanel {
             // Gọi màn hình ChiTietChucVu_Dialog lên
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
             ChiTietChucVu_Dialog dialog = new ChiTietChucVu_Dialog(parentWindow, maCV, tenCV);
+            dialog.setPhanQuyen(currentRole);
             dialog.setVisible(true);
         });
+    }
+
+    public void setPhanQuyen(String quyen, String maNV) {
+        this.currentRole = quyen;
+        this.currentMaNV = maNV;
+
+        if (quyen.equalsIgnoreCase("User")) {
+            // 1. Chỉ load chức vụ của chính nhân viên đó
+            taiDuLieuLenBangUser(maNV);
+            
+            // 2. Ẩn toàn bộ các nút tác động dữ liệu
+            btnAdd.setVisible(false);
+            btnEdit.setVisible(false);
+            btnDelete.setVisible(false);            
+            txtSearch.setVisible(false);
+            btnSearch.setVisible(false);
+            btnRefresh.setVisible(false);
+            
+        } 
+        else if (quyen.equalsIgnoreCase("Manager")) {
+            taiDuLieuLenBangCV(); 
+            
+            btnDelete.setVisible(false); 
+            
+        }
+        
+        pnToolBar.revalidate();
+        pnToolBar.repaint();
+    }
+
+    private void taiDuLieuLenBangUser(String maNV) {
+        modelCV.setRowCount(0); 
+        List<ChucVu_DTO> list = bus.layChucVuTheoNV(maNV);
+        if (list != null) {
+            for (ChucVu_DTO cv : list) {
+                modelCV.addRow(new Object[]{ cv.getMaCV(), cv.getTenCV(), cv.getMoTa() });
+            }
+        }
+        
+        if (tableCV.getRowCount() > 0) {
+            tableCV.setRowSelectionInterval(0, 0);
+        }
     }
 }

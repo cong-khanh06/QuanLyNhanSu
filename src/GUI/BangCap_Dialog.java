@@ -22,14 +22,12 @@ public class BangCap_Dialog extends JDialog {
     private BangCap_GUI parentGUI;
     private boolean isEditMode = false;
 
-    // Constructor cho chức năng THÊM
     public BangCap_Dialog(BangCap_GUI parent) {
         this.parentGUI = parent;
         khoiTaoGiaoDien();
-        txtMaBC.setText(bus.taoMaMoi()); // Sinh mã tự động
+        txtMaBC.setText(bus.taoMaMoi()); 
     }
 
-    // Constructor cho chức năng SỬA
     public BangCap_Dialog(BangCap_GUI parent, BangCap_DTO bcEdit) {
         this.parentGUI = parent;
         this.isEditMode = true;
@@ -38,13 +36,11 @@ public class BangCap_Dialog extends JDialog {
         setTitle("Sửa Bằng Cấp");
         btnLuu.setText("Cập Nhật");
 
-        // Đổ dữ liệu lên form
         txtMaBC.setText(bcEdit.getMaBC());
         txtTenBC.setText(bcEdit.getTenBC());
         txtNoiCap.setText(bcEdit.getNoiCap());
         dpNgayCap.setDate(bcEdit.getNgayCap());
         
-        // Chọn đúng nhân viên trong ComboBox khi Sửa
         String maNVCanTim = bcEdit.getMaNV();
         for (int i = 0; i < cbMaNV.getItemCount(); i++) {
             if (cbMaNV.getItemAt(i).startsWith(maNVCanTim + " -")) {
@@ -86,7 +82,7 @@ public class BangCap_Dialog extends JDialog {
 
         pnForm.add(new JLabel("Nhân Viên:"));
         cbMaNV = new JComboBox<>();
-        loadDanhSachNhanVienVaoCB(); // Gọi hàm load dữ liệu bằng NhanVien_DAO
+        loadDanhSachNhanVienVaoCB(); 
         pnForm.add(cbMaNV);
 
         add(pnForm, BorderLayout.CENTER);
@@ -103,15 +99,12 @@ public class BangCap_Dialog extends JDialog {
         btnLuu.addActionListener(e -> xuLyLuu());
     }
 
-    // Lấy dữ liệu từ NhanVien_DAO đổ vào ComboBox
     private void loadDanhSachNhanVienVaoCB() {
-        NhanVien_BUS nvBUS = new NhanVien_BUS(); // Khởi tạo DAO của Nhân viên
-        List<NhanVien_DTO> dsNhanVien = nvBUS.layDanhSachNhanVien(); // Lấy list NV
+        NhanVien_BUS nvBUS = new NhanVien_BUS(); 
+        List<NhanVien_DTO> dsNhanVien = nvBUS.layDanhSachNhanVien(); 
         
         for (NhanVien_DTO nv : dsNhanVien) {
-            // Tận dụng enum của bạn: Chỉ load những người đang làm việc
             if (nv.getTrangThai() == NhanVien_DTO.TrangThaiNhanVien.DangLam) {
-                // Ghép chuỗi theo dạng: "NV001 - Nguyen Van A"
                 cbMaNV.addItem(nv.getMaNV() + " - " + nv.getHoTen());
             }
         }
@@ -133,7 +126,6 @@ public class BangCap_Dialog extends JDialog {
             return;
         }
 
-        // Cắt chuỗi để lấy ra Mã NV đẩy xuống Database
         String selectedItem = cbMaNV.getSelectedItem().toString();
         String maNV = selectedItem.split(" - ")[0];
 

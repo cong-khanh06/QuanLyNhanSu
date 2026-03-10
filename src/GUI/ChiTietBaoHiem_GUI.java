@@ -15,8 +15,11 @@ public class ChiTietBaoHiem_GUI extends JPanel {
     JTextField txtSearch;
     JButton btnSearch, btnChiTiet, btnRefresh;
     JLabel lblTitle;
+    private String currentRole = "Admin";
 
     ChiTietBaoHiem_BUS bus = new ChiTietBaoHiem_BUS();
+    boolean check=true;
+    String manvuser="";
 
     public ChiTietBaoHiem_GUI() {
         setLayout(new BorderLayout());
@@ -64,13 +67,28 @@ public class ChiTietBaoHiem_GUI extends JPanel {
         add(scroll, BorderLayout.CENTER);
 
         // --- SỰ KIỆN ---
-        taiDuLieuLenBang();
+        if(!check)
+        {
+        	taiDuLieuLenBanguser(manvuser);
+        }
+        else
+        {
+        	taiDuLieuLenBang();
+        }
         addEvents();
     }
 
     private void taiDuLieuLenBang() {
         model.setRowCount(0);
         List<ChiTietBaoHiem_DTO> list = bus.layDanhSachNhanVienBaoHiem();
+        for (ChiTietBaoHiem_DTO nv : list) {
+            model.addRow(new Object[]{ nv.getMaNV(), nv.getTenNV(), nv.getSoLuongBH() });
+        }
+    }
+    public void taiDuLieuLenBanguser(String manv)
+    {
+    	model.setRowCount(0);
+        List<ChiTietBaoHiem_DTO> list = bus.laydanhsachNhanVienBHuser(manv);
         for (ChiTietBaoHiem_DTO nv : list) {
             model.addRow(new Object[]{ nv.getMaNV(), nv.getTenNV(), nv.getSoLuongBH() });
         }
@@ -104,11 +122,35 @@ public class ChiTietBaoHiem_GUI extends JPanel {
 
             // Mở Dialog y hệt như Dialog của Phụ Cấp
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
-            ChiTietBaoHiem_Dialog dialog = new ChiTietBaoHiem_Dialog(parentWindow, maNV, tenNV);
-            dialog.setVisible(true);
+             ChiTietBaoHiem_Dialog dialogBH = new ChiTietBaoHiem_Dialog(parentWindow, maNV, tenNV);
+            
+            if (currentRole.equals("User")) {
+                dialogBH.setphanquyenuser(false); // Chế độ chỉ xem
+            } else if (currentRole.equals("Manager")) {
+                dialogBH.setphanquyenManager(); // Không cho xóa
+            }
 
-            // Tải lại để cập nhật số lượng
-            taiDuLieuLenBang(); 
+            dialogBH.setVisible(true);
+
+            // Sau khi đóng, load lại bảng
+            if (currentRole.equals("User")) taiDuLieuLenBanguser(manvuser);
+            else taiDuLieuLenBang();
         });
+    }
+    public void setphanquyenUser(boolean kq, String manv) {
+        this.check = kq; // false
+        this.manvuser = manv;
+        this.currentRole = "User";
+
+        // Ẩn thanh công cụ tìm kiếm cho User
+        txtSearch.setVisible(false);
+        btnSearch.setVisible(false);
+        btnRefresh.setVisible(false);
+        taiDuLieuLenBanguser(manv);
+    }
+    public void setphanquyenManager() {
+        this.currentRole = "Manager";
+        this.check = true; 
+        taiDuLieuLenBang();
     }
 }

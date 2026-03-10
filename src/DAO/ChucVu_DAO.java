@@ -1,7 +1,7 @@
 package DAO;
 
 import DTO.ChucVu_DTO;
-import DTO.PhuCap_DTO; // Đừng quên Import DTO mới này nhé
+import DTO.PhuCap_DTO; 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,6 @@ public class ChucVu_DAO extends Connection_DAO {
     Connection con = getCon();
     Statement stmt = getStmt();
 
-    // 1. Lấy toàn bộ danh sách chức vụ (Đã bỏ cột ma_pc)
     public List<ChucVu_DTO> layDanhSachChucVu() {
         List<ChucVu_DTO> list = new ArrayList<>();
         try {
@@ -205,4 +204,47 @@ public class ChucVu_DAO extends Connection_DAO {
         } catch (Exception e) { e.printStackTrace(); }
         return false;
     }
+ // Thêm vào ChucVu_DAO.java
+
+ // Lấy chức vụ của 1 nhân viên cụ thể
+ public List<ChucVu_DTO> layChucVuTheoNV(String maNV) {
+     List<ChucVu_DTO> list = new ArrayList<>();
+     String sql = "SELECT cv.* FROM ChucVu cv " +
+                  "JOIN NhanVien nv ON cv.ma_cv = nv.ma_cv " +
+                  "WHERE nv.ma_nv = ?";
+     try (PreparedStatement ps = con.prepareStatement(sql)) {
+         ps.setString(1, maNV);
+         ResultSet rs = ps.executeQuery();
+         while (rs.next()) {
+             list.add(new ChucVu_DTO(
+                 rs.getString("ma_cv"),
+                 rs.getString("ten_cv"),
+                 rs.getString("mo_ta")
+             ));
+         }
+     } catch (Exception e) { e.printStackTrace(); }
+     return list;
+ }
+
+ public List<PhuCap_DTO> layPhuCapCuaNhanVien(String maNV) {
+     List<PhuCap_DTO> list = new ArrayList<>();
+     String sql = "SELECT p.* FROM PhuCap p " +
+                  "JOIN ChiTietChucVu ct ON p.ma_pc = ct.ma_pc " +
+                  "JOIN NhanVien nv ON ct.ma_cv = nv.ma_cv " +
+                  "WHERE nv.ma_nv = ?";
+     try (PreparedStatement ps = con.prepareStatement(sql)) {
+         ps.setString(1, maNV);
+         ResultSet rs = ps.executeQuery();
+         while (rs.next()) {
+             list.add(new PhuCap_DTO(
+                 rs.getString("ma_pc"),
+                 rs.getString("ten_pc"),
+                 rs.getDouble("so_tien")
+             ));
+         }
+     } catch (Exception e) { e.printStackTrace(); }
+     return list;
+ }
+ 
+ 
 }

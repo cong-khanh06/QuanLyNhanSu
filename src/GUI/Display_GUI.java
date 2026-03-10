@@ -226,6 +226,8 @@ public class Display_GUI extends JFrame{
     		nhanvien.setphanquyennut(false,quyen);
     		hopdong.setphanquyenUser(false, manv);
     		chamcong.setphanquyenUser(false,manv);
+    		chitietbaohiem.setphanquyenUser(false, manv);
+    		chucvu.setPhanQuyen(quyen, manv);
     		pnCard.revalidate();
     		pnCard.repaint();
     	}
@@ -235,6 +237,8 @@ public class Display_GUI extends JFrame{
     		hopdong.setphanquyenManager(false);
     		phongban.setphanquyenManager(false);
     		duan.setphanquyenManager(false);
+    		chitietbaohiem.setphanquyenManager();
+    		chucvu.setPhanQuyen(quyen, manv);
     		btnTK.setVisible(false);	
     		pnCard.revalidate();
     		pnCard.repaint();

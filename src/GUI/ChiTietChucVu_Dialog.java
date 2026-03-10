@@ -117,4 +117,21 @@ public class ChiTietChucVu_Dialog extends JDialog {
             cbPhuCap.addItem(pc.getMaPC() + " - " + pc.getTenPC());
         }
     }
+ // --- HÀM PHÂN QUYỀN CHO DIALOG CHI TIẾT PHỤ CẤP ---
+    public void setPhanQuyen(String quyen) {
+        if (quyen.equalsIgnoreCase("User")) {
+            btnThem.setVisible(false);
+            btnXoa.setVisible(false);            
+            cbPhuCap.setEnabled(false);
+            
+        } 
+        else if (quyen.equalsIgnoreCase("Manager")) {
+            btnThem.setVisible(true);
+            btnThem.setEnabled(true);
+            
+            btnXoa.setVisible(false); 
+            btnXoa.setEnabled(false);
+            
+        }
+    }
 }

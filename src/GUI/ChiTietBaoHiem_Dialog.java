@@ -171,4 +171,19 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
             cbLoaiBH.addItem(bh);
         }
     }
+    public void setphanquyenuser(boolean kq)
+    {
+    	btnThem.setVisible(kq);
+    	btnXoa.setVisible(kq);
+    	txtSoThe.setEditable(false);
+        txtNoiCap.setEditable(false);
+        cbLoaiBH.setEnabled(false);
+        dpNgayCap.setEnabled(false);
+    	
+    }
+    public void setphanquyenManager()
+    {
+    	btnXoa.setVisible(false);
+    }
+    
 }

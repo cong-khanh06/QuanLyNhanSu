@@ -38,4 +38,8 @@ public class ChiTietBaoHiem_BUS {
         if (tuKhoa == null) tuKhoa = "";
         return dao.timKiemNhanVienBaoHiem(tuKhoa.trim());
     }
+    public List<ChiTietBaoHiem_DTO> laydanhsachNhanVienBHuser(String manv)
+    {
+    	return dao.layDanhSachNhanVienBaoHiemtumanv(manv);
+    }
 }

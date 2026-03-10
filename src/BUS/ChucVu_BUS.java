@@ -70,4 +70,11 @@ public class ChucVu_BUS {
     public boolean xoaPhuCapKhoiChucVu(String maCV, String maPC) {
         return dao.xoaPhuCapKhoiChucVu(maCV, maPC);
     }
+    public List<ChucVu_DTO> layChucVuTheoNV(String maNV) {
+        return dao.layChucVuTheoNV(maNV);
+    }
+
+    public List<PhuCap_DTO> layPhuCapCuaNhanVien(String maNV) {
+        return dao.layPhuCapCuaNhanVien(maNV);
+    }
 }
