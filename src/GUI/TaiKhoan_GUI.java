@@ -22,7 +22,6 @@ public class TaiKhoan_GUI extends JPanel {
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        // --- HEADER ---
         JPanel panelHeader = new JPanel(new BorderLayout());
         panelHeader.setOpaque(false);
 
@@ -56,7 +55,6 @@ public class TaiKhoan_GUI extends JPanel {
 
         setupTable();
 
-        // --- EVENTS ---
         btnAdd.addActionListener(e -> showInputForm(null));
         btnUpdate.addActionListener(e -> {
             int row = table.getSelectedRow();
