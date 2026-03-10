@@ -219,4 +219,30 @@ public class HopDong_DAO {
         }
         return count;
     }
+    
+    public double getMucLuongCoBanTheoMaNV(String manv) {
+        double mucLuong = 0.0;
+        
+        String sql = "SELECT TOP 1 muc_luong_co_ban FROM HopDong WHERE ma_nv = ? ORDER BY ngay_ky DESC";
+        Connection con = null;
+        
+        try {
+            con = connDAO.getCon();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, manv);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                mucLuong = rs.getDouble("muc_luong_co_ban");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                connDAO.Closeconnection(con);
+            }
+        }
+        return mucLuong;
+    }
 }

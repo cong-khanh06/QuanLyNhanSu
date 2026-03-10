@@ -65,7 +65,7 @@ public class ChucVu_BUS {
         return dao.layChucVuTheoNV(maNV);
     }
 
-    public List<PhuCap_DTO> layPhuCapCuaNhanVien(String maNV) {
-        return dao.layPhuCapCuaNhanVien(maNV);
+    public double getTongPhuCapCuaNhanVien(String manv){
+        return dao.layTongPhuCapCuaNhanVien(manv);
     }
 }
