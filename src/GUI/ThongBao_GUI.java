@@ -25,9 +25,7 @@ public class ThongBao_GUI extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // ==========================================
-        // 1. PHẦN BẢNG DỮ LIỆU (BÊN TRÁI)
-        // ==========================================
+        
         JPanel pnLeft = new JPanel(new BorderLayout());
         pnLeft.setBackground(Color.WHITE);
         pnLeft.setBorder(BorderFactory.createTitledBorder("Danh Sách Thông Báo"));
@@ -45,9 +43,7 @@ public class ThongBao_GUI extends JPanel {
         pnLeft.add(new JScrollPane(tableTB), BorderLayout.CENTER);
         add(pnLeft, BorderLayout.CENTER);
 
-        // ==========================================
-        // 2. PHẦN FORM NHẬP LIỆU (BÊN PHẢI)
-        // ==========================================
+        
         JPanel pnRight = new JPanel(new BorderLayout(0, 15));
         pnRight.setPreferredSize(new Dimension(350, 0));
         pnRight.setBackground(Color.WHITE);
@@ -58,7 +54,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.setBackground(Color.WHITE);
         pnForm.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Mã Thông Báo
+        
         pnForm.add(new JLabel("Mã Thông Báo (Tự động):"));
         txtMaTB = new JTextField();
         txtMaTB.setEditable(false);
@@ -66,7 +62,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.add(txtMaTB);
         pnForm.add(Box.createVerticalStrut(10));
 
-        // Mã Tài Khoản
+        
         pnForm.add(new JLabel("Người tạo (mã tài khoản):"));
         String maTK_DangNhap = "";
         if (DTO.taiKhoanDangDangNhap.getTkHienTai() != null) {
@@ -77,7 +73,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.add(txtMaTK);
         pnForm.add(Box.createVerticalStrut(10));
 
-        // Ngày Tạo
+        
         pnForm.add(new JLabel("Ngày Tạo:"));
         txtNgayTao = new JTextField();
         txtNgayTao.setEditable(false); 
@@ -85,7 +81,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.add(txtNgayTao);
         pnForm.add(Box.createVerticalStrut(10));
 
-        // Nội Dung
+        
         pnForm.add(new JLabel("Nội Dung:"));
         txtNoiDung = new JTextArea(5, 20);
         txtNoiDung.setLineWrap(true);

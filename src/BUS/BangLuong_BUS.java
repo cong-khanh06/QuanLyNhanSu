@@ -29,7 +29,7 @@ public class BangLuong_BUS {
         return dao.getNewestMaBL();
     }
 
-    // Hàm tìm kiếm nâng cao (Lọc bằng Stream API cho tốc độ cao)
+    
     public List<BangLuong_DTO> timKiemVaLoc(String tuKhoa, String thang, String nam, String trangThai) {
         List<BangLuong_DTO> all = dao.layDanhSachBangLuong();
         String keyword = tuKhoa.toLowerCase().trim();

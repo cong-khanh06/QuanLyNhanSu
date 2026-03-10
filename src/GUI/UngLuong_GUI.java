@@ -42,7 +42,7 @@ public class UngLuong_GUI extends JPanel {
     public UngLuong_GUI() {
         setLayout(new BorderLayout());
         
-        // --- HEADER ---
+        
         pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnHeader.setBackground(new Color(150, 214, 255));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
@@ -61,7 +61,7 @@ public class UngLuong_GUI extends JPanel {
         pnSearch.setBackground(new Color(150, 214, 255));
         
         txtSearch = new JTextField();
-        // Không dùng setPreferredSize để txtSearch tự động kéo dài
+        
         txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         
         btnSearch = new ButtonToolBar("Tìm kiếm");
@@ -70,7 +70,7 @@ public class UngLuong_GUI extends JPanel {
         pnSearch.add(txtSearch, BorderLayout.CENTER);
         pnSearch.add(btnSearch, BorderLayout.EAST);
         
-        // 2. Nhóm Nút chức năng & Lọc (Đặt ở EAST để đẩy về góc phải)
+        
         JPanel pnAction = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnAction.setBackground(new Color(150, 214, 255));
         
@@ -97,7 +97,7 @@ public class UngLuong_GUI extends JPanel {
         pnAction.add(btnDown);
         pnAction.add(btnrefresh);
         
-        // 3. Ráp 2 nhóm vào ToolBar chính
+        
         pnToolBar.add(pnSearch, BorderLayout.CENTER);
         pnToolBar.add(pnAction, BorderLayout.EAST);
         
@@ -111,7 +111,7 @@ public class UngLuong_GUI extends JPanel {
         pnSearchUL.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearchUL, BorderLayout.NORTH);
         
-        // --- BẢNG DỮ LIỆU ---
+        
         String[] colsUL = {
             "Mã Ứng Lương", "Mã Bảng Lương", "Ngày Ứng", "Số Tiền", "Lý Do", "Trạng Thái"
         };
@@ -129,7 +129,7 @@ public class UngLuong_GUI extends JPanel {
         
         add(new JScrollPane(tableUL), BorderLayout.CENTER);
         
-        // --- THỐNG KÊ ---
+        
         JPanel pnThongKe = new JPanel(new GridLayout(1, 3, 20, 0)); 
         pnThongKe.setBackground(Color.WHITE);
         pnThongKe.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
