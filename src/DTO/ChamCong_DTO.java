@@ -1,125 +1,52 @@
 package DTO;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class ChamCong_DTO {
     private String maChamCong;
     private String maNV;
-    private int thang, nam;
-    private int soNgayLam, soGioTre, soGioTangCa;
-    private String hoTen;
+    private String hoTen; // Lấy từ JOIN bảng NhanVien
+    private LocalDate ngayTao;
+    private LocalTime gioVao;
+    private LocalTime gioRa;
+    private float soGioTangCa;
+    private String trangThai;
 
-    private int soNgayTre;
-    private int soNgayTangCa;
+    public ChamCong_DTO() {}
 
-    public ChamCong_DTO(String maChamCong, String maNV, int thang, int nam, int soNgayLam, int soGioTre,
-            int soGioTangCa, String hoTen, int soNgayTre, int soNgayTangCa) {
+    public ChamCong_DTO(String maChamCong, String maNV, String hoTen, LocalDate ngayTao, LocalTime gioVao, LocalTime gioRa, float soGioTangCa, String trangThai) {
         this.maChamCong = maChamCong;
         this.maNV = maNV;
-        this.thang = thang;
-        this.nam = nam;
-        this.soNgayLam = soNgayLam;
-        this.soGioTre = soGioTre;
-        this.soGioTangCa = soGioTangCa;
         this.hoTen = hoTen;
-        this.soNgayTre = soNgayTre;
-        this.soNgayTangCa = soNgayTangCa;
-    }
-    public ChamCong_DTO(String maChamCong,
-                    String maNV,
-                    int thang,
-                    int nam,
-                    int soNgayLam,
-                    int soGioTre,
-                    int soGioTangCa) {
-
-    this.maChamCong = maChamCong;
-    this.maNV = maNV;
-    this.thang = thang;
-    this.nam = nam;
-    this.soNgayLam = soNgayLam;
-    this.soGioTre = soGioTre;
-    this.soGioTangCa = soGioTangCa;
-}
-    public ChamCong_DTO(){}
-
-    public String getMaChamCong() {
-        return maChamCong;
-    }
-
-    public void setMaChamCong(String maChamCong) {
-        this.maChamCong = maChamCong;
-    }
-
-    public String getMaNV() {
-        return maNV;
-    }
-
-    public void setMaNV(String maNV) {
-        this.maNV = maNV;
-    }
-
-    public int getThang() {
-        return thang;
-    }
-
-    public void setThang(int thang) {
-        this.thang = thang;
-    }
-
-    public int getNam() {
-        return nam;
-    }
-
-    public void setNam(int nam) {
-        this.nam = nam;
-    }
-
-    public int getSoNgayLam() {
-        return soNgayLam;
-    }
-
-    public void setSoNgayLam(int soNgayLam) {
-        this.soNgayLam = soNgayLam;
-    }
-
-    public int getSoGioTre() {
-        return soGioTre;
-    }
-
-    public void setSoGioTre(int soGioTre) {
-        this.soGioTre = soGioTre;
-    }
-
-    public int getSoGioTangCa() {
-        return soGioTangCa;
-    }
-
-    public void setSoGioTangCa(int soGioTangCa) {
+        this.ngayTao = ngayTao;
+        this.gioVao = gioVao;
+        this.gioRa = gioRa;
         this.soGioTangCa = soGioTangCa;
+        this.trangThai = trangThai;
     }
 
-    public String getHoTen() {
-        return hoTen;
-    }
+    public String getMaChamCong() { return maChamCong; }
+    public void setMaChamCong(String maChamCong) { this.maChamCong = maChamCong; }
 
-    public void setHoTen(String hoTen) {
-        this.hoTen = hoTen;
-    }
+    public String getMaNV() { return maNV; }
+    public void setMaNV(String maNV) { this.maNV = maNV; }
 
-    public int getSoNgayTre() {
-        return soNgayTre;
-    }
+    public String getHoTen() { return hoTen; }
+    public void setHoTen(String hoTen) { this.hoTen = hoTen; }
 
-    public void setSoNgayTre(int soNgayTre) {
-        this.soNgayTre = soNgayTre;
-    }
+    public LocalDate getNgayTao() { return ngayTao; }
+    public void setNgayTao(LocalDate ngayTao) { this.ngayTao = ngayTao; }
 
-    public int getSoNgayTangCa() {
-        return soNgayTangCa;
-    }
+    public LocalTime getGioVao() { return gioVao; }
+    public void setGioVao(LocalTime gioVao) { this.gioVao = gioVao; }
 
-    public void setSoNgayTangCa(int soNgayTangCa) {
-        this.soNgayTangCa = soNgayTangCa;
-    }
-    
+    public LocalTime getGioRa() { return gioRa; }
+    public void setGioRa(LocalTime gioRa) { this.gioRa = gioRa; }
 
+    public float getSoGioTangCa() { return soGioTangCa; }
+    public void setSoGioTangCa(float soGioTangCa) { this.soGioTangCa = soGioTangCa; }
+
+    public String getTrangThai() { return trangThai; }
+    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
 }

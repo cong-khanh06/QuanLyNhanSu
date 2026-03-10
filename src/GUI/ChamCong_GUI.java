@@ -1,325 +1,199 @@
 package GUI;
 
 import BUS.ChamCong_BUS;
-import DTO.ChamCongChiTiet_DTO;
 import DTO.ChamCong_DTO;
+import GUI.button.ButtonToolBar;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import javax.swing.BorderFactory;
-import java.awt.Font;
+import java.awt.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Year;
-import java.awt.BorderLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class ChamCong_GUI extends JPanel {
 
     private JTable table;
     private DefaultTableModel model;
-
     private JTextField txtSearch;
-    private JComboBox<String> cboPhong;
-    private JComboBox<String> cboGioiTinh;
-    private JComboBox<Integer> cboThang;
-    private JComboBox<Integer> cboNam;
-
-    private JTable tableChiTiet;
-    private DefaultTableModel modelChiTiet;
-
-    private JButton btnChamCong;
+    private JComboBox<String> cboPhong, cboThang, cboNam; 
+    private JButton btnSearch, btnAdd, btnEdit, btnDelete;
 
     private ChamCong_BUS bus = new ChamCong_BUS();
     private boolean isAdmin = true; 
     private String currentMaNV = ""; 
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public ChamCong_GUI() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        JLabel lblTitle = new JLabel("Bảng chấm công nhân viên", JLabel.CENTER);
+        JLabel lblTitle = new JLabel("QUẢN LÝ CHẤM CÔNG HÀNG NGÀY", JLabel.CENTER);
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        filterPanel.setBackground(new Color(150, 214, 255));
+        filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        txtSearch = new JTextField(18);
-        JButton btnSearch = new JButton("Tìm kiếm");
-        btnSearch.setBackground(new Color(52, 152, 219));
-        btnSearch.setForeground(Color.WHITE);
+        txtSearch = new JTextField(15);
+        txtSearch.setPreferredSize(new Dimension(150, 30));
+        btnSearch = new JButton("Tìm kiếm");
 
-        JLabel lblPhong = new JLabel("Phòng ban:");
         cboPhong = new JComboBox<>();
         cboPhong.addItem("Tất cả");
-        List<String> dsPhong = bus.getDanhSachPhong();
-        for (String p : dsPhong) {
-            cboPhong.addItem(p);
-        }
+        for (String p : bus.getDanhSachPhong()) cboPhong.addItem(p);
 
-        JLabel lblGioiTinh = new JLabel("Giới tính:");
-        cboGioiTinh = new JComboBox<>();
-        cboGioiTinh.addItem("Tất cả");
-        cboGioiTinh.addItem("Nam");
-        cboGioiTinh.addItem("Nữ");
-
-        JLabel lblThang = new JLabel("Tháng:");
         cboThang = new JComboBox<>();
-        for (int i = 1; i <= 12; i++) {
-            cboThang.addItem(i);
-        }
-        JLabel lblNam = new JLabel("Năm:");
+        cboThang.addItem("Tất cả");
+        for (int i = 1; i <= 12; i++) cboThang.addItem(String.valueOf(i));
+        
         cboNam = new JComboBox<>();
+        cboNam.addItem("Tất cả");
         int namHienTai = Year.now().getValue();
-        for (int i = 2023; i <= namHienTai; i++) {
-            cboNam.addItem(i);
-        }
-        cboThang.setSelectedItem(LocalDate.now().getMonthValue());
-        cboNam.setSelectedItem(LocalDate.now().getYear());
+        for (int i = 2020; i <= namHienTai; i++) cboNam.addItem(String.valueOf(i)); 
+        
+        
+        cboThang.setSelectedItem("Tất cả");
+        cboNam.setSelectedItem("Tất cả");
 
-
-        btnChamCong = new JButton("Chấm công");
-        btnChamCong.setBackground(new Color(46, 204, 113));
-        btnChamCong.setForeground(Color.WHITE);
+        btnAdd = new ButtonToolBar("Thêm Mới");
+        btnEdit = new ButtonToolBar("Sửa");
+        btnDelete = new ButtonToolBar("Xóa");
 
         filterPanel.add(txtSearch);
         filterPanel.add(btnSearch);
-        filterPanel.add(lblPhong);
-        filterPanel.add(cboPhong);
-        filterPanel.add(lblGioiTinh);
-        filterPanel.add(cboGioiTinh);
-        filterPanel.add(lblThang);
-        filterPanel.add(cboThang);
-        filterPanel.add(lblNam);
-        filterPanel.add(cboNam);
-        filterPanel.add(btnChamCong);
+        filterPanel.add(new JLabel("Phòng:")); filterPanel.add(cboPhong);
+        filterPanel.add(new JLabel("Tháng:")); filterPanel.add(cboThang);
+        filterPanel.add(new JLabel("Năm:")); filterPanel.add(cboNam);
+        filterPanel.add(btnAdd);
+        filterPanel.add(btnEdit);
+        filterPanel.add(btnDelete);
 
+        add(lblTitle, BorderLayout.NORTH);
+        
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(filterPanel, BorderLayout.NORTH);
 
-        JPanel northPanel = new JPanel(new BorderLayout());
-        northPanel.add(lblTitle, BorderLayout.NORTH);
-        northPanel.add(filterPanel, BorderLayout.SOUTH);
-
-        add(northPanel, BorderLayout.NORTH);
-
-        String[] cols = { 
-        		"STT", 
-        		"Mã chấm công", 
-        		"Nhân viên", 
-        		"Ngày làm", 
-        		"Nghỉ", 
-        		"Trễ", 
-        		"Tăng ca",
-        		"Trạng thái"
-        		};
+        String[] cols = { "Mã CC", "Nhân viên", "Ngày Chấm", "Giờ Vào", "Giờ Ra", "Tăng ca (Giờ)", "Trạng thái" };
         model = new DefaultTableModel(cols, 0) {
-            public boolean isCellEditable(int r, int c) {
-                return false;
-            }
+            public boolean isCellEditable(int r, int c) { return false; }
         };
 
         table = new JTable(model);
         table.setRowHeight(28);
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-
-        JPanel centerPanel = new JPanel(new BorderLayout());
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        table.setShowGrid(true);
 
         centerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        String[] colsCT = { "Thời gian", "Trạng thái", "Số giờ" };
-
-        modelChiTiet = new DefaultTableModel(colsCT, 0) {
-            public boolean isCellEditable(int r, int c) {
-                return false;
-            }
-        };
-
-        tableChiTiet = new JTable(modelChiTiet);
-        tableChiTiet.setRowHeight(26);
-
-        JScrollPane spCT = new JScrollPane(tableChiTiet);
-        spCT.setPreferredSize(new java.awt.Dimension(0, 150));
-
-        centerPanel.add(spCT, BorderLayout.SOUTH);
-
         add(centerPanel, BorderLayout.CENTER);
 
-        btnChamCong.addActionListener(e -> moChamCong());
-        btnSearch.addActionListener(e -> loadTable());
-
-        table.getSelectionModel().addListSelectionListener(e -> loadChiTiet());
-
-        cboPhong.addActionListener(e -> loadTable());
-        cboGioiTinh.addActionListener(e -> loadTable());
+        
+        btnSearch.addActionListener(e -> refreshData());
+        cboPhong.addActionListener(e -> refreshData());
         cboThang.addActionListener(e -> refreshData());
         cboNam.addActionListener(e -> refreshData());
 
-        refreshData();
-    }
-    private void refreshData() {
-        if (isAdmin) {
-            loadTable();
-        } else {
-            loadTableuser(currentMaNV);
-        }
-    }
+        btnAdd.addActionListener(e -> {
+            new ChamCong1_GUI(this, null).setVisible(true);
+        });
 
-    private void moChamCong() {
-
-        JFrame f = new JFrame("Chấm công chi tiết");
-        f.setSize(950, 600);
-        f.setLocationRelativeTo(null);
-
-        ThaoTacChamCong_GUI panel = new ThaoTacChamCong_GUI();
-
-        f.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                loadTable();
+        btnEdit.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng để sửa!"); return;
+            }
+            try {
+                String macc = table.getValueAt(row, 0).toString();
+                String manv = table.getValueAt(row, 1).toString().split(" - ")[0]; 
+                
+                String strNgay = table.getValueAt(row, 2).toString();
+                LocalDate ngay = strNgay.isEmpty() ? null : LocalDate.parse(strNgay, dateFormatter);
+                
+                String strVao = table.getValueAt(row, 3).toString();
+                LocalTime vao = strVao.equals("--:--") ? null : LocalTime.parse(strVao);
+                
+                String strRa = table.getValueAt(row, 4).toString();
+                LocalTime ra = strRa.equals("--:--") ? null : LocalTime.parse(strRa);
+                
+                float tangCa = Float.parseFloat(table.getValueAt(row, 5).toString());
+                String trangThai = table.getValueAt(row, 6).toString();
+                
+                ChamCong_DTO ccEdit = new ChamCong_DTO(macc, manv, "", ngay, vao, ra, tangCa, trangThai);
+                new ChamCong1_GUI(this, ccEdit).setVisible(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
 
-        f.add(panel);
+        btnDelete.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng để xóa!"); return;
+            }
+            String macc = table.getValueAt(row, 0).toString();
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (bus.xoaChamCong(macc)) {
+                    JOptionPane.showMessageDialog(this, "Đã xóa!");
+                    refreshData();
+                }
+            }
+        });
 
-        f.setVisible(true);
+        refreshData();
+    }
+
+    public void refreshData() {
+        if (isAdmin) loadTable();
+        else loadTableuser(currentMaNV);
     }
 
     private void loadTable() {
         model.setRowCount(0);
-
-        int thang = (int) cboThang.getSelectedItem();
-        int nam = (int) cboNam.getSelectedItem();
-
+        int thang = cboThang.getSelectedItem().equals("Tất cả") ? 0 : Integer.parseInt(cboThang.getSelectedItem().toString());
+        int nam = cboNam.getSelectedItem().equals("Tất cả") ? 0 : Integer.parseInt(cboNam.getSelectedItem().toString());
+        
         String phong = cboPhong.getSelectedItem().toString();
-        String gioiTinh = cboGioiTinh.getSelectedItem().toString();
+        if (phong.equals("Tất cả")) phong = "";
         String keyword = txtSearch.getText().trim();
 
-        if (phong.equals("Tất cả")) {
-            phong = "";
-        }
-        if ("Tất cả".equals(gioiTinh)) {
-            gioiTinh = "";
-        }
-
-
-        List<ChamCong_DTO> list = bus.getDanhSachChamCong(thang, nam, phong, gioiTinh, keyword);
-        if (list == null)
-            return;
-
-        int stt = 1;
-        for (ChamCong_DTO c : list) {
-
-            String nhanVien = c.getMaNV() + " - " + c.getHoTen();
-
-            int[] tk = bus.getThongKeChamCong(c.getMaChamCong());
-
-            int soNgayNghi = tk[0];
-            int soNgayTre = tk[1];
-            int soNgayTangCa = tk[2];
-
-            String trangThai = (tk[3] == 1) ? "Đã chấm công" : "Chưa chấm công";
-            
-            model.addRow(new Object[] {
-                    stt++,
-                    c.getMaChamCong(),
-                    nhanVien,
-                    c.getSoNgayLam(),
-                    soNgayNghi,
-                    soNgayTre,
-                    soNgayTangCa,
-                    trangThai
-            });
-        }
+        fillTable(bus.getDanhSachChamCong(thang, nam, phong, keyword));
     }
 
-    private void loadChiTiet() {
-
-        int row = table.getSelectedRow();
-        if (row < 0)
-            return;
-
-        modelChiTiet.setRowCount(0);
-
-        String maNV = model.getValueAt(row, 2).toString().split(" - ")[0];
-
-        int thang = (int) cboThang.getSelectedItem();
-        int nam = (int) cboNam.getSelectedItem();
-
-        List<ChamCongChiTiet_DTO> list = bus.getChiTietChamCong(maNV, thang, nam);
-
-        int tongNghi = 0;
-        int tongTre = 0;
-        int tongTangCa = 0;
-
-        for (ChamCongChiTiet_DTO c : list) {
-
-            modelChiTiet.addRow(new Object[] {
-                    c.getNgay(),
-                    c.getTrangThai(),
-                    c.getSoGio()
-            });
-            if ("Nghỉ".equals(c.getTrangThai()))
-                tongNghi++;
-            if ("Trễ".equals(c.getTrangThai()))
-                tongTre++;
-            if ("Tăng ca".equals(c.getTrangThai()))
-                tongTangCa++;
-        }
-
-        modelChiTiet.addRow(new Object[] { "", "", "" });
-        modelChiTiet.addRow(new Object[] { "Tổng nghỉ", tongNghi, "" });
-        modelChiTiet.addRow(new Object[] { "Tổng trễ", tongTre, "" });
-        modelChiTiet.addRow(new Object[] { "Tổng tăng ca", tongTangCa, "" });
-    }
-    public void setphanquyenUser(boolean kq,String manv) {
-    	this.isAdmin = kq;
+    public void setphanquyenUser(boolean isAdmin, String manv) {
+        this.isAdmin = isAdmin;
         this.currentMaNV = manv;
-        txtSearch.setEnabled(kq);
-        cboPhong.setEnabled(kq);
-        cboGioiTinh.setEnabled(kq);
-        btnChamCong.setEnabled(kq); 
-        loadTableuser(manv);
+        txtSearch.setEnabled(isAdmin);
+        cboPhong.setEnabled(isAdmin);
+        btnAdd.setEnabled(isAdmin); 
+        btnEdit.setEnabled(isAdmin); 
+        btnDelete.setEnabled(isAdmin); 
+        refreshData();
     }
+
     public void loadTableuser(String manv) {
         model.setRowCount(0);
-        int thang = (int) cboThang.getSelectedItem();
-        int nam = (int) cboNam.getSelectedItem();
-
-        List<ChamCong_DTO> list = bus.getDanhSachChamCongSVDangNhap(thang, nam,manv);
+        int thang = cboThang.getSelectedItem().equals("Tất cả") ? 0 : Integer.parseInt(cboThang.getSelectedItem().toString());
+        int nam = cboNam.getSelectedItem().equals("Tất cả") ? 0 : Integer.parseInt(cboNam.getSelectedItem().toString());
         
-        int stt = 1;
+        fillTable(bus.getDanhSachChamCongSVDangNhap(thang, nam, manv));
+    }
+    
+    private void fillTable(List<ChamCong_DTO> list) {
+        model.setRowCount(0);
         for (ChamCong_DTO c : list) {
             String nhanVien = c.getMaNV() + " - " + c.getHoTen();
-
-            int[] tk = bus.getThongKeChamCong(c.getMaChamCong());
-            int soNgayNghi = tk[0];
-            int soNgayTre = tk[1];
-            int soNgayTangCa = tk[2];
-
-            String trangThai = (tk[3] == 1) ? "Đã chấm công" : "Chưa chấm công";
+            String strNgay = c.getNgayTao() != null ? c.getNgayTao().format(dateFormatter) : "";
+            String strVao = c.getGioVao() != null ? c.getGioVao().format(timeFormatter) : "--:--";
+            String strRa = c.getGioRa() != null ? c.getGioRa().format(timeFormatter) : "--:--";
             
             model.addRow(new Object[] {
-                    stt++,
-                    c.getMaChamCong(),
-                    nhanVien,
-                    c.getSoNgayLam(),
-                    soNgayNghi,     
-                    soNgayTre,      
-                    soNgayTangCa,   
-                    trangThai
+                c.getMaChamCong(), nhanVien, strNgay, strVao, strRa, c.getSoGioTangCa(), c.getTrangThai()
             });
-        }
-
-
-        if (table.getRowCount() > 0) {
-            table.setRowSelectionInterval(0, 0);
         }
     }
 }

@@ -1,20 +1,25 @@
 package GUI;
 
 import BUS.BangLuong_BUS;
+import BUS.NhanVien_BUS;
 import DTO.BangLuong_DTO;
+import DTO.NhanVien_DTO;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class BangLuong1_GUI extends JDialog {
-    private JTextField txtMaBL, txtMaNV, txtTenNV, txtLuongCB, txtPhuCap, txtKhauTru, txtThucLanh;
-    private JComboBox<String> cbThang, cbNam, cbTrangThai;
+    private JTextField txtMaBL, txtTenNV, txtLuongCB, txtPhuCap, txtKhauTru, txtThucLanh;
+    private JComboBox<String> cbNhanVien, cbThang, cbNam, cbTrangThai;
     private JButton btnLuu, btnHuy;
     
     private BangLuong_BUS busBL = new BangLuong_BUS();
+    private NhanVien_BUS busNV = new NhanVien_BUS(); 
     private BangLuong_GUI parentGUI;
     private boolean isEditMode = false; 
     
@@ -23,10 +28,15 @@ public class BangLuong1_GUI extends JDialog {
         khoiTaoGiaoDien();
         txtMaBL.setText(busBL.taoMaMoi()); 
         
-        // Mặc định chọn tháng và năm hiện tại
+        
         LocalDate now = LocalDate.now();
         cbThang.setSelectedItem(String.valueOf(now.getMonthValue()));
         cbNam.setSelectedItem(String.valueOf(now.getYear()));
+        
+        
+        if (cbNhanVien.getItemCount() > 0) {
+            capNhatTenNV();
+        }
     }
 
     public BangLuong1_GUI(BangLuong_GUI parent, BangLuong_DTO blEdit) {
@@ -36,13 +46,22 @@ public class BangLuong1_GUI extends JDialog {
         setTitle("Sửa Bảng Lương");
         btnLuu.setText("Cập Nhật");
         
-        // Disable các khóa để tránh vi phạm Unique
-        txtMaNV.setEditable(false);
+        
+        cbNhanVien.setEnabled(false); 
         cbThang.setEnabled(false);
         cbNam.setEnabled(false);
         
         txtMaBL.setText(blEdit.getMaBL());
-        txtMaNV.setText(blEdit.getMaNV());
+        
+        
+        String maNVEdit = blEdit.getMaNV();
+        for (int i = 0; i < cbNhanVien.getItemCount(); i++) {
+            if (cbNhanVien.getItemAt(i).startsWith(maNVEdit)) {
+                cbNhanVien.setSelectedIndex(i);
+                break;
+            }
+        }
+        
         txtTenNV.setText(blEdit.getTenNV());
         cbThang.setSelectedItem(String.valueOf(blEdit.getThang()));
         cbNam.setSelectedItem(String.valueOf(blEdit.getNam()));
@@ -65,15 +84,30 @@ public class BangLuong1_GUI extends JDialog {
         pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
         pnForm.add(new JLabel("Mã Bảng Lương:"));
-        txtMaBL = new JTextField(); txtMaBL.setEditable(false); txtMaBL.setBackground(new Color(230, 230, 230));
+        txtMaBL = new JTextField(); 
+        txtMaBL.setEditable(false); 
+        txtMaBL.setBackground(new Color(230, 230, 230));
         pnForm.add(txtMaBL);
 
-        pnForm.add(new JLabel("Mã Nhân Viên:"));
-        txtMaNV = new JTextField();
-        pnForm.add(txtMaNV);
+        
+        pnForm.add(new JLabel("Chọn Nhân Viên:"));
+        cbNhanVien = new JComboBox<>();
+        List<NhanVien_DTO> dsNV = busNV.layDanhSachNhanVien();
+        for (NhanVien_DTO nv : dsNV) {
+            
+            if (nv.getTrangThai() != null && nv.getTrangThai().name().equals("DangLam")) {
+                cbNhanVien.addItem(nv.getMaNV() + " - " + nv.getHoTen());
+            }
+        }
+        pnForm.add(cbNhanVien);
+        
+        // Sự kiện: Khi chọn 1 nhân viên khác, tự động điền Tên NV xuống Textfield dưới
+        cbNhanVien.addActionListener(e -> capNhatTenNV());
         
         pnForm.add(new JLabel("Tên Nhân Viên:"));
-        txtTenNV = new JTextField(); txtTenNV.setEditable(false); txtTenNV.setBackground(new Color(230, 230, 230));
+        txtTenNV = new JTextField(); 
+        txtTenNV.setEditable(false); 
+        txtTenNV.setBackground(new Color(230, 230, 230));
         pnForm.add(txtTenNV);
 
         pnForm.add(new JLabel("Tháng:"));
@@ -121,11 +155,20 @@ public class BangLuong1_GUI extends JDialog {
         btnHuy.addActionListener(e -> dispose());
         btnLuu.addActionListener(e -> xuLyLuu());
         
-        // Bật Event Tự động tính tiền
         kichHoatTuDongTinhTien();
     }
     
-    // Thuật toán lắng nghe mỗi khi người dùng gõ phím vào ô Tiền
+    
+    private void capNhatTenNV() {
+        if (cbNhanVien.getSelectedItem() != null) {
+            String selectedItem = cbNhanVien.getSelectedItem().toString();
+            String[] parts = selectedItem.split(" - ");
+            if (parts.length > 1) {
+                txtTenNV.setText(parts[1].trim());
+            }
+        }
+    }
+    
     private void kichHoatTuDongTinhTien() {
         DocumentListener listener = new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { tinhThucLanh(); }
@@ -143,18 +186,23 @@ public class BangLuong1_GUI extends JDialog {
             BigDecimal pc = txtPhuCap.getText().trim().isEmpty() ? BigDecimal.ZERO : new BigDecimal(txtPhuCap.getText().trim());
             BigDecimal kt = txtKhauTru.getText().trim().isEmpty() ? BigDecimal.ZERO : new BigDecimal(txtKhauTru.getText().trim());
             
-            // Thực lãnh = Lương CB + Phụ cấp - Khấu trừ
             BigDecimal thucLanh = lcb.add(pc).subtract(kt);
             txtThucLanh.setText(thucLanh.toString());
         } catch (Exception ex) {
-            // Nếu người dùng nhập chữ thay vì số, bỏ qua không tính
+            
         }
     }
 
     private void xuLyLuu() {
         try {
             String maBL = txtMaBL.getText();
-            String maNV = txtMaNV.getText().trim();
+            
+            
+            String maNV = "";
+            if (cbNhanVien.getSelectedItem() != null) {
+                maNV = cbNhanVien.getSelectedItem().toString().split(" - ")[0].trim();
+            }
+            
             int thang = Integer.parseInt(cbThang.getSelectedItem().toString());
             int nam = Integer.parseInt(cbNam.getSelectedItem().toString());
             String trangThai = cbTrangThai.getSelectedItem().toString();
@@ -178,7 +226,7 @@ public class BangLuong1_GUI extends JDialog {
                 parentGUI.taiDuLieuLenBang(); 
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Lưu thất bại! (Kiểm tra lại Mã Nhân Viên hoặc Bảng lương tháng này đã tồn tại)", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lưu thất bại! (Bảng lương cho nhân viên này trong tháng " + thang + " có thể đã tồn tại)", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Số tiền không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
