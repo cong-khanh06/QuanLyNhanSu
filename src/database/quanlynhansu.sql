@@ -43,19 +43,6 @@ CREATE TABLE quanlynhansu.dbo.LoaiBaoHiem (
 );
 
 
--- quanlynhansu.dbo.LoaiDon definition
-
--- Drop table
-
--- DROP TABLE quanlynhansu.dbo.LoaiDon;
-
-CREATE TABLE quanlynhansu.dbo.LoaiDon (
-	ma_loai_don varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	ten_loai_don nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__LoaiDon__D9D2B98F16C245B6 PRIMARY KEY (ma_loai_don)
-);
-
-
 -- quanlynhansu.dbo.PhuCap definition
 
 -- Drop table
@@ -127,16 +114,16 @@ CREATE TABLE quanlynhansu.dbo.BangChamCong (
 
 CREATE TABLE quanlynhansu.dbo.BangLuong (
 	ma_bl varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	NgayTao date DEFAULT getdate() NULL,
 	luong_co_ban decimal(15,2) NULL,
 	tong_phu_cap decimal(15,2) NULL,
-	tong_khen_thuong decimal(15,2) NULL,
 	tong_khau_tru decimal(15,2) NULL,
 	thuc_lanh decimal(15,2) NULL,
-	ngay_tinh_luong date DEFAULT getdate() NULL,
 	trang_thai nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ma_nv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__BangLuon__0FE17EF94763CEC8 PRIMARY KEY (ma_bl)
+	thang int DEFAULT datepart(month,getdate()) NOT NULL,
+	nam int DEFAULT datepart(year,getdate()) NOT NULL,
+	CONSTRAINT PK__BangLuon__0FE17EF94763CEC8 PRIMARY KEY (ma_bl),
+	CONSTRAINT UQ_BangLuong_NhanVien_Thang_Nam UNIQUE (ma_nv,thang,nam)
 );
 ALTER TABLE quanlynhansu.dbo.BangLuong WITH NOCHECK ADD CONSTRAINT CHK_TrangThaiLuong CHECK (([trang_thai]='DaThanhToan' OR [trang_thai]='ChuaThanhToan'));
 
@@ -156,25 +143,6 @@ CREATE TABLE quanlynhansu.dbo.ChiTietBaoHiem (
 	ma_bh varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	CONSTRAINT PK__ChiTietB__5AE48C431966B3F0 PRIMARY KEY (ma_ctbh)
 );
-
-
--- quanlynhansu.dbo.ChiTietDon definition
-
--- Drop table
-
--- DROP TABLE quanlynhansu.dbo.ChiTietDon;
-
-CREATE TABLE quanlynhansu.dbo.ChiTietDon (
-	ma_don varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	ngay_tao date DEFAULT getdate() NULL,
-	noi_dung nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	trang_thai nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS DEFAULT 'ChoDuyet' NULL,
-	nguoi_duyet varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ma_nv varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ma_loai_don varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__ChiTietD__057D6CE1DA5B5587 PRIMARY KEY (ma_don)
-);
-ALTER TABLE quanlynhansu.dbo.ChiTietDon WITH NOCHECK ADD CONSTRAINT CHK_TrangThaiDon CHECK (([trang_thai]='TuChoi' OR [trang_thai]='DaDuyet' OR [trang_thai]='ChoDuyet'));
 
 
 -- quanlynhansu.dbo.DuAn definition
@@ -215,24 +183,6 @@ CREATE TABLE quanlynhansu.dbo.HopDong (
 	CONSTRAINT PK__HopDong__0FE16E863E629316 PRIMARY KEY (ma_hd)
 );
 ALTER TABLE quanlynhansu.dbo.HopDong WITH NOCHECK ADD CONSTRAINT CHK_TrangThaiHD CHECK (([trang_thai]='Huy' OR [trang_thai]='HetHan' OR [trang_thai]='HieuLuc'));
-
-
--- quanlynhansu.dbo.KhenThuongKyLuat definition
-
--- Drop table
-
--- DROP TABLE quanlynhansu.dbo.KhenThuongKyLuat;
-
-CREATE TABLE quanlynhansu.dbo.KhenThuongKyLuat (
-	ma_ktkl varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	ma_bl varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	loai nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	ngay_quyet_dinh date NULL,
-	so_tien decimal(15,2) NULL,
-	ly_do nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__KhenThuo__A84EA71D05ADE1F1 PRIMARY KEY (ma_ktkl)
-);
-ALTER TABLE quanlynhansu.dbo.KhenThuongKyLuat WITH NOCHECK ADD CONSTRAINT CHK_LoaiKTKL CHECK (([loai]='KyLuat' OR [loai]='KhenThuong'));
 
 
 -- quanlynhansu.dbo.NhanVien definition
@@ -313,6 +263,21 @@ CREATE TABLE quanlynhansu.dbo.TaiKhoan (
 ALTER TABLE quanlynhansu.dbo.TaiKhoan WITH NOCHECK ADD CONSTRAINT CHK_Quyen CHECK (([quyen_truy_cap]='Manager' OR [quyen_truy_cap]='User' OR [quyen_truy_cap]='Admin'));
 
 
+-- quanlynhansu.dbo.ThongBao definition
+
+-- Drop table
+
+-- DROP TABLE quanlynhansu.dbo.ThongBao;
+
+CREATE TABLE quanlynhansu.dbo.ThongBao (
+	ma_tb varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	ma_tk varchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	noi_dung nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ngay_tao datetime DEFAULT getdate() NULL,
+	CONSTRAINT PK_ThongBao PRIMARY KEY (ma_tb)
+);
+
+
 -- quanlynhansu.dbo.UngLuong definition
 
 -- Drop table
@@ -352,13 +317,6 @@ ALTER TABLE quanlynhansu.dbo.ChiTietBaoHiem ADD CONSTRAINT FK__ChiTietBa__ma_bh_
 ALTER TABLE quanlynhansu.dbo.ChiTietBaoHiem ADD CONSTRAINT FK__ChiTietBa__ma_nv__5812160E FOREIGN KEY (ma_nv) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
 
 
--- quanlynhansu.dbo.ChiTietDon foreign keys
-
-ALTER TABLE quanlynhansu.dbo.ChiTietDon ADD CONSTRAINT FK__ChiTietDo__ma_lo__6754599E FOREIGN KEY (ma_loai_don) REFERENCES quanlynhansu.dbo.LoaiDon(ma_loai_don);
-ALTER TABLE quanlynhansu.dbo.ChiTietDon ADD CONSTRAINT FK__ChiTietDo__ma_nv__656C112C FOREIGN KEY (ma_nv) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
-ALTER TABLE quanlynhansu.dbo.ChiTietDon ADD CONSTRAINT FK__ChiTietDo__nguoi__66603565 FOREIGN KEY (nguoi_duyet) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
-
-
 -- quanlynhansu.dbo.DuAn foreign keys
 
 ALTER TABLE quanlynhansu.dbo.DuAn ADD CONSTRAINT FK_DuAn_NguoiQuanLy FOREIGN KEY (nguoi_quan_ly) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
@@ -367,11 +325,6 @@ ALTER TABLE quanlynhansu.dbo.DuAn ADD CONSTRAINT FK_DuAn_NguoiQuanLy FOREIGN KEY
 -- quanlynhansu.dbo.HopDong foreign keys
 
 ALTER TABLE quanlynhansu.dbo.HopDong ADD CONSTRAINT FK__HopDong__ma_nv__52593CB8 FOREIGN KEY (ma_nv) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
-
-
--- quanlynhansu.dbo.KhenThuongKyLuat foreign keys
-
-ALTER TABLE quanlynhansu.dbo.KhenThuongKyLuat ADD CONSTRAINT FK_KTKL_BangLuong FOREIGN KEY (ma_bl) REFERENCES quanlynhansu.dbo.BangLuong(ma_bl);
 
 
 -- quanlynhansu.dbo.NhanVien foreign keys
@@ -395,6 +348,11 @@ ALTER TABLE quanlynhansu.dbo.PhongBan ADD CONSTRAINT FK__PhongBan__ma_bp__398D8E
 -- quanlynhansu.dbo.TaiKhoan foreign keys
 
 ALTER TABLE quanlynhansu.dbo.TaiKhoan ADD CONSTRAINT FK__TaiKhoan__ma_nv__4BAC3F29 FOREIGN KEY (ma_nv) REFERENCES quanlynhansu.dbo.NhanVien(ma_nv);
+
+
+-- quanlynhansu.dbo.ThongBao foreign keys
+
+ALTER TABLE quanlynhansu.dbo.ThongBao ADD CONSTRAINT FK_ThongBao_TaiKhoan FOREIGN KEY (ma_tk) REFERENCES quanlynhansu.dbo.TaiKhoan(ma_tk);
 
 
 -- quanlynhansu.dbo.UngLuong foreign keys

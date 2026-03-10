@@ -8,8 +8,8 @@ import BUS.NhanVien_BUS;
 import BUS.Phongban_BUS;
 import BUS.DuAn_BUS;
 import BUS.HopDong_BUS;
-import BUS.ThongBao_BUS; // Bổ sung import ThongBao_BUS
-import DTO.ThongBao_DTO; // Bổ sung import ThongBao_DTO
+import BUS.ThongBao_BUS; 
+import DTO.ThongBao_DTO; 
 import org.jfree.chart.*;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
@@ -18,13 +18,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class TrangChu_GUI extends JPanel {
     NhanVien_BUS busNv = new NhanVien_BUS();
     Phongban_BUS busPb = new Phongban_BUS();
     DuAn_BUS busDa = new DuAn_BUS();
     HopDong_BUS busHd = new HopDong_BUS();
-    ThongBao_BUS busTb = new ThongBao_BUS(); // Khởi tạo BUS Thông báo
+    ThongBao_BUS busTb = new ThongBao_BUS(); 
+    
+    
+    private DefaultTableModel modelAlert;
+    private JTable tableAlert;
     
     public TrangChu_GUI() {
         setLayout(new BorderLayout(20, 20)); 
@@ -72,39 +78,31 @@ public class TrangChu_GUI extends JPanel {
         lblAlertTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         pnAlerts.add(lblAlertTitle, BorderLayout.NORTH);
 
-
-
         
         String[] colsAlert = {"Ngày đăng", "Nội dung thông báo"};
-        DefaultTableModel modelAlert = new DefaultTableModel(colsAlert, 0) {
+        modelAlert = new DefaultTableModel(colsAlert, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; } // Khóa không cho sửa
+            public boolean isCellEditable(int row, int column) { return false; } 
         };
         
-        JTable tableAlert = new JTable(modelAlert);
-        tableAlert.setRowHeight(35); // Dòng cao cho dễ nhìn
+        tableAlert = new JTable(modelAlert);
+        tableAlert.setRowHeight(35); 
 
         tableAlert.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableAlert.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         tableAlert.setShowVerticalLines(false);
         
-        // Chỉnh độ rộng cột: Cột ngày hẹp lại, cột nội dung to ra
         tableAlert.getColumnModel().getColumn(0).setPreferredWidth(100);
         tableAlert.getColumnModel().getColumn(0).setMaxWidth(120);
 
-        // --- ĐỔ DỮ LIỆU TỪ DATABASE VÀO BẢNG ---
-        List<ThongBao_DTO> danhSachTB = busTb.layDanhSachThongBao();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        for (ThongBao_DTO tb : danhSachTB) {
-            String strNgay = (tb.getNgayTao() != null) ? tb.getNgayTao().format(dtf) : "";
-            modelAlert.addRow(new Object[]{strNgay, tb.getNoiDung()});
-        }
         
-        // --- THÊM SỰ KIỆN CLICK ĐÚP CHUỘT ĐỂ ĐỌC FULL THÔNG BÁO ---
+        capNhatDuLieuThongBao();
+        
+        
         tableAlert.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Nếu click đúp (2 lần)
+                if (e.getClickCount() == 2) { 
                     int row = tableAlert.getSelectedRow();
                     if (row >= 0) {
                         String ngay = modelAlert.getValueAt(row, 0).toString();
@@ -131,9 +129,31 @@ public class TrangChu_GUI extends JPanel {
         pnContent.add(pnAlerts);
 
         add(pnContent, BorderLayout.CENTER);
+        
+        
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                
+                capNhatDuLieuThongBao();
+            }
+        });
     }
 
     
+    public void capNhatDuLieuThongBao() {
+        if (modelAlert != null) {
+            modelAlert.setRowCount(0); 
+            List<ThongBao_DTO> danhSachTB = busTb.layDanhSachThongBao();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            
+            for (ThongBao_DTO tb : danhSachTB) {
+                String strNgay = (tb.getNgayTao() != null) ? tb.getNgayTao().format(dtf) : "";
+                modelAlert.addRow(new Object[]{strNgay, tb.getNoiDung()});
+            }
+        }
+    }
+
     private JPanel taoTheThongKe(String tieuDe, int giaTri, Color mauNen) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
