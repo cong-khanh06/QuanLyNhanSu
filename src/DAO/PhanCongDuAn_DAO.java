@@ -10,7 +10,7 @@ import java.util.List;
 public class PhanCongDuAn_DAO extends Connection_DAO {
     Connection con = getCon();
 
-    // 1. Lấy danh sách phân công theo Mã Dự Án
+    
     public List<PhanCongDuAn_DTO> layDanhSachPhanCong(String maDA) {
         List<PhanCongDuAn_DTO> list = new ArrayList<>();
         String sql = "SELECT pc.ma_da, pc.ma_nv, nv.ho_ten, pc.vai_tro " +
@@ -30,7 +30,7 @@ public class PhanCongDuAn_DAO extends Connection_DAO {
         return list;
     }
 
-    // 2. Thêm phân công
+    
     public boolean insertPhanCong(PhanCongDuAn_DTO pc) {
         String sql = "INSERT INTO PhanCongDuAn (ma_da, ma_nv, vai_tro) VALUES (?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -44,7 +44,7 @@ public class PhanCongDuAn_DAO extends Connection_DAO {
         return false;
     }
 
-    // 3. Xóa phân công
+    
     public boolean deletePhanCong(String maDA, String maNV) {
         String sql = "DELETE FROM PhanCongDuAn WHERE ma_da=? AND ma_nv=?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -55,7 +55,7 @@ public class PhanCongDuAn_DAO extends Connection_DAO {
         return false;
     }
 
-    // 4. Cập nhật vai trò
+    
     public boolean updatePhanCong(PhanCongDuAn_DTO pc) {
         String sql = "UPDATE PhanCongDuAn SET vai_tro=? WHERE ma_da=? AND ma_nv=?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -67,7 +67,7 @@ public class PhanCongDuAn_DAO extends Connection_DAO {
         return false;
     }
 
-    // 5. Lấy danh sách nhân viên đang làm việc để hiển thị lên ComboBox
+    
     public List<String> layDanhSachNhanVienCombobox() {
         List<String> list = new ArrayList<>();
         String sql = "SELECT ma_nv, ho_ten FROM NhanVien WHERE trang_thai = N'DangLam'";

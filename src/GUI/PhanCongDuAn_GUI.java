@@ -31,7 +31,7 @@ public class PhanCongDuAn_GUI extends JDialog {
         setModal(true);
         setLayout(new BorderLayout(10, 10));
 
-        // --- BÊN TRÁI: BẢNG DỮ LIỆU ---
+        
         String[] cols = {"Mã NV", "Tên Nhân Viên", "Vai Trò Đảm Nhận"};
         modelPCDA = new DefaultTableModel(cols, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -44,7 +44,7 @@ public class PhanCongDuAn_GUI extends JDialog {
         scrollPane.setBorder(BorderFactory.createTitledBorder("Danh sách nhân sự hiện tại"));
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- BÊN PHẢI: FORM NHẬP LIỆU ---
+        
         JPanel pnRight = new JPanel(new BorderLayout());
         pnRight.setPreferredSize(new Dimension(280, 0));
         pnRight.setBorder(BorderFactory.createTitledBorder("Thông tin phân công"));
@@ -65,7 +65,7 @@ public class PhanCongDuAn_GUI extends JDialog {
         
         pnRight.add(pnForm, BorderLayout.NORTH);
 
-        // Nút bấm
+        
         JPanel pnButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnThem = new JButton("Thêm Mới");
         btnSua = new JButton("Cập Nhật Vai Trò");
@@ -78,7 +78,7 @@ public class PhanCongDuAn_GUI extends JDialog {
 
         add(pnRight, BorderLayout.EAST);
 
-        // --- SỰ KIỆN ---
+        
         taiDuLieu();
         addEvents();
     }
@@ -89,19 +89,19 @@ public class PhanCongDuAn_GUI extends JDialog {
         for (PhanCongDuAn_DTO pc : ds) {
             modelPCDA.addRow(new Object[]{ pc.getMaNV(), pc.getTenNV(), pc.getVaiTro() });
         }
-        // Cập nhật lại bảng chi tiết ở màn hình DuAn_GUI chính
+        
         parent.taiDuLieuChiTietLenBang(maDA); 
     }
 
     private void addEvents() {
-        // Click bảng đổ dữ liệu lên form
+        
         tablePCDA.getSelectionModel().addListSelectionListener(e -> {
             int row = tablePCDA.getSelectedRow();
             if (row >= 0) {
                 String maNV = tablePCDA.getValueAt(row, 0).toString();
                 String vaiTro = tablePCDA.getValueAt(row, 2).toString();
                 txtVaiTro.setText(vaiTro);
-                // Chọn đúng người trên combobox
+                
                 for (int i = 0; i < cbNhanVien.getItemCount(); i++) {
                     if (cbNhanVien.getItemAt(i).startsWith(maNV)) {
                         cbNhanVien.setSelectedIndex(i);
@@ -111,7 +111,7 @@ public class PhanCongDuAn_GUI extends JDialog {
             }
         });
 
-        // Nút Thêm
+        
         btnThem.addActionListener(e -> {
             if (txtVaiTro.getText().trim().isEmpty() || cbNhanVien.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên và nhập vai trò!"); return;
@@ -127,7 +127,7 @@ public class PhanCongDuAn_GUI extends JDialog {
             }
         });
 
-        // Nút Sửa
+        
         btnSua.addActionListener(e -> {
             int row = tablePCDA.getSelectedRow();
             if (row == -1) {
@@ -144,7 +144,7 @@ public class PhanCongDuAn_GUI extends JDialog {
             }
         });
 
-        // Nút Xóa
+        
         btnXoa.addActionListener(e -> {
             int row = tablePCDA.getSelectedRow();
             if (row == -1) {

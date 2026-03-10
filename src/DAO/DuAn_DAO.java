@@ -17,7 +17,7 @@ public class DuAn_DAO extends Connection_DAO{
     Statement stmt=getStmt();
     
     public boolean insertDuAn(DuAn_DTO da){
-        // Thêm cột nguoi_quan_ly vào SQL
+        
         String sql="INSERT INTO DuAn (ma_da,ten_du_an,ngay_bat_dau,ngay_ket_thuc,trang_thai,nguoi_quan_ly)"
                 + "VALUES (?,?,?,?,?,?)";
         try(PreparedStatement ps=con.prepareStatement(sql)) {
@@ -26,7 +26,7 @@ public class DuAn_DAO extends Connection_DAO{
             ps.setDate(3, da.getNgayBatDau() != null ? java.sql.Date.valueOf(da.getNgayBatDau()) : null);
             ps.setDate(4, da.getNgayKetThuc() != null ? java.sql.Date.valueOf(da.getNgayKetThuc()) : null);
             ps.setNString(5, da.getTrangThai());
-            ps.setString(6, da.getNguoiQuanLy()); // Truyền thêm tham số
+            ps.setString(6, da.getNguoiQuanLy()); 
             
             return ps.executeUpdate()>0;
         } catch (Exception e) {
@@ -48,7 +48,6 @@ public class DuAn_DAO extends Connection_DAO{
     }
     
     public boolean updateDuAn(DuAn_DTO da){
-        // Thêm cột nguoi_quan_ly = ? vào SQL
         String sql="UPDATE DuAn SET "
                 +"ten_du_an = ?, "
                 +"ngay_bat_dau = ?, "
@@ -61,9 +60,9 @@ public class DuAn_DAO extends Connection_DAO{
             ps.setString(1, da.getTenDuAn());
             ps.setDate(2, java.sql.Date.valueOf(da.getNgayBatDau()));
             ps.setDate(3, java.sql.Date.valueOf(da.getNgayKetThuc()));
-            ps.setNString(4, da.getTrangThai()); // Nên dùng setNString cho Tiếng Việt
-            ps.setString(5, da.getNguoiQuanLy()); // Truyền thêm biến này
-            ps.setString(6, da.getMaDa()); // ma_da bị đẩy xuống vị trí số 6
+            ps.setNString(4, da.getTrangThai()); 
+            ps.setString(5, da.getNguoiQuanLy()); 
+            ps.setString(6, da.getMaDa()); 
             return ps.executeUpdate()>0;
         } catch (Exception e) {
             e.printStackTrace();

@@ -25,9 +25,7 @@ public class ThongBao_GUI extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // ==========================================
-        // 1. PHẦN BẢNG DỮ LIỆU (BÊN TRÁI)
-        // ==========================================
+        
         JPanel pnLeft = new JPanel(new BorderLayout());
         pnLeft.setBackground(Color.WHITE);
         pnLeft.setBorder(BorderFactory.createTitledBorder("Danh Sách Thông Báo"));
@@ -45,9 +43,7 @@ public class ThongBao_GUI extends JPanel {
         pnLeft.add(new JScrollPane(tableTB), BorderLayout.CENTER);
         add(pnLeft, BorderLayout.CENTER);
 
-        // ==========================================
-        // 2. PHẦN FORM NHẬP LIỆU (BÊN PHẢI)
-        // ==========================================
+        
         JPanel pnRight = new JPanel(new BorderLayout(0, 15));
         pnRight.setPreferredSize(new Dimension(350, 0));
         pnRight.setBackground(Color.WHITE);
@@ -58,7 +54,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.setBackground(Color.WHITE);
         pnForm.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Mã Thông Báo
+        
         pnForm.add(new JLabel("Mã Thông Báo (Tự động):"));
         txtMaTB = new JTextField();
         txtMaTB.setEditable(false);
@@ -66,7 +62,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.add(txtMaTB);
         pnForm.add(Box.createVerticalStrut(10));
 
-        // Mã Tài Khoản
+        
         pnForm.add(new JLabel("Người tạo (mã tài khoản):"));
         String maTK_DangNhap = "";
         if (DTO.taiKhoanDangDangNhap.getTkHienTai() != null) {
@@ -77,7 +73,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.add(txtMaTK);
         pnForm.add(Box.createVerticalStrut(10));
 
-        // Ngày Tạo
+        
         pnForm.add(new JLabel("Ngày Tạo:"));
         txtNgayTao = new JTextField();
         txtNgayTao.setEditable(false); 
@@ -85,7 +81,7 @@ public class ThongBao_GUI extends JPanel {
         pnForm.add(txtNgayTao);
         pnForm.add(Box.createVerticalStrut(10));
 
-        // Nội Dung
+        
         pnForm.add(new JLabel("Nội Dung:"));
         txtNoiDung = new JTextArea(5, 20);
         txtNoiDung.setLineWrap(true);
@@ -95,9 +91,6 @@ public class ThongBao_GUI extends JPanel {
 
         pnRight.add(pnForm, BorderLayout.CENTER);
 
-        // ==========================================
-        // 3. KHU VỰC NÚT BẤM (DƯỚI CÙNG BÊN PHẢI)
-        // ==========================================
         JPanel pnButtons = new JPanel(new GridLayout(2, 2, 10, 10));
         pnButtons.setBackground(Color.WHITE);
         pnButtons.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
@@ -122,13 +115,11 @@ public class ThongBao_GUI extends JPanel {
 
         add(pnRight, BorderLayout.EAST);
 
-        // ==========================================
-        // 4. GẮN SỰ KIỆN (EVENTS)
-        // ==========================================
+        
         taiDuLieuLenBang();
         resetForm();
 
-        // Sự kiện click vào bảng
+        
         tableTB.getSelectionModel().addListSelectionListener(e -> {
             int row = tableTB.getSelectedRow();
             if (row >= 0) {
@@ -139,16 +130,16 @@ public class ThongBao_GUI extends JPanel {
             }
         });
 
-        // Sự kiện Làm mới
+        
         btnLamMoi.addActionListener(e -> resetForm());
 
-        // Sự kiện Thêm mới
+        
         btnThem.addActionListener(e -> {
             String maTB = txtMaTB.getText();
             String maTK = txtMaTK.getText().trim();
             String noiDung = txtNoiDung.getText().trim();
             
-            // Ngày tạo mặc định lấy giờ hiện tại của hệ thống
+            
             LocalDate ngayTao = LocalDate.now();
 
             if (maTK.isEmpty() || noiDung.isEmpty()) {
@@ -166,7 +157,7 @@ public class ThongBao_GUI extends JPanel {
             }
         });
 
-        // Sự kiện Sửa
+        
         btnSua.addActionListener(e -> {
             if (tableTB.getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 thông báo để sửa!");
@@ -187,7 +178,7 @@ public class ThongBao_GUI extends JPanel {
             }
         });
 
-        // Sự kiện Xóa
+        
         btnXoa.addActionListener(e -> {
             if (tableTB.getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 thông báo để xóa!");
@@ -220,12 +211,12 @@ public class ThongBao_GUI extends JPanel {
         }
     }
 
-    // Reset lại form để chuẩn bị nhập thông báo mới
+    
     private void resetForm() {
         tableTB.clearSelection();
         txtMaTB.setText(bus.taoMaMoi()); 
         
-        // Load lại mã tài khoản hiện tại thay vì để trống rỗng
+        
         if (DTO.taiKhoanDangDangNhap.getTkHienTai() != null) {
             txtMaTK.setText(DTO.taiKhoanDangDangNhap.getTkHienTai().getMataikhoan());
         } else {
