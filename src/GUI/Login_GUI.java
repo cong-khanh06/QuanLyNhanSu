@@ -111,7 +111,7 @@ public class Login_GUI extends JFrame implements ActionListener {
                 ds.PhanQuyen(taikhoan.getQuyentruycap(),taikhoan.getManv());
                 ds.revalidate();
                 ds.repaint();
-                
+                	
             } else {
                 JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.ERROR_MESSAGE);
             }

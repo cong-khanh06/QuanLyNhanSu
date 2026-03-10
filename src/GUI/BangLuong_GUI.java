@@ -88,7 +88,6 @@ public class BangLuong_GUI extends JPanel {
         pnAction.add(btnDelete);
         pnAction.add(btnRefresh);
 
-        // 3. Ráp 2 nhóm vào ToolBar chính
         pnToolBar.add(pnSearch, BorderLayout.CENTER);
         pnToolBar.add(pnAction, BorderLayout.EAST);
         
@@ -118,7 +117,6 @@ public class BangLuong_GUI extends JPanel {
         
         add(new JScrollPane(tableBL), BorderLayout.CENTER);
         
-        // --- THỐNG KÊ (DÀNH CHO KẾ TOÁN) ---
         JPanel pnThongKe = new JPanel(new GridLayout(1, 3, 20, 0)); 
         pnThongKe.setBackground(Color.WHITE);
         pnThongKe.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -133,14 +131,12 @@ public class BangLuong_GUI extends JPanel {
         
         add(pnThongKe, BorderLayout.SOUTH);
 
-        // --- GẮN SỰ KIỆN ---
         addEventRefresh();
         addEventSearch();
         addEventAdd();
         addEventEdit();
         addEventDelete();
         
-        // Tải dữ liệu ban đầu
         taiDuLieuLenBang();
     }
     
@@ -168,7 +164,6 @@ public class BangLuong_GUI extends JPanel {
     }
     
     public void addEventSearch() {
-        // Nút tìm kiếm sẽ lấy tất cả các điều kiện để lọc
         btnSearch.addActionListener(e -> {
             String tuKhoa = txtSearch.getText().trim();
             String thang = cbThang.getSelectedItem().toString();
@@ -179,7 +174,6 @@ public class BangLuong_GUI extends JPanel {
             hienThiDanhSach(ketQua);
         });
         
-        // TIỆN ÍCH: Chỉ cần đổi combobox là tự động lọc, không cần bấm nút Tìm
         cbThang.addActionListener(e -> btnSearch.doClick());
         cbNam.addActionListener(e -> btnSearch.doClick());
         cbTrangThai.addActionListener(e -> btnSearch.doClick());
@@ -210,11 +204,8 @@ public class BangLuong_GUI extends JPanel {
                 return;
             }
             try {
-                // Lấy mã BL từ cột đầu tiên của dòng được chọn
                 String maBL = tableBL.getValueAt(row, 0).toString();
-                
-                // Thay vì đọc ngược từ JTable (do đã bị format chuỗi VNĐ), 
-                // ta sẽ tìm lại Object đó trong danh sách gốc bằng Stream API cho an toàn tuyệt đối
+
                 List<BangLuong_DTO> listAll = bus.layDanhSachBangLuong();
                 BangLuong_DTO blEdit = listAll.stream()
                                               .filter(bl -> bl.getMaBL().equals(maBL))
@@ -248,7 +239,7 @@ public class BangLuong_GUI extends JPanel {
             if (confirm == JOptionPane.YES_OPTION) {
                 if (bus.xoaBangLuong(maBL)) {
                     JOptionPane.showMessageDialog(this, "Đã xóa thành công!");
-                    btnSearch.doClick(); // Cập nhật lại danh sách theo bộ lọc hiện tại
+                    btnSearch.doClick(); 
                 } else {
                     JOptionPane.showMessageDialog(this, "Xóa thất bại!", "Lỗi DB", JOptionPane.ERROR_MESSAGE);
                 }
@@ -279,7 +270,6 @@ public class BangLuong_GUI extends JPanel {
         return pnBox;
     }
     
-    // Tính tổng tiền cho 3 ô thống kê dưới cùng dựa trên kết quả lọc
     private void capNhatThongKe(List<BangLuong_DTO> danhSach) {
         BigDecimal tongQuy = BigDecimal.ZERO;
         BigDecimal daThanhToan = BigDecimal.ZERO;

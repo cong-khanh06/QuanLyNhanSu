@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class BangLuong1_GUI extends JDialog {
-    private JTextField txtMaBL, txtTenNV, txtLuongCB, txtPhuCap, txtKhauTru, txtThucLanh;
+    private JTextField txtMaBL, txtTenNV, txtLuongCB, txtPhuCap, txtKhauTru, txtThucLanh,txtMaNV;
     private JComboBox<String> cbNhanVien, cbThang, cbNam, cbTrangThai;
     private JButton btnLuu, btnHuy;
     
@@ -28,7 +28,7 @@ public class BangLuong1_GUI extends JDialog {
         khoiTaoGiaoDien();
         txtMaBL.setText(busBL.taoMaMoi()); 
         
-        
+
         LocalDate now = LocalDate.now();
         cbThang.setSelectedItem(String.valueOf(now.getMonthValue()));
         cbNam.setSelectedItem(String.valueOf(now.getYear()));
@@ -46,6 +46,7 @@ public class BangLuong1_GUI extends JDialog {
         setTitle("Sửa Bảng Lương");
         btnLuu.setText("Cập Nhật");
         
+        txtMaNV.setEditable(false);
         
         cbNhanVien.setEnabled(false); 
         cbThang.setEnabled(false);
@@ -158,7 +159,7 @@ public class BangLuong1_GUI extends JDialog {
         kichHoatTuDongTinhTien();
     }
     
-    
+
     private void capNhatTenNV() {
         if (cbNhanVien.getSelectedItem() != null) {
             String selectedItem = cbNhanVien.getSelectedItem().toString();
@@ -189,7 +190,7 @@ public class BangLuong1_GUI extends JDialog {
             BigDecimal thucLanh = lcb.add(pc).subtract(kt);
             txtThucLanh.setText(thucLanh.toString());
         } catch (Exception ex) {
-            
+
         }
     }
 
