@@ -23,7 +23,8 @@ public class BangLuong_GUI extends JPanel {
     BangLuong_BUS bus = new BangLuong_BUS();
     JLabel lblTongQuyLuong, lblTongDaThanhToan, lblTongChuaThanhToan; 
     DecimalFormat df = new DecimalFormat("#,### VNĐ");
-    
+    private boolean check=true;
+    private String manhanvien="";
     public BangLuong_GUI() {
         setLayout(new BorderLayout());
         
@@ -141,7 +142,11 @@ public class BangLuong_GUI extends JPanel {
     }
     
     public void taiDuLieuLenBang() {
-        hienThiDanhSach(bus.layDanhSachBangLuong());
+    	if (!check) { 
+            hienThiDanhSach(bus.getdanhsachuser(manhanvien));
+        } else {
+            hienThiDanhSach(bus.layDanhSachBangLuong());
+        }
     }
     
     private void hienThiDanhSach(List<BangLuong_DTO> danhSach) {
@@ -165,7 +170,12 @@ public class BangLuong_GUI extends JPanel {
     
     public void addEventSearch() {
         btnSearch.addActionListener(e -> {
-            String tuKhoa = txtSearch.getText().trim();
+        	String tuKhoa;
+            if (!check) {
+                tuKhoa = manhanvien; 
+            } else {
+                tuKhoa = txtSearch.getText().trim();
+            }            
             String thang = cbThang.getSelectedItem().toString();
             String nam = cbNam.getSelectedItem().toString();
             String trangThai = cbTrangThai.getSelectedItem().toString();
@@ -288,5 +298,21 @@ public class BangLuong_GUI extends JPanel {
         lblTongQuyLuong.setText(df.format(tongQuy));
         lblTongDaThanhToan.setText(df.format(daThanhToan));
         lblTongChuaThanhToan.setText(df.format(chuaThanhToan));
+    }
+    public void setphanquyenUser(boolean kq,String manv)
+    {
+    	this.check=kq;
+    	this.manhanvien=manv;
+    	btnAdd.setVisible(kq);
+    	btnDelete.setVisible(kq);
+    	btnEdit.setVisible(kq);
+    	
+    	taiDuLieuLenBang();
+    	
+    }
+    public void setphanquyenManager(boolean kq)
+    {
+    	btnDelete.setVisible(kq);
+    	taiDuLieuLenBang();
     }
 }

@@ -16,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 import DTO.UngLuong_DTO;
 import BUS.UngLuong_BUS; 
@@ -38,6 +39,8 @@ public class UngLuong_GUI extends JPanel {
     UngLuong_BUS bus = new UngLuong_BUS();
     JLabel lblSoChoDuyet, lblSoDaDuyet, lblSoTuChoi; 
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private boolean ischeck=true;
+    private String manhanvien="";
     
     public UngLuong_GUI() {
         setLayout(new BorderLayout());
@@ -155,7 +158,12 @@ public class UngLuong_GUI extends JPanel {
     
     public void taiDuLieuLenBang() {
         modelUL.setRowCount(0); 
-        List<UngLuong_DTO> danhsach = bus.layDanhSachUngLuong();
+        List<UngLuong_DTO> danhsach=new ArrayList<>();
+        if (!ischeck) {
+            danhsach = bus.getdanhsachUngLuonguser(manhanvien);
+        } else {
+            danhsach = bus.layDanhSachUngLuong();
+        }
         
         for (UngLuong_DTO ul : danhsach) {
             String strNgayUng = (ul.getNgayUng() != null) ? ul.getNgayUng().format(dtf) : "";
@@ -172,7 +180,13 @@ public class UngLuong_GUI extends JPanel {
             String trangThai = cbTrangThai.getSelectedItem().toString();
             if (trangThai.equals("Tất cả")) trangThai = ""; 
 
-            List<UngLuong_DTO> ketQua = bus.timKiemUngLuong(tuKhoa); 
+            List<UngLuong_DTO> ketQua;
+            if (!ischeck) {
+                ketQua = bus.getdanhsachUngLuonguser(manhanvien);
+            } else {
+                String key = txtSearch.getText().trim();
+                ketQua = bus.timKiemUngLuong(key);
+            }
             modelUL.setRowCount(0);
             for (UngLuong_DTO ul : ketQua) {
                 
@@ -237,7 +251,7 @@ public class UngLuong_GUI extends JPanel {
                 String trangThai = tableUL.getValueAt(row, 5).toString();
                 
                 UngLuong_DTO ulEdit = new UngLuong_DTO(maUL, maBL, lyDo, trangThai, ngayUng, soTien);
-                UngLuong1_GUI formSua = new UngLuong1_GUI(this, ulEdit);
+                UngLuong1_GUI formSua = new UngLuong1_GUI(this, ulEdit,this.ischeck);
                 formSua.setVisible(true);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Lỗi đọc dữ liệu: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -289,4 +303,20 @@ public class UngLuong_GUI extends JPanel {
         pnBox.add(lblSoLuong);
         return pnBox;
     }
+    public void setphanquyenUser(boolean kq, String manv) {
+        this.ischeck=kq;
+        this.manhanvien=manv;
+
+            btnDelete.setVisible(false);
+            txtSearch.setVisible(false); 
+            taiDuLieuLenBang();
+        
+    }
+    public void setphanquyenManager(boolean kq)
+    {
+    
+        btnDelete.setVisible(kq);
+        taiDuLieuLenBang();
+    }
+    
 }

@@ -47,4 +47,8 @@ public class BangLuong_BUS {
             return matchTuKhoa && matchThang && matchNam && matchTrangThai;
         }).collect(Collectors.toList());
     }
+    public List<BangLuong_DTO> getdanhsachuser(String manv)
+    {
+    	return dao.layDanhSachBangLuongTheoNV(manv);
+    }
 }

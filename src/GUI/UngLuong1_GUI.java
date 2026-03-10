@@ -21,6 +21,7 @@ public class UngLuong1_GUI extends JDialog {
     private UngLuong_BUS busUL = new UngLuong_BUS();
     private UngLuong_GUI parentGUI;
     private boolean isEditMode = false; 
+    private boolean checkQuyenForm;
     
     public UngLuong1_GUI(UngLuong_GUI parent) {
         this.parentGUI = parent;
@@ -28,9 +29,10 @@ public class UngLuong1_GUI extends JDialog {
         txtMaUL.setText(busUL.taoMaMoi()); 
     }
 
-    public UngLuong1_GUI(UngLuong_GUI parent, UngLuong_DTO ulEdit) {
+    public UngLuong1_GUI(UngLuong_GUI parent, UngLuong_DTO ulEdit,boolean ischeck) {
         this.parentGUI = parent;
         this.isEditMode = true; 
+        this.checkQuyenForm = ischeck;
         khoiTaoGiaoDien();
         
         setTitle("Sửa Thông Tin Ứng Lương");
@@ -42,6 +44,14 @@ public class UngLuong1_GUI extends JDialog {
         txtLyDo.setText(ulEdit.getLyDo());
         dpNgayUng.setDate(ulEdit.getNgayUng());
         cbTrangThai.setSelectedItem(ulEdit.getTrangThai());
+        if (!this.checkQuyenForm) { 
+            cbTrangThai.setEnabled(false); 
+            
+         
+            if (!ulEdit.getTrangThai().equals("Chờ duyệt")) {
+                 btnLuu.setVisible(false); 
+            }
+        }
     }
     
     private void khoiTaoGiaoDien() {
@@ -95,6 +105,7 @@ public class UngLuong1_GUI extends JDialog {
 
         btnHuy.addActionListener(e -> dispose());
         btnLuu.addActionListener(e -> xuLyLuuUngLuong());
+        
     }
 
     private void xuLyLuuUngLuong() {

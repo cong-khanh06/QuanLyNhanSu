@@ -99,6 +99,33 @@ public class BangLuong_DAO extends Connection_DAO {
         }
         return list;
     }
+ // Thêm vào BangLuong_DAO.java
+    public List<BangLuong_DTO> layDanhSachBangLuongTheoNV(String maNVien) {
+        List<BangLuong_DTO> list = new ArrayList<>(); // Lưu ý sửa DTO cho đúng loại
+        String sql = "SELECT bl.*, nv.ho_ten FROM BangLuong bl " +
+                     "LEFT JOIN NhanVien nv ON bl.ma_nv = nv.ma_nv " +
+                     "WHERE bl.ma_nv = ? " +
+                     "ORDER BY bl.nam DESC, bl.thang DESC";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, maNVien.trim());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new BangLuong_DTO(
+                    rs.getString("ma_bl"),
+                    rs.getBigDecimal("luong_co_ban"),
+                    rs.getBigDecimal("tong_phu_cap"),
+                    rs.getBigDecimal("tong_khau_tru"),
+                    rs.getBigDecimal("thuc_lanh"),
+                    dichSangUI(rs.getString("trang_thai")),
+                    rs.getString("ma_nv"),
+                    rs.getInt("thang"),
+                    rs.getInt("nam"),
+                    rs.getString("ho_ten") != null ? rs.getString("ho_ten") : "N/A"
+                ));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
     
     public String getNewestMaBL() {
         String sql = "SELECT TOP 1 ma_bl FROM BangLuong ORDER BY CAST(SUBSTRING(ma_bl, 3, LEN(ma_bl)) AS INT) DESC";

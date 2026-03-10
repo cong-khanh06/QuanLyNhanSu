@@ -47,4 +47,6 @@ public class BangCap_BUS {
     public List<BangCap_DTO> timkiem(String tukhoa){
         return dao.timKiemBangCap(tukhoa);
     }
+    
+    
 }

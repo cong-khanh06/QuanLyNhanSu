@@ -242,13 +242,17 @@ public class Display_GUI extends JFrame{
     		btnPB.setVisible(false);
     		btnTK.setVisible(false);
     		btnDA.setVisible(false);
+    		btnTB.setVisible(false);
     		pnCard.revalidate();
     		nhanvien.setphanquyenuser(false,manv);
     		nhanvien.setphanquyennut(false,quyen);
     		hopdong.setphanquyenUser(false, manv);
     		chamcong.setphanquyenUser(false,manv);
     		chitietbaohiem.setphanquyenUser(false, manv);
+    		bangluong.setphanquyenUser(false, manv);
+    		ungluong.setphanquyenUser(false, manv);
     		chucvu.setPhanQuyen(quyen, manv);
+    		
     		pnCard.revalidate();
     		pnCard.repaint();
     	}
@@ -260,6 +264,8 @@ public class Display_GUI extends JFrame{
     		duan.setphanquyenManager(false);
     		chitietbaohiem.setphanquyenManager();
     		chucvu.setPhanQuyen(quyen, manv);
+    		bangluong.setphanquyenManager(false);
+    		ungluong.setphanquyenManager(false);
     		btnTK.setVisible(false);	
     		pnCard.revalidate();
     		pnCard.repaint();

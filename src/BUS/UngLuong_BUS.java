@@ -41,4 +41,7 @@ public class UngLuong_BUS {
     public int soLuongUngLuongTheoTrangThai(String trangThai) {
         return dao.soLuongUngLuongTheoTrangThai(trangThai);
     }
+    public List<UngLuong_DTO> getdanhsachUngLuonguser(String manv) {
+        return dao.layDanhSachUngLuongTheoNV(manv);
+    }
 }
