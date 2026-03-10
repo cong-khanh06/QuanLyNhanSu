@@ -13,7 +13,7 @@ public class BangLuong_DAO extends Connection_DAO {
     Connection con = getCon();
     Statement stmt = getStmt();
     
-    // --- HÀM PHIÊN DỊCH ---
+    
     private String dichSangDB(String ttUI) {
         if (ttUI == null) return "ChuaThanhToan";
         if (ttUI.trim().equalsIgnoreCase("Đã thanh toán")) return "DaThanhToan";
@@ -77,7 +77,7 @@ public class BangLuong_DAO extends Connection_DAO {
     
     public List<BangLuong_DTO> layDanhSachBangLuong() {
         List<BangLuong_DTO> list = new ArrayList<>();
-        // JOIN để lấy ho_ten từ bảng NhanVien
+        
         String sql = "SELECT bl.*, nv.ho_ten FROM BangLuong bl LEFT JOIN NhanVien nv ON bl.ma_nv = nv.ma_nv ORDER BY bl.nam DESC, bl.thang DESC";
         try (ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {

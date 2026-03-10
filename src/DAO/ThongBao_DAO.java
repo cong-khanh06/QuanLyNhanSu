@@ -38,7 +38,7 @@ public class ThongBao_DAO extends Connection_DAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, tb.getMaTB());
             ps.setString(2, tb.getMaTK());
-            ps.setNString(3, tb.getNoiDung()); // setNString để lưu tiếng Việt
+            ps.setNString(3, tb.getNoiDung()); 
             ps.setDate(4, tb.getNgayTao() != null ? Date.valueOf(tb.getNgayTao()) : Date.valueOf(LocalDate.now()));
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class ThongBao_DAO extends Connection_DAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, tb.getMaTK());
             ps.setNString(2, tb.getNoiDung());
-            // Không cập nhật ngày tạo để giữ nguyên lịch sử gốc
+            
             ps.setString(3, tb.getMaTB());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
