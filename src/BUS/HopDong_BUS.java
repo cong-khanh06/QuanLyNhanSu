@@ -82,4 +82,8 @@ public class HopDong_BUS {
         public int soLuongHopDongHetHan(){
             return dao.soLuonghopDongSapHetHan();
         }
+        
+        public double getMucLuongCoBanTheoMaNV(String manv){
+            return dao.getMucLuongCoBanTheoMaNV(manv);
+        }
 }

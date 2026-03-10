@@ -27,7 +27,7 @@ public class BangLuong_GUI extends JPanel {
     public BangLuong_GUI() {
         setLayout(new BorderLayout());
         
-        // --- HEADER ---
+        
         pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnHeader.setBackground(new Color(150, 214, 255));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
@@ -36,12 +36,12 @@ public class BangLuong_GUI extends JPanel {
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         pnHeader.add(lblTitle);
         
-        // --- TOOLBAR ---
+        
         pnToolBar = new JPanel(new BorderLayout(10, 10)); 
         pnToolBar.setBackground(new Color(150, 214, 255));
         pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
         
-        // 1. Nhóm Tìm kiếm (Sẽ tự động co giãn)
+        
         JPanel pnSearch = new JPanel(new BorderLayout(5, 0));
         pnSearch.setBackground(new Color(150, 214, 255));
         
@@ -101,7 +101,7 @@ public class BangLuong_GUI extends JPanel {
         pnSearchBL.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearchBL, BorderLayout.NORTH);
         
-        // --- BẢNG DỮ LIỆU ---
+        
         String[] colsBL = {
             "Mã BL", "Mã NV", "Tên Nhân Viên", "Kỳ Lương", "Lương CB", "Phụ Cấp", "Khấu Trừ", "THỰC LÃNH", "Trạng Thái"
         };

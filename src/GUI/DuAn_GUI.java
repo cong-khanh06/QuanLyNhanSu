@@ -30,11 +30,12 @@ import javax.swing.JOptionPane;
 import java.time.format.DateTimeFormatter;
 import DTO.PhanCongDuAn_DTO;
 import BUS.PhanCongDuAn_BUS;
+import BUS.ExcelExporter;
 
 public class DuAn_GUI extends JPanel {
     JPanel pnSearchDA, pnHeader, pnToolBar;
     
-    // Đã khai báo thêm tablePCDA và modelPCDA ở đây
+    
     JTable tableDA, tablePCDA; 
     DefaultTableModel modelDA, modelPCDA; 
     
@@ -137,9 +138,7 @@ public class DuAn_GUI extends JPanel {
         tableDA.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         JScrollPane scrollDA = new JScrollPane(tableDA);
         
-        // ========================================================
-        // --- 2. BẢNG CHI TIẾT NHÂN SỰ (BẢNG DƯỚI - DETAIL) ---
-        // ========================================================
+        
         JPanel pnChiTiet = new JPanel(new BorderLayout());
         pnChiTiet.setBackground(Color.WHITE);
         pnChiTiet.setBorder(BorderFactory.createTitledBorder(
@@ -188,7 +187,7 @@ public class DuAn_GUI extends JPanel {
 
         addEventPhanCong();
         addEventClickTableDA(); 
- 
+        taiDuLieu();
         taiDuLieuLenBang();
     }
     
@@ -373,7 +372,12 @@ public class DuAn_GUI extends JPanel {
         lblSoHoanThanh.setText(String.valueOf(hoanThanh));
     }
 
-    
+    private void taiDuLieu(){
+        btnDown.addActionListener(e -> {
+            // Truyền cái tableDA (hoặc bảng nào bạn muốn xuất) vào hàm
+            ExcelExporter.exportJTableToExcel(tableDA); 
+        });
+    }
 
     
     
