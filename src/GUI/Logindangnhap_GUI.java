@@ -17,7 +17,7 @@ public class Logindangnhap_GUI extends JPanel {
     public Logindangnhap_GUI() {
         
         setBackground(Color.WHITE);
-        setLayout(new BorderLayout()); // Dùng BorderLayout để căn giữa Form chính
+        setLayout(new BorderLayout()); 
         setPreferredSize(new Dimension(400, 500));
 
         JPanel wrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
@@ -25,34 +25,26 @@ public class Logindangnhap_GUI extends JPanel {
 
         JPanel formPanel = new JPanel(new GridLayout(8, 1, 0, 0)); 
         formPanel.setBackground(Color.WHITE);
-        formPanel.setPreferredSize(new Dimension(300, 400)); // Cố định độ rộng Form
-
-        // --- THÊM THÀNH PHẦN VÀO GRID ---
-
-        // Hàng 1: Tiêu đề
+        formPanel.setPreferredSize(new Dimension(300, 400)); 
         JLabel lblTitle = new JLabel("SIGN IN TO YOUR ACCOUNT", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 16));
         formPanel.add(lblTitle);
 
-        // Hàng 2: Nhãn Username
+
         JLabel jluser = new JLabel("Username");
         jluser.setFont(new Font("Arial", Font.BOLD, 12));
         formPanel.add(jluser);
 
-        // Hàng 3: Ô nhập Username
         jtfuser = new JTextField();
         formPanel.add(jtfuser);
 
-        // Hàng 4: Nhãn Password
         JLabel jlpassword = new JLabel("Password");
         jlpassword.setFont(new Font("Arial", Font.BOLD, 12));
         formPanel.add(jlpassword);
 
-        // Hàng 5: Ô nhập Password
         passwordField = new JPasswordField();
         formPanel.add(passwordField);
 
-        // Hàng 6: Link đổi mật khẩu (Dùng FlowLayout để đẩy sang phải)
         JPanel pnlLink = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pnlLink.setBackground(Color.WHITE);
         jlchange = new JLabel("Change password");
@@ -60,7 +52,6 @@ public class Logindangnhap_GUI extends JPanel {
         pnlLink.add(jlchange);
         formPanel.add(pnlLink);
 
-        // Hàng 7: Nút Login
         btlogin = new JButton("LOGIN");
         btlogin.setBackground(new Color(0, 128, 255));
         btlogin.setForeground(Color.WHITE);
@@ -68,10 +59,9 @@ public class Logindangnhap_GUI extends JPanel {
         btlogin.setFont(new Font("Arial", Font.BOLD, 14));
         formPanel.add(btlogin);
 
-        // Hàng 8: Một khoảng trống phía dưới (Tùy chọn)
         formPanel.add(new JLabel(""));
 
-        // Ráp nối các Panel
+
         wrapperPanel.add(formPanel);
         add(wrapperPanel, BorderLayout.CENTER);
 

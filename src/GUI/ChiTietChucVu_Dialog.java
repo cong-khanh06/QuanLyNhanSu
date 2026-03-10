@@ -32,7 +32,6 @@ public class ChiTietChucVu_Dialog extends JDialog {
         setLocationRelativeTo(getParent());
         setLayout(new BorderLayout());
 
-        // --- Khu vực Thêm Phụ Cấp (Phía trên) ---
         JPanel pnTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnTop.setBorder(BorderFactory.createTitledBorder("Gán Phụ Cấp Mới"));
         
@@ -47,7 +46,6 @@ public class ChiTietChucVu_Dialog extends JDialog {
         pnTop.add(btnThem);
         add(pnTop, BorderLayout.NORTH);
 
-        // --- Khu vực Bảng (Ở giữa) ---
         String[] cols = {"Mã PC", "Tên Phụ Cấp", "Số Tiền (VNĐ)"};
         modelPC = new DefaultTableModel(cols, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -59,25 +57,23 @@ public class ChiTietChucVu_Dialog extends JDialog {
         scroll.setBorder(BorderFactory.createTitledBorder("Danh Sách Phụ Cấp Hiện Tại Của: " + tenCV));
         add(scroll, BorderLayout.CENTER);
 
-        // --- Khu vực Nút (Phía dưới) ---
         JPanel pnBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnDong = new JButton("Đóng");
         pnBottom.add(btnXoa);
         pnBottom.add(btnDong);
         add(pnBottom, BorderLayout.SOUTH);
 
-        // --- Sự kiện ---
+
         btnDong.addActionListener(e -> dispose());
         
         btnThem.addActionListener(e -> {
             if (cbPhuCap.getSelectedItem() == null) return;
-            // Cắt lấy mã PC từ chuỗi "PC01 - Xăng xe"
             String selectedItem = cbPhuCap.getSelectedItem().toString();
             String maPC = selectedItem.split(" - ")[0];
             
             if (bus.themPhuCapChoChucVu(maCV, maPC)) {
                 JOptionPane.showMessageDialog(this, "Đã gán phụ cấp thành công!");
-                taiDuLieuPhuCapCuaChucVu(); // Tải lại bảng
+                taiDuLieuPhuCapCuaChucVu(); 
             } else {
                 JOptionPane.showMessageDialog(this, "Thất bại! Phụ cấp này có thể đã được gán rồi.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
@@ -117,7 +113,6 @@ public class ChiTietChucVu_Dialog extends JDialog {
             cbPhuCap.addItem(pc.getMaPC() + " - " + pc.getTenPC());
         }
     }
- // --- HÀM PHÂN QUYỀN CHO DIALOG CHI TIẾT PHỤ CẤP ---
     public void setPhanQuyen(String quyen) {
         if (quyen.equalsIgnoreCase("User")) {
             btnThem.setVisible(false);

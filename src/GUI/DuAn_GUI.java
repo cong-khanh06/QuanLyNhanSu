@@ -32,7 +32,7 @@ public class DuAn_GUI extends JPanel {
     DefaultTableModel modelDA;
     JTextField txtSearch;
     JButton btnSearch, btnAdd, btnEdit, btnDelete, btnDown, btnrefresh;
-    JComboBox<String> cbTrangThai; // Đổi combobox lọc theo trạng thái dự án
+    JComboBox<String> cbTrangThai; 
     JLabel lblTitle;
     DuAn_BUS bus=new DuAn_BUS();
     JLabel lblSoChuanBi, lblSoDangThucHien, lblSoHoanThanh; 
@@ -41,7 +41,7 @@ public class DuAn_GUI extends JPanel {
     public DuAn_GUI() {
         setLayout(new BorderLayout());
         
-        // --- HEADER ---
+
         pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnHeader.setBackground(new Color(150, 214, 255));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
@@ -50,7 +50,6 @@ public class DuAn_GUI extends JPanel {
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         pnHeader.add(lblTitle);
         
-        // --- TOOLBAR ---
         pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnToolBar.setBackground(new Color(150, 214, 255));
         pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
@@ -73,7 +72,6 @@ public class DuAn_GUI extends JPanel {
         btnAdd.setPreferredSize(new Dimension(100, 36));
         btnrefresh.setPreferredSize(new Dimension(100, 36));
         
-        // Combobox lọc theo Trạng thái dự án
         cbTrangThai = new JComboBox<>(new String[]{"Tất cả", "Chuẩn bị", "Đang thực hiện", "Hoàn thành"});
         cbTrangThai.setPreferredSize(new Dimension(150, 36));
         cbTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -87,7 +85,6 @@ public class DuAn_GUI extends JPanel {
         pnToolBar.add(btnDown);
         pnToolBar.add(btnrefresh);
         
-        // --- KHU VỰC PHÍA BẮC (HEADER + TOOLBAR) ---
         pnSearchDA = new JPanel(new BorderLayout());
         pnSearchDA.setBackground(Color.WHITE);
         pnSearchDA.setBorder(
@@ -99,8 +96,7 @@ public class DuAn_GUI extends JPanel {
         pnSearchDA.add(pnHeader, BorderLayout.NORTH);
         pnSearchDA.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearchDA, BorderLayout.NORTH);
-        
-        // --- BẢNG DỮ LIỆU (TABLE) ---
+
         String[] colsDA = {
             "Mã Dự Án", "Tên Dự Án", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái", "Người quản lý"
         };
@@ -133,13 +129,11 @@ public class DuAn_GUI extends JPanel {
         
         add(pnThongKe, BorderLayout.SOUTH);
 
-        // --- GÁN SỰ KIỆN ---
         addEventRefresh();
         addEventAdd();
         addEventSearch();
         addEventEdit();
         addEventDelete();
-        // Tải dữ liệu ban đầu
         taiDuLieuLenBang();
     }
     
@@ -209,7 +203,7 @@ public class DuAn_GUI extends JPanel {
     
     private JPanel taoOThongKe(String tieuDe, Color mauNen, JLabel lblSoLuong) {
         JPanel pnBox = new JPanel();
-        pnBox.setLayout(new BoxLayout(pnBox, BoxLayout.Y_AXIS)); // Sắp xếp dọc
+        pnBox.setLayout(new BoxLayout(pnBox, BoxLayout.Y_AXIS)); 
         pnBox.setBackground(mauNen);
         pnBox.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.LIGHT_GRAY),
@@ -225,7 +219,7 @@ public class DuAn_GUI extends JPanel {
         lblSoLuong.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         pnBox.add(lblTitle);
-        pnBox.add(Box.createVerticalStrut(10)); // Khoảng cách giữa chữ và số
+        pnBox.add(Box.createVerticalStrut(10)); 
         pnBox.add(lblSoLuong);
         
         return pnBox;
@@ -282,7 +276,6 @@ public class DuAn_GUI extends JPanel {
             }
             
             try {
-                // Lấy thông tin từ các cột của dòng đang chọn
                 String maDA = tableDA.getValueAt(row, 0).toString();
                 String tenDA = tableDA.getValueAt(row, 1).toString();
                 

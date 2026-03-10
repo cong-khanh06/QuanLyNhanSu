@@ -78,7 +78,6 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         panelTopToolbar.add(pnlButtons, BorderLayout.EAST);
         panelTop.add(panelTopToolbar, BorderLayout.NORTH);
 
-        // Bảng Phòng Ban
         table = new JTable();
         table.setModel(new DefaultTableModel(
             new Object[][] {},
@@ -171,7 +170,6 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         this.add(panelBottom, BorderLayout.CENTER);
       
 
-        // Gán sự kiện
         btthem.addActionListener(this);
         btsua.addActionListener(this);
         btxoa.addActionListener(this);
@@ -180,7 +178,6 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         btthongke.addActionListener(this);
     }
 
-    // Hàm bổ trợ tạo nút bấm có style đồng nhất
     private JButton createStyledButton(String text, String iconPath) {
         JButton btn = new JButton(text);
         btn.setFocusPainted(false);

@@ -146,7 +146,7 @@ public class Phongban_DAO {
 	            ps.setString(6, x.getMatruongphong());
 	        }
 
-	        int result = ps.executeUpdate(); // THỰC THI LỆNH
+	        int result = ps.executeUpdate(); 
 	        return result > 0;
 	        
 	    } catch (SQLException e) {
@@ -168,7 +168,6 @@ public class Phongban_DAO {
 	        
 	        ResultSet rs = ps.executeQuery();
 	        if (rs.next()) {
-	            // Nếu kết quả > 0 nghĩa là mã đã tồn tại
 	            return rs.getInt(1) > 0;
 	        }
 	    } catch (SQLException e) {

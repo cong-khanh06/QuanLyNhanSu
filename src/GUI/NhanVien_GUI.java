@@ -90,15 +90,12 @@ public class NhanVien_GUI extends JPanel{
         cbChucVu.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
-        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL; // Cho phép co giãn theo chiều ngang
-        gbc.insets = new java.awt.Insets(0, 0, 0, 10); // Tạo khoảng cách (margin) 10px bên phải mỗi component
-        gbc.gridy = 0; // Đặt tất cả trên cùng 1 hàng ngang (row 0)
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL; 
+        gbc.insets = new java.awt.Insets(0, 0, 0, 10); 
+        gbc.gridy = 0; 
 
-        // 3. Cấu hình riêng cho Ô tìm kiếm (txtSearch) giãn ra chiếm toàn bộ khoảng trống
-        gbc.weightx = 1.0; // Trọng số 1.0 nghĩa là nó sẽ hút hết không gian thừa
+        gbc.weightx = 1.0;
         pnToolBar.add(txtSearch, gbc);
-
-        // 4. Các nút và ComboBox còn lại giữ nguyên kích thước (weightx = 0)
         gbc.weightx = 0;
         pnToolBar.add(btnSearch, gbc);
         pnToolBar.add(cbPhongBan, gbc);
@@ -152,7 +149,7 @@ public class NhanVien_GUI extends JPanel{
                 if (row != -1) {
                     String maNV = tableNV.getValueAt(row, 0).toString();
                     NhanVien_DTO nv = dao.getNhanVienById(maNV);
-                    pndetail.hienThiNhanVien(nv); // Chuyền banh xuống panel dưới!
+                    pndetail.hienThiNhanVien(nv); 
                 }
             }
         });
@@ -188,7 +185,6 @@ public class NhanVien_GUI extends JPanel{
         btnSearch.addActionListener(e -> {
             String tuKhoa = txtSearch.getText().trim();
 
-            // Lấy giới tính (Nếu chọn "Tất cả" thì gán bằng rỗng để DAO không lọc)
             String gioiTinh = cbGioiTinh.getSelectedItem().toString();
             if (gioiTinh.equals("Tất cả")) {
                 gioiTinh = "Tat ca";
@@ -196,17 +192,14 @@ public class NhanVien_GUI extends JPanel{
                 gioiTinh = "Nu";
             }
 
-            // Lấy mã phòng ban từ Object cực nhàn
             Phongban_DTO pbSelected = (Phongban_DTO) cbPhongBan.getSelectedItem();
             String maPB = (pbSelected != null && !pbSelected.getTenphongban().equals("Tất cả")) 
                       ? pbSelected.getMaphongban() : "Tat ca";
             ChucVu_DTO cvSelected =(ChucVu_DTO) cbChucVu.getSelectedItem();
             String maCV=(cvSelected != null && !cvSelected.getTenCV().equals("Tất cả"))?cvSelected.getMaCV():"Tat ca";
-            // Gọi BUS để tìm kiếm
             NhanVien_BUS bus = new NhanVien_BUS();
             List<NhanVien_DTO> ketQua = bus.timKiemNhanVien(tuKhoa, gioiTinh, maPB, maCV);
 
-            // Cập nhật lại JTable
             modelNV.setRowCount(0);
             for (NhanVien_DTO nv : ketQua) {
                 modelNV.addRow(new Object[]{
@@ -244,14 +237,12 @@ public class NhanVien_GUI extends JPanel{
 
         cbPhongBan.removeAllItems();
 
-        // Tạo một DTO "giả" làm tùy chọn Tất cả
         Phongban_DTO tatCa = new Phongban_DTO();
-        tatCa.setMaphongban(""); // Mã rỗng để ngầm hiểu là không lọc
-        tatCa.setTenphongban("Tất cả"); // Tên hiển thị nhờ hàm toString()
+        tatCa.setMaphongban(""); 
+        tatCa.setTenphongban("Tất cả"); 
 
-        cbPhongBan.addItem(tatCa); // Nhét tùy chọn "Tất cả" lên đầu tiên
+        cbPhongBan.addItem(tatCa);
 
-        // Đổ danh sách phòng ban thật từ Database vào
         for (Phongban_DTO pb : list) {
             cbPhongBan.addItem(pb);
         }
@@ -279,7 +270,7 @@ public class NhanVien_GUI extends JPanel{
                 return pb.getTenphongban();
             }
         }
-        return maPB; // Nếu không tìm thấy thì hiện mã luôn
+        return maPB; 
     }
 
     private String getTenChucVu(String maCV) {
@@ -289,8 +280,7 @@ public class NhanVien_GUI extends JPanel{
                 return cv.getTenCV();
             }
         }
-        return maCV; // Nếu không tìm thấy thì hiện mã luôn
-    }
+        return maCV;     }
     public void Loaddatatheoma(String manv){
         modelNV.setRowCount(0);
         

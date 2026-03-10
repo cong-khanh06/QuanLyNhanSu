@@ -83,7 +83,6 @@ public class HopDong1_GUI extends JDialog {
                     dataChanged = true; 
                     dispose(); 
                 } else {
-                    // Hiển thị lỗi từ BUS (lỗi validate hoặc lỗi trùng mã)
                     JOptionPane.showMessageDialog(this, res, "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 }
             } catch (NumberFormatException nfe) {

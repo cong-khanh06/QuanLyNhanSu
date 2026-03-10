@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package DTO;
 
 import java.time.LocalDate;
-
-/**
- *
- * @author khanh
- */
 public class ChiTietDon_DTO {
     private String maDon,noiDung,trangThai,nguoiDuyet,maNV,maLoaiDon;
     private LocalDate ngayTao;

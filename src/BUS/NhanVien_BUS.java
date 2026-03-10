@@ -27,8 +27,6 @@ public class NhanVien_BUS {
     }
     
     public boolean themNhanVien(NhanVien_DTO nv) {
-
-        // Validate trước khi lưu
         if (!isValidPhone(nv.getSdt())) return false;
         if (!isValidEmail(nv.getEmail())) return false;
         if (!isValidCCCD(nv.getCccd())) return false;

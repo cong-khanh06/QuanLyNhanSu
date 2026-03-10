@@ -1,7 +1,4 @@
-    /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package GUI;
 
 import java.awt.BorderLayout;
@@ -174,28 +171,21 @@ public class NhanVien1_GUI extends JDialog{
         String email = txtEmail.getText().trim();
         String cccd = txtCCCD.getText().trim();
 
-        // Họ tên
         if (ten.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Họ tên không được để trống");
             txtTen.requestFocus();
             return false;
         }
-
-        // SĐT
         if (!NhanVien_BUS.isValidPhone(sdt)) {
             JOptionPane.showMessageDialog(this, "SĐT không hợp lệ");
             txtSDT.requestFocus();
             return false;
         }
-
-        // Email
         if (!email.isEmpty() && !NhanVien_BUS.isValidEmail(email)) {
             JOptionPane.showMessageDialog(this, "Email không hợp lệ");
             txtEmail.requestFocus();
             return false;
         }
-
-        // CCCD
         if (!NhanVien_BUS.isValidCCCD(cccd)) {
             JOptionPane.showMessageDialog(this, "CCCD phải gồm 12 chữ số");
             txtCCCD.requestFocus();
@@ -225,15 +215,11 @@ public class NhanVien1_GUI extends JDialog{
                 String avatarPath = null;
                 if (selectedFile != null) {
                     try {
-                        // Tạo tên file mới: maNV_tenfilegoc.jpg (Tránh trùng lặp)
                         String newFileName = maNV + "_" + selectedFile.getName();
                         Path targetPath = Paths.get("avatars", newFileName);
-
-                        // Tạo thư mục nếu chưa có và copy file
                         Files.createDirectories(targetPath.getParent());
                         Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
-                        // Lưu đường dẫn vào database
                         avatarPath = targetPath.toString();
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -253,7 +239,7 @@ public class NhanVien1_GUI extends JDialog{
                 if (bus.themNhanVien(nv)) {
                     JOptionPane.showMessageDialog(this,
                             "Thêm nhân viên thành công!");
-                    dispose(); // đóng form
+                    dispose(); 
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Dữ liệu không hợp lệ!");
@@ -289,7 +275,6 @@ public class NhanVien1_GUI extends JDialog{
             fileChooser.setFileFilter(new FileNameExtensionFilter("Hình ảnh (JPG, PNG)", "jpg", "png", "jpeg"));
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 selectedFile = fileChooser.getSelectedFile();
-                // Hiển thị ảnh thu nhỏ lên Label
                 ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
                 Image img = icon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
                 lblAvatar.setIcon(new ImageIcon(img));
@@ -298,4 +283,3 @@ public class NhanVien1_GUI extends JDialog{
         });
     }
 }
-//

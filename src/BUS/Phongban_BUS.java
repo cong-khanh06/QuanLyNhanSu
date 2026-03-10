@@ -28,10 +28,9 @@ import DAO.Phongban_DAO;
 	{
 		return arr;
 	}
-	// Thêm hàm này vào cuối lớp Phongban_BUS để dùng chung
 	public String dinhDangLuong(double luong) {
 	    DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
-	    symbols.setGroupingSeparator('.'); // Dấu chấm phân cách hàng nghìn
+	    symbols.setGroupingSeparator('.'); 
 	    DecimalFormat df = new DecimalFormat("#,###", symbols); 
 	    return df.format(luong);
 	}
@@ -40,7 +39,6 @@ import DAO.Phongban_DAO;
 		Object[][] ob = new Object[arr.size()][5];
 		for(int i=0;i<arr.size();i++) {
 			Phongban_DTO temp = arr.get(i);
-			// lấy ên trưởng phòng
 			String tenTruongPhong = "Đang tuyển";
 			if(temp.getMatruongphong() != null && !temp.getMatruongphong().isEmpty() && !temp.getMatruongphong().equals("Đang tuyển")) {
 			    tenTruongPhong = pbdao.gettentuma(temp.getMatruongphong());
@@ -81,7 +79,6 @@ import DAO.Phongban_DAO;
 		
 	}
 	public String addPhongBan(Phongban_DTO pb) {
-	    // 1. Kiểm tra mã có trống không
 	    if (pb.getMaphongban().trim().isEmpty()) {
 	        return "Mã phòng ban không được để trống!";
 	    }
@@ -94,13 +91,11 @@ import DAO.Phongban_DAO;
 	    	return "Số điện thoại phải có đúng 10 chữ số!";
 	    }
 	
-	    // 2. Kiểm tra trùng mã thông qua DAO
 	    Phongban_DAO dao = new Phongban_DAO();
 	    if (dao.checkMaPhongBan(pb.getMaphongban())) {
 	        return "Mã phòng ban này đã tồn tại trong hệ thống!";
 	    }
 	
-	    // 3. Nếu mọi thứ hợp lệ, tiến hành gọi DAO để chèn dữ liệu
 	    boolean success = dao.insertPhongban(pb);
 	    if (success) {
 	    	getdatabase();

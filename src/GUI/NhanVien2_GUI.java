@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package GUI;
 
 import javax.swing.JTextField;
@@ -55,7 +52,6 @@ public class NhanVien2_GUI extends JPanel {
 
     private boolean isDeleteAllowed = true; 
 
-    // Sửa Constructor thành Không tham số
     public NhanVien2_GUI() {
         initComponents();
         setEditable(false);
@@ -72,7 +68,6 @@ public class NhanVien2_GUI extends JPanel {
                 "Chi tiết nhân viên"
         ));
 
-        // ===== TextField =====
         txtMa = new JTextField();
         txtTen = new JTextField();
         txtDiaChi = new JTextField();
@@ -89,7 +84,6 @@ public class NhanVien2_GUI extends JPanel {
         
         txtMa.setEditable(false);
 
-        // ===== ComboBox =====
         cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values());
         cbPhongBan = new JComboBox<>();
         loadComboPhongBan();
@@ -99,7 +93,6 @@ public class NhanVien2_GUI extends JPanel {
         
         cbTrangThai = new JComboBox<>(NhanVien_DTO.TrangThaiNhanVien.values());
 
-        // ===== Buttons =====
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
@@ -108,7 +101,6 @@ public class NhanVien2_GUI extends JPanel {
         btnLuu.setEnabled(false);
         btnHuy.setEnabled(false);
 
-        // ===== Bố cục Form (Center) =====
         JPanel panelForm = new JPanel(new GridLayout(0, 4, 15, 10)); 
         panelForm.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
@@ -131,7 +123,6 @@ public class NhanVien2_GUI extends JPanel {
         panelForm.add(new JLabel("Chức vụ:")); panelForm.add(cbChucVu);
         panelForm.add(new JLabel("Trạng thái:")); panelForm.add(cbTrangThai);
 
-        // ===== Bố cục Buttons (South) =====
         JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelButtons.add(btnSua);
         panelButtons.add(btnLuu);
@@ -144,7 +135,7 @@ public class NhanVien2_GUI extends JPanel {
         lblAvatar.setPreferredSize(new Dimension(150, 200));
         lblAvatar.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         btnChonAnh = new JButton("Đổi ảnh");
-        btnChonAnh.setEnabled(false); // Khóa lúc đầu
+        btnChonAnh.setEnabled(false); 
         panelAvatar.add(lblAvatar, BorderLayout.CENTER);
         panelAvatar.add(btnChonAnh, BorderLayout.SOUTH);
         
@@ -152,7 +143,6 @@ public class NhanVien2_GUI extends JPanel {
         add(panelForm, BorderLayout.CENTER);
         add(panelButtons, BorderLayout.SOUTH);
 
-        // ===== Gán Sự Kiện =====
         btnXoa.addActionListener(e -> {
             String maNV = txtMa.getText();
             if(maNV.isEmpty()) {
@@ -172,11 +162,11 @@ public class NhanVien2_GUI extends JPanel {
                 
                 if (status == true) {
                     JOptionPane.showMessageDialog(this, "Nhân viên này có dữ liệu Lương/Hợp đồng liên quan.\nHệ thống đã tự động chuyển trạng thái thành 'Nghỉ Việc' để bảo toàn lịch sử.");
-                    if (parentGUI != null) parentGUI.taiDuLieuLenBang(); // Load lại bảng
+                    if (parentGUI != null) parentGUI.taiDuLieuLenBang(); 
                 } else if (status == false) {
                     JOptionPane.showMessageDialog(this, "Đã xóa hoàn toàn nhân viên khỏi hệ thống.");
-                    clearForm(); // Làm trống form
-                    if (parentGUI != null) parentGUI.taiDuLieuLenBang(); // Load lại bảng
+                    clearForm(); 
+                    if (parentGUI != null) parentGUI.taiDuLieuLenBang(); 
                 } else {
                     JOptionPane.showMessageDialog(this, "Xóa thất bại. Vui lòng kiểm tra Console!");
                 }
@@ -219,7 +209,6 @@ public class NhanVien2_GUI extends JPanel {
         });
         
         btnHuy.addActionListener(e -> {
-            // Khi hủy thì nạp lại thông tin gốc từ DB
             NhanVien_DTO nvCu = dao.getNhanVienById(txtMa.getText());
             hienThiNhanVien(nvCu);
             
@@ -243,7 +232,6 @@ public class NhanVien2_GUI extends JPanel {
         });
     }
 
-    // ===== HÀM ĐỂ NHẬN DỮ LIỆU TỪ BẢNG Ở TRÊN =====
     public void hienThiNhanVien(NhanVien_DTO nv) {
         if (nv == null) return;
         
@@ -258,7 +246,6 @@ public class NhanVien2_GUI extends JPanel {
 
         cbGioiTinh.setSelectedItem(nv.getGioiTinh());
         
-        // Chọn ComboBox Phòng Ban
         for (int i = 0; i < cbPhongBan.getItemCount(); i++) {
             if (cbPhongBan.getItemAt(i).getMaphongban().equals(nv.getMaPB())) {
                 cbPhongBan.setSelectedIndex(i);
@@ -266,7 +253,6 @@ public class NhanVien2_GUI extends JPanel {
             }
         }
         
-        // Chọn ComboBox Chức Vụ
         for (int i = 0; i < cbChucVu.getItemCount(); i++) {
             if (cbChucVu.getItemAt(i).getMaCV().equals(nv.getMaCV())) {
                 cbChucVu.setSelectedIndex(i);
@@ -274,11 +260,10 @@ public class NhanVien2_GUI extends JPanel {
             }
         }
         
-        // Chọn ComboBox Trạng Thái
         cbTrangThai.setSelectedItem(nv.getTrangThai());
         
         currentAvatarPath = nv.getAvatar();
-        selectedFile = null; // Reset file được chọn
+        selectedFile = null; 
 
         if (currentAvatarPath != null && !currentAvatarPath.isEmpty()) {
             File imgFile = new File(currentAvatarPath);
@@ -296,7 +281,6 @@ public class NhanVien2_GUI extends JPanel {
             lblAvatar.setText("Không có ảnh");
         }
         
-        // Đảm bảo Form đang bị khóa khi mới hiện
         setEditable(false);
         btnSua.setEnabled(isDeleteAllowed);
         btnXoa.setEnabled(isDeleteAllowed);
@@ -323,28 +307,23 @@ public class NhanVien2_GUI extends JPanel {
         nv.setEmail(txtEmail.getText());
         nv.setCccd(txtCCCD.getText());
 
-        // 1. XỬ LÝ GIỚI TÍNH 
         nv.setGioiTinh((NhanVien_DTO.GioiTinh) cbGioiTinh.getSelectedItem());
 
-        // 2. XỬ LÝ TRẠNG THÁI 
         nv.setTrangThai((NhanVien_DTO.TrangThaiNhanVien) cbTrangThai.getSelectedItem());
 
-        // 3. XỬ LÝ PHÒNG BAN 
         Phongban_DTO pbSelected = (Phongban_DTO) cbPhongBan.getSelectedItem();
         nv.setMaPB(pbSelected != null ? pbSelected.getMaphongban() : "");
 
-        // 4. XỬ LÝ CHỨC VỤ 
         ChucVu_DTO cvSelected = (ChucVu_DTO) cbChucVu.getSelectedItem();
         String maCV = (cvSelected != null) ? cvSelected.getMaCV() : "";
         nv.setMaCV(maCV);
         
-        // 5. XỬ LÝ NGÀY THÁNG 
         nv.setNgaySinh(dpNgaySinh.getDate());
         nv.setNgayVaoLam(dpNgayVaoLam.getDate());
         
         String finalAvatarPath = currentAvatarPath;
 
-        if (selectedFile != null) { // Nếu có chọn ảnh mới
+        if (selectedFile != null) { 
             try {
                 String newFileName = nv.getMaNV() + "_" + selectedFile.getName();
                 Path targetPath = Paths.get("avatars", newFileName);

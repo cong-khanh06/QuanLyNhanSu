@@ -8,7 +8,7 @@ public class NhanVien_DTO {
         private String tenHienThi;
         GioiTinh(String tenHienThi) { this.tenHienThi = tenHienThi; }
         public String getTenHienThi() { return tenHienThi; }
-        @Override public String toString() { return tenHienThi; } // Giúp JComboBox tự hiện tiếng Việt
+        @Override public String toString() { return tenHienThi; } 
     }
     
     public enum TrangThaiNhanVien {
@@ -16,7 +16,7 @@ public class NhanVien_DTO {
         private String tenHienThi;
         TrangThaiNhanVien(String tenHienThi) { this.tenHienThi = tenHienThi; }
         public String getTenHienThi() { return tenHienThi; }
-        @Override public String toString() { return tenHienThi; } // Giúp JComboBox tự hiện tiếng Việt
+        @Override public String toString() { return tenHienThi; } 
     }
     private String maNV;
     private String hoTen;

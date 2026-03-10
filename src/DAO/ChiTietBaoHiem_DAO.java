@@ -91,7 +91,6 @@ public class ChiTietBaoHiem_DAO extends Connection_DAO {
         return "CTBH01";
     }
     
-    // Thay thế 2 hàm cũ bằng 2 hàm này trong ChiTietBaoHiem_DAO.java
     public List<ChiTietBaoHiem_DTO> layDanhSachNhanVienBaoHiem() {
         List<ChiTietBaoHiem_DTO> list = new ArrayList<>();
         String sql = "SELECT nv.ma_nv, nv.ho_ten, COUNT(ct.ma_bh) as so_luong " +

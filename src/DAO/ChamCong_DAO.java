@@ -16,7 +16,6 @@ public class ChamCong_DAO extends Connection_DAO {
 
         List<ChamCong_DTO> list = new ArrayList<>();
 
-        // SỬA: Thêm cột so_ngay_tre và so_ngay_tang_ca vào câu lệnh SELECT
         String sql = """
                     SELECT cc.ma_cc, nv.ma_nv, nv.ho_ten,
                            cc.thang, cc.nam,
@@ -56,7 +55,6 @@ public class ChamCong_DAO extends Connection_DAO {
                 dto.setSoNgayLam(rs.getInt("so_ngay_lam"));
                 dto.setSoGioTre(rs.getInt("so_gio_tre"));
                 dto.setSoGioTangCa(rs.getInt("so_gio_tang_ca"));
-                // SỬA: Lấy thêm dữ liệu cho 2 cột thống kê
                 dto.setSoNgayTre(rs.getInt("so_ngay_tre"));
                 dto.setSoNgayTangCa(rs.getInt("so_ngay_tang_ca"));
                 list.add(dto);
@@ -99,7 +97,6 @@ public class ChamCong_DAO extends Connection_DAO {
     }
 
     public boolean insertOrUpdate(ChamCong_DTO dto) {
-        // SỬA: Cập nhật lệnh MERGE để lưu cả so_ngay_tre và so_ngay_tang_ca
         String sql = """
                     MERGE BangChamCong AS target
                     USING (SELECT ? AS ma_nv, ? AS thang, ? AS nam) AS src
@@ -120,14 +117,12 @@ public class ChamCong_DAO extends Connection_DAO {
             ps.setInt(2, dto.getThang());
             ps.setInt(3, dto.getNam());
 
-            // Update
             ps.setInt(4, dto.getSoNgayLam());
             ps.setInt(5, dto.getSoGioTre());
             ps.setInt(6, dto.getSoGioTangCa());
             ps.setInt(7, dto.getSoNgayTre());
             ps.setInt(8, dto.getSoNgayTangCa());
 
-            // Insert
             ps.setString(9, dto.getMaChamCong());
             ps.setString(10, dto.getMaNV());
             ps.setInt(11, dto.getThang());

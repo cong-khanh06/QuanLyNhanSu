@@ -2,7 +2,6 @@ package GUI;
 
 import BUS.ChucVu_BUS;
 import DTO.ChucVu_DTO;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,14 +14,12 @@ public class ChucVu_Dialog extends JDialog {
     private ChucVu_GUI parentGUI;
     private boolean isEditMode = false;
 
-    // Constructor THÊM
     public ChucVu_Dialog(ChucVu_GUI parent) {
         this.parentGUI = parent;
         khoiTaoGiaoDien();
         txtMaCV.setText(bus.taoMaMoi()); 
     }
 
-    // Constructor SỬA
     public ChucVu_Dialog(ChucVu_GUI parent, ChucVu_DTO cvEdit) {
         this.parentGUI = parent;
         this.isEditMode = true;
@@ -38,7 +35,7 @@ public class ChucVu_Dialog extends JDialog {
 
     private void khoiTaoGiaoDien() {
         setTitle("Thêm Chức Vụ");
-        setSize(400, 280); // Đã thu nhỏ lại một chút cho cân đối
+        setSize(400, 280);
         setLocationRelativeTo(parentGUI);
         setModal(true);
         setLayout(new BorderLayout());
@@ -92,7 +89,7 @@ public class ChucVu_Dialog extends JDialog {
 
         if (success) {
             JOptionPane.showMessageDialog(this, isEditMode ? "Cập nhật thành công!" : "Thêm thành công!");
-            parentGUI.taiDuLieuLenBangCV(); // Đã sửa tên hàm cho khớp với GUI mới
+            parentGUI.taiDuLieuLenBangCV(); 
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Thao tác thất bại!", "Lỗi DB", JOptionPane.ERROR_MESSAGE);

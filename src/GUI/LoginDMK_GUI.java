@@ -83,11 +83,8 @@ public class LoginDMK_GUI extends JPanel implements ActionListener {
         pnlButtons.add(bthuy);
         formPanel.add(pnlButtons);
 
-        // Ráp nối các Panel
         wrapperPanel.add(formPanel);
         add(wrapperPanel, BorderLayout.CENTER);
-
-        // Sự kiện
         bthuy.addActionListener(this);
         btluu.addActionListener(this);
         addEvent();

@@ -31,7 +31,6 @@ public class ChucVu_DAO extends Connection_DAO {
         return list;
     }
 
-    // 2. Tìm kiếm chức vụ (Đã bỏ cột ma_pc)
     public List<ChucVu_DTO> timKiemChucVu(String tuKhoa) {
         List<ChucVu_DTO> list = new ArrayList<>();
         String sql = "SELECT * FROM ChucVu WHERE ma_cv LIKE ? OR ten_cv LIKE ?";
@@ -54,7 +53,6 @@ public class ChucVu_DAO extends Connection_DAO {
         return list;
     }
 
-    // 3. Thêm chức vụ mới (Chỉ Insert 3 cột: ma_cv, ten_cv, mo_ta)
     public boolean insertChucVu(ChucVu_DTO cv) {
         String sql = "INSERT INTO ChucVu (ma_cv, ten_cv, mo_ta) VALUES (?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {

@@ -28,7 +28,6 @@ public class ChamCong_BUS {
         return dao.getDanhSachPhong();
     }
 
-    // Hàm bổ trợ tạo mã chấm công thống nhất (Ví dụ: CC202603_NV001)
     private String taoMaCC(String maNV, int thang, int nam) {
         return "CC" + nam + String.format("%02d", thang) + "_" + maNV;
     }
@@ -43,7 +42,6 @@ public class ChamCong_BUS {
 
         int soNgayThang = YearMonth.of(nam, thang).lengthOfMonth();
 
-        // Tính toán các thông số tổng hợp
         int soNgayLam = soNgayThang - nghi.size();
         int soGioTre = tre.size() * gio;
         int soGioTangCa = tangca.size() * gio;
@@ -52,20 +50,16 @@ public class ChamCong_BUS {
 
         String maCC = taoMaCC(maNV, thang, nam);
 
-        // Tạo đối tượng DTO bảng cha (BangChamCong)
         ChamCong_DTO cc = new ChamCong_DTO(maCC, maNV, thang, nam, soNgayLam, soGioTre, soGioTangCa);
         cc.setSoNgayTre(soNgayTre);
         cc.setSoNgayTangCa(soNgayTangCa);
 
-        // 1. Lưu hoặc Cập nhật bảng tổng hợp trước
         if (!dao.insertOrUpdate(cc)) {
             return false;
         }
 
-        // 2. XÓA dữ liệu chi tiết cũ của tháng này để tránh lỗi trùng khóa chính
         ctDao.deleteByMaChamCong(maCC);
 
-        // 3. Chuẩn bị danh sách chi tiết mới với trạng thái có dấu
         ArrayList<ChamCongChiTiet_DTO> list = new ArrayList<>();
         for (int d : nghi)
             list.add(new ChamCongChiTiet_DTO(maCC, d, "Nghỉ", 0));
@@ -74,7 +68,6 @@ public class ChamCong_BUS {
         for (int d : tangca)
             list.add(new ChamCongChiTiet_DTO(maCC, d, "Tăng ca", gio));
 
-        // 4. Lưu danh sách chi tiết vào Database
         return ctDao.insertList(list);
     }
 
@@ -89,7 +82,6 @@ public class ChamCong_BUS {
         
         return true; 
     }
- // Trong class ChamCong_BUS
     public List<ChamCong_DTO> getDanhSachChamCongSVDangNhap(int thang, int nam, String manv) {
         return ctDao.getDanhSachChamCongSVDangNhap(thang, nam, manv);
     }

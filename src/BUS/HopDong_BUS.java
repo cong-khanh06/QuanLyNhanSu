@@ -67,15 +67,11 @@ public class HopDong_BUS {
         public ArrayList<HopDong_DTO> getHopDongTheoMaNV(String manv) {
             ArrayList<HopDong_DTO> list = new ArrayList<>();
             
-            // Kiểm tra dữ liệu đầu vào cơ bản
             if (manv == null || manv.trim().isEmpty()) {
                 return list;
             }
 
-            // Gọi lớp DAO để lấy đối tượng DTO
             HopDong_DTO hd = dao.gethopdongtheomanv(manv.trim());
-
-            // Nếu tìm thấy hợp đồng (khác null), thêm vào danh sách
             if (hd != null) {
                 list.add(hd);
             }

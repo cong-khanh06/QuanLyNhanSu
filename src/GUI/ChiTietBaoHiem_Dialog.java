@@ -33,7 +33,7 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
         khoiTaoGiaoDien();
         taiDanhSachComboBox();
         taiDuLieuBaoHiem();
-        txtMaCTBH.setText(bus.taoMaMoi()); // Tự sinh mã mới
+        txtMaCTBH.setText(bus.taoMaMoi()); 
     }
 
     private void khoiTaoGiaoDien() {
@@ -41,7 +41,6 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
         setLocationRelativeTo(getParent());
         setLayout(new BorderLayout(0, 10));
 
-        // --- FORM NHẬP LIỆU (PHÍA TRÊN) ---
         JPanel pnTop = new JPanel(new GridLayout(3, 1, 5, 5));
         pnTop.setBorder(BorderFactory.createTitledBorder("Cấp Bảo Hiểm Mới Cho Nhân Viên"));
 
@@ -82,7 +81,6 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
         pnTop.add(line3);
         add(pnTop, BorderLayout.NORTH);
 
-        // --- BẢNG DỮ LIỆU (Ở GIỮA) ---
         String[] cols = {"Mã CTBH", "Loại BH", "Số Thẻ", "Ngày Cấp", "Nơi Cấp", "NV Đóng(%)", "Cty Đóng(%)"};
         modelBH = new DefaultTableModel(cols, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -94,7 +92,6 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
         scroll.setBorder(BorderFactory.createTitledBorder("Danh Sách Bảo Hiểm Đang Tham Gia"));
         add(scroll, BorderLayout.CENTER);
 
-        // --- NÚT ĐIỀU KHIỂN (PHÍA DƯỚI) ---
         JPanel pnBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnXoa = new JButton("Gỡ Bảo Hiểm (Đang Chọn)");
         btnDong = new JButton("Đóng");
@@ -102,7 +99,7 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
         pnBottom.add(btnDong);
         add(pnBottom, BorderLayout.SOUTH);
 
-        // --- SỰ KIỆN ---
+  
         btnDong.addActionListener(e -> dispose());
         
         btnThem.addActionListener(e -> {
@@ -125,7 +122,7 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
                 JOptionPane.showMessageDialog(this, "Đã thêm bảo hiểm thành công!");
                 taiDuLieuBaoHiem(); 
                 txtSoThe.setText(""); txtNoiCap.setText(""); dpNgayCap.clear();
-                txtMaCTBH.setText(bus.taoMaMoi()); // Sinh mã tiếp theo
+                txtMaCTBH.setText(bus.taoMaMoi()); 
             } else {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
@@ -160,7 +157,7 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
             modelBH.addRow(new Object[]{
                 bh.getMaCTBH(), bh.getTenBH(), bh.getSoTheBH(), 
                 strNgayCap, bh.getNoiCap(), 
-                bh.getTyLeNV(), bh.getTyLeCT() // Sử dụng đúng tên biến từ DTO của bạn
+                bh.getTyLeNV(), bh.getTyLeCT() 
             });
         }
     }

@@ -104,7 +104,6 @@ public class HopDong_DAO {
     
     public ArrayList<HopDong_DTO> search(String keyword) {
         ArrayList<HopDong_DTO> list = new ArrayList<>();
-        // Tìm kiếm theo mã hợp đồng, mã nhân viên hoặc loại hợp đồng
         String sql = "SELECT * FROM HopDong WHERE ma_hd LIKE ? OR ma_nv LIKE ? OR loai_hop_dong LIKE ?";
         
         try (Connection con = connDAO.getCon();

@@ -11,7 +11,6 @@ import DTO.ChamCong_DTO;
 public class ChamCongChiTiet_DAO extends Connection_DAO {
     Connection_DAO connDAO = new Connection_DAO();
 
-    // Xóa chi tiết dựa trên mã chấm công mới (ma_cc)
     public boolean deleteByMaChamCong(String maChamCong) {
         String sql = "DELETE FROM ChamCongChiTiet WHERE ma_cc=?";
         try (
@@ -26,7 +25,6 @@ public class ChamCongChiTiet_DAO extends Connection_DAO {
         return false;
     }
 
-    // Lấy danh sách chi tiết theo các cột ma_cc, ngay, trang_thai, so_gio
     public List<ChamCongChiTiet_DTO> getByMaChamCong(String maChamCong) {
         List<ChamCongChiTiet_DTO> list = new ArrayList<>();
         String sql = "SELECT ma_cc, ngay, trang_thai, so_gio FROM ChamCongChiTiet WHERE ma_cc=?";
@@ -51,7 +49,6 @@ public class ChamCongChiTiet_DAO extends Connection_DAO {
         return list;
     }
 
-    // Chèn danh sách sử dụng Batch Update để tối ưu hiệu suất
     public boolean insertList(List<ChamCongChiTiet_DTO> list) {
         String sql = "INSERT INTO ChamCongChiTiet (ma_cc, ngay, trang_thai, so_gio) VALUES(?,?,?,?)";
 
@@ -74,12 +71,10 @@ public class ChamCongChiTiet_DAO extends Connection_DAO {
         return false;
     }
 
-    // Thống kê dựa trên các chuỗi trạng thái có dấu (Nghĩ, Trễ, Tăng ca)
     public int[] getThongKeChamCong(String maChamCong) {
         int[] kq = new int[4];
         try {
             Connection con = connDAO.getCon();
-            // Sử dụng N'...' để truy vấn chính xác dữ liệu NVARCHAR
             String sql = """
                         SELECT
                             COALESCE(SUM(CASE WHEN trang_thai = N'Nghỉ' THEN 1 END), 0),
@@ -95,12 +90,12 @@ public class ChamCongChiTiet_DAO extends Connection_DAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                kq[0] = rs.getInt(1); // Số ngày nghỉ
-                kq[1] = rs.getInt(2); // Số ngày trễ
-                kq[2] = rs.getInt(3); // Số ngày tăng ca
+                kq[0] = rs.getInt(1); 
+                kq[1] = rs.getInt(2); 
+                kq[2] = rs.getInt(3); 
 
                 int tong = rs.getInt(4);
-                kq[3] = (tong > 0) ? 1 : 0; // Trạng thái đã chấm công
+                kq[3] = (tong > 0) ? 1 : 0; 
             }
         } catch (Exception e) {
             e.printStackTrace();

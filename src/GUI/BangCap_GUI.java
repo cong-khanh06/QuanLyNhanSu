@@ -2,7 +2,7 @@ package GUI;
 
 import BUS.BangCap_BUS;
 import DTO.BangCap_DTO;
-import GUI.button.ButtonToolBar; // Giả sử bạn có class này giống form DuAn
+import GUI.button.ButtonToolBar; 
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,7 +25,6 @@ public class BangCap_GUI extends JPanel {
     public BangCap_GUI() {
         setLayout(new BorderLayout());
 
-        // --- HEADER ---
         pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnHeader.setBackground(new Color(150, 214, 255));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
@@ -34,7 +33,6 @@ public class BangCap_GUI extends JPanel {
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         pnHeader.add(lblTitle);
 
-        // --- TOOLBAR ---
         pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnToolBar.setBackground(new Color(150, 214, 255));
         pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
@@ -43,7 +41,6 @@ public class BangCap_GUI extends JPanel {
         txtSearch.setPreferredSize(new Dimension(220, 36));
         txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
-        // Sử dụng JButton thường hoặc ButtonToolBar tùy bạn đang cấu hình
         btnSearch = new JButton("Tìm kiếm");
         btnAdd = new JButton("Thêm");
         btnEdit = new JButton("Sửa");
@@ -69,7 +66,6 @@ public class BangCap_GUI extends JPanel {
         pnSearch.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearch, BorderLayout.NORTH);
 
-        // --- BẢNG DỮ LIỆU ---
         String[] cols = {"Mã Bằng Cấp", "Tên Bằng Cấp", "Nơi Cấp", "Ngày Cấp", "Mã Nhân Viên"};
         modelBC = new DefaultTableModel(cols, 0) {
             @Override
@@ -84,19 +80,14 @@ public class BangCap_GUI extends JPanel {
 
         add(new JScrollPane(tableBC), BorderLayout.CENTER);
 
-        // --- SỰ KIỆN ---
         btnSearch.addActionListener(e -> {
             String tuKhoa = txtSearch.getText().trim();
             
-            // Gọi hàm tìm kiếm từ BUS (mà bạn vừa thêm ở Bước 2)
             List<BangCap_DTO> ketQua = bus.timkiem(tuKhoa);
 
-            // Xóa trắng dữ liệu cũ trên bảng
             modelBC.setRowCount(0);
 
-            // Đổ dữ liệu mới tìm được lên bảng
             for (BangCap_DTO bc : ketQua) {
-                // Nhớ format ngày tháng để không bị lỗi khi bấm Sửa nhé
                 String strNgayCap = (bc.getNgayCap() != null) ? bc.getNgayCap().format(dtf) : "";
                 
                 modelBC.addRow(new Object[]{
@@ -108,7 +99,6 @@ public class BangCap_GUI extends JPanel {
                 });
             }
             
-            // Nếu không tìm thấy gì thì báo cho người dùng biết
             if (ketQua.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Không tìm thấy bằng cấp nào khớp với từ khóa: " + tuKhoa, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -129,19 +119,16 @@ public class BangCap_GUI extends JPanel {
     }
 
     private void addEvents() {
-        // Tải lại
         btnRefresh.addActionListener(e -> {
             txtSearch.setText("");
             taiDuLieuLenBang();
         });
 
-        // Thêm
         btnAdd.addActionListener(e -> {
             BangCap_Dialog dialog = new BangCap_Dialog(this);
             dialog.setVisible(true);
         });
 
-        // Xóa
         btnDelete.addActionListener(e -> {
             int row = tableBC.getSelectedRow();
             if (row == -1) {
@@ -161,7 +148,6 @@ public class BangCap_GUI extends JPanel {
             }
         });
 
-        // Sửa
         btnEdit.addActionListener(e -> {
             int row = tableBC.getSelectedRow();
             if (row == -1) {

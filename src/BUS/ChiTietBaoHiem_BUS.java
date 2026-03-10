@@ -8,7 +8,6 @@ import java.util.List;
 public class ChiTietBaoHiem_BUS {
     private ChiTietBaoHiem_DAO dao = new ChiTietBaoHiem_DAO();
 
-    // Các hàm dành cho Dialog (Chi tiết bảo hiểm của 1 người)
     public List<LoaiBaoHiem_DTO> layTatCaLoaiBaoHiem() {
         return dao.layTatCaLoaiBaoHiem();
     }
@@ -29,7 +28,6 @@ public class ChiTietBaoHiem_BUS {
         return dao.taoMaMoi();
     }
 
-    // Các hàm dành cho GUI Chính (Danh sách Nhân viên và Số lượng BH)
     public List<ChiTietBaoHiem_DTO> layDanhSachNhanVienBaoHiem() {
         return dao.layDanhSachNhanVienBaoHiem();
     }

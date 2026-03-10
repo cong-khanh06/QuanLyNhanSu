@@ -10,7 +10,6 @@ import DTO.TaiKhoan_DTO;
 
 public class TaiKhoan_DAO {
     
-    // Lấy toàn bộ danh sách tài khoản
     public ArrayList<TaiKhoan_DTO> getListtaikhoan() {
         ArrayList<TaiKhoan_DTO> list = new ArrayList<>();
         Connection_DAO conn = new Connection_DAO();
@@ -31,7 +30,6 @@ public class TaiKhoan_DAO {
         return list;
     }
 
-    // Kiểm tra tên đăng nhập tồn tại chưa
     public boolean checktaikhoan(String taikhoan) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -50,7 +48,6 @@ public class TaiKhoan_DAO {
         return false;
     }
 
-    // Kiểm tra mã tài khoản (Khóa chính) tồn tại chưa
     public boolean checkExistMaTK(String maTK) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -69,7 +66,6 @@ public class TaiKhoan_DAO {
         return false;
     }
 
-    // Kiểm tra mật khẩu cũ
     public boolean checkmatkhau(String taikhoan, String matkhau) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -89,7 +85,6 @@ public class TaiKhoan_DAO {
         return false;
     }
 
-    // Đổi mật khẩu
     public boolean updatePassword(String user, String newPass) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -108,7 +103,6 @@ public class TaiKhoan_DAO {
         }
     }
 
-    // Thêm tài khoản mới
     public boolean insert(TaiKhoan_DTO tk) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -130,7 +124,6 @@ public class TaiKhoan_DAO {
         return false;
     }
 
-// update
     public boolean update(TaiKhoan_DTO tk) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -166,7 +159,6 @@ public class TaiKhoan_DAO {
         return false;
     }
 
-    // Xóa tài khoản
     public boolean delete(String maTK) {
         Connection_DAO conn = new Connection_DAO();
         Connection con = null;
@@ -184,7 +176,6 @@ public class TaiKhoan_DAO {
         return false;
     }
 
-    // Tìm kiếm đa năng
     public ArrayList<TaiKhoan_DTO> search(String keyword) {
         ArrayList<TaiKhoan_DTO> list = new ArrayList<>();
         Connection_DAO conn = new Connection_DAO();

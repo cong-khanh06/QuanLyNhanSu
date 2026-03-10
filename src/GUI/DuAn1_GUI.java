@@ -19,7 +19,7 @@ public class DuAn1_GUI extends JDialog {
     
     private DuAn_BUS busDA = new DuAn_BUS();
     private DuAn_GUI parentGUI;
-    private boolean isEditMode = false; // Cờ đánh dấu form đang ở chế độ Sửa hay Thêm
+    private boolean isEditMode = false; 
     private DateTimeFormatter dtfGUI = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     
     public DuAn1_GUI(DuAn_GUI parent) {
@@ -70,15 +70,13 @@ public class DuAn1_GUI extends JDialog {
 
         pnForm.add(new JLabel("Người quản lý:"));
         txtNguoiQuanLy=new JTextField();
-        pnForm.add(txtNguoiQuanLy);
-        // --- NGÀY BẮT ĐẦU ---
+        pnForm.add(txtNguoiQuanLy);        
         pnForm.add(new JLabel("Ngày Bắt Đầu:"));
         DatePickerSettings setBD = new DatePickerSettings();
         setBD.setFormatForDatesCommonEra("dd-MM-yyyy");
         dpNgayBD = new DatePicker(setBD);
         pnForm.add(dpNgayBD);
 
-        // --- NGÀY KẾT THÚC ---
         pnForm.add(new JLabel("Ngày Kết Thúc:"));
         DatePickerSettings setKT = new DatePickerSettings();
         setKT.setFormatForDatesCommonEra("dd-MM-yyyy");

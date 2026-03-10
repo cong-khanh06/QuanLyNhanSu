@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package DTO;
 
 import java.time.LocalDate;
 
-/**
- *
- * @author khanh
- */
 public class BangCap_DTO {
     private String maBC,tenBC,noiCap,maNV;
     private LocalDate ngayCap;

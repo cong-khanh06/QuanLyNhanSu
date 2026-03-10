@@ -22,14 +22,11 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-// JPanel Danh Sách Chấm Công
 public class ChamCong_GUI extends JPanel {
 
-    // bảng dữ liệu và các dữ liệu
     private JTable table;
     private DefaultTableModel model;
 
-    // các nút lọc dữ liệu
     private JTextField txtSearch;
     private JComboBox<String> cboPhong;
     private JComboBox<String> cboGioiTinh;
@@ -39,32 +36,27 @@ public class ChamCong_GUI extends JPanel {
     private JTable tableChiTiet;
     private DefaultTableModel modelChiTiet;
 
-    // control chấm công chi tiết
     private JButton btnChamCong;
 
     private ChamCong_BUS bus = new ChamCong_BUS();
-    private boolean isAdmin = true; // Mặc định là Admin
-    private String currentMaNV = ""; // Lưu mã nhân viên nếu là User
+    private boolean isAdmin = true; 
+    private String currentMaNV = ""; 
 
-    // Constructor dựng giao diện
     public ChamCong_GUI() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        // Tiêu đề
         JLabel lblTitle = new JLabel("Bảng chấm công nhân viên", JLabel.CENTER);
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Panel các control
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
-        // Tìm kiếm
         txtSearch = new JTextField(18);
         JButton btnSearch = new JButton("Tìm kiếm");
         btnSearch.setBackground(new Color(52, 152, 219));
         btnSearch.setForeground(Color.WHITE);
-        // lọc theo phòng ban
+
         JLabel lblPhong = new JLabel("Phòng ban:");
         cboPhong = new JComboBox<>();
         cboPhong.addItem("Tất cả");
@@ -73,36 +65,31 @@ public class ChamCong_GUI extends JPanel {
             cboPhong.addItem(p);
         }
 
-        // lọc theo giới tính
         JLabel lblGioiTinh = new JLabel("Giới tính:");
         cboGioiTinh = new JComboBox<>();
         cboGioiTinh.addItem("Tất cả");
         cboGioiTinh.addItem("Nam");
         cboGioiTinh.addItem("Nữ");
 
-        // lọc theo tháng
         JLabel lblThang = new JLabel("Tháng:");
         cboThang = new JComboBox<>();
         for (int i = 1; i <= 12; i++) {
             cboThang.addItem(i);
         }
-        // lọc theo năm
         JLabel lblNam = new JLabel("Năm:");
         cboNam = new JComboBox<>();
         int namHienTai = Year.now().getValue();
         for (int i = 2023; i <= namHienTai; i++) {
             cboNam.addItem(i);
         }
-        // mặc định là tháng năm hiện tại
         cboThang.setSelectedItem(LocalDate.now().getMonthValue());
         cboNam.setSelectedItem(LocalDate.now().getYear());
 
-        // control chấm công chi tiết
+
         btnChamCong = new JButton("Chấm công");
         btnChamCong.setBackground(new Color(46, 204, 113));
         btnChamCong.setForeground(Color.WHITE);
 
-        // Thêm tìm kiếm và các control vào một Panel
         filterPanel.add(txtSearch);
         filterPanel.add(btnSearch);
         filterPanel.add(lblPhong);
@@ -115,14 +102,13 @@ public class ChamCong_GUI extends JPanel {
         filterPanel.add(cboNam);
         filterPanel.add(btnChamCong);
 
-        // set layout
+
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.add(lblTitle, BorderLayout.NORTH);
         northPanel.add(filterPanel, BorderLayout.SOUTH);
 
         add(northPanel, BorderLayout.NORTH);
 
-        // Bảng dữ liệu
         String[] cols = { 
         		"STT", 
         		"Mã chấm công", 
@@ -148,7 +134,6 @@ public class ChamCong_GUI extends JPanel {
 
         centerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // bảng chi tiết
         String[] colsCT = { "Thời gian", "Trạng thái", "Số giờ" };
 
         modelChiTiet = new DefaultTableModel(colsCT, 0) {
@@ -167,7 +152,6 @@ public class ChamCong_GUI extends JPanel {
 
         add(centerPanel, BorderLayout.CENTER);
 
-        // Thêm sự kiện
         btnChamCong.addActionListener(e -> moChamCong());
         btnSearch.addActionListener(e -> loadTable());
 
@@ -188,7 +172,6 @@ public class ChamCong_GUI extends JPanel {
         }
     }
 
-    // mở Frame chấm công chi tiết
     private void moChamCong() {
 
         JFrame f = new JFrame("Chấm công chi tiết");
@@ -225,11 +208,11 @@ public class ChamCong_GUI extends JPanel {
             gioiTinh = "";
         }
 
-        // gọi BUS để lấy danh sách từ cơ sở dữ liệu
+
         List<ChamCong_DTO> list = bus.getDanhSachChamCong(thang, nam, phong, gioiTinh, keyword);
         if (list == null)
             return;
-        // đổ dữ liệu vào bảng
+
         int stt = 1;
         for (ChamCong_DTO c : list) {
 
@@ -309,14 +292,12 @@ public class ChamCong_GUI extends JPanel {
         int thang = (int) cboThang.getSelectedItem();
         int nam = (int) cboNam.getSelectedItem();
 
-        // Gọi hàm lọc dành riêng cho cá nhân
         List<ChamCong_DTO> list = bus.getDanhSachChamCongSVDangNhap(thang, nam,manv);
         
         int stt = 1;
         for (ChamCong_DTO c : list) {
             String nhanVien = c.getMaNV() + " - " + c.getHoTen();
 
-            // Lấy thống kê từ BUS dựa trên mã chấm công
             int[] tk = bus.getThongKeChamCong(c.getMaChamCong());
             int soNgayNghi = tk[0];
             int soNgayTre = tk[1];
@@ -329,14 +310,14 @@ public class ChamCong_GUI extends JPanel {
                     c.getMaChamCong(),
                     nhanVien,
                     c.getSoNgayLam(),
-                    soNgayNghi,     // Thay cho c.getSoNgayNghi()
-                    soNgayTre,      // Thay cho c.getSoNgayTre()
-                    soNgayTangCa,   // Thay cho c.getSoNgayTangCa()
+                    soNgayNghi,     
+                    soNgayTre,      
+                    soNgayTangCa,   
                     trangThai
             });
         }
 
-        // Tự động chọn dòng để hiện chi tiết bên dưới
+
         if (table.getRowCount() > 0) {
             table.setRowSelectionInterval(0, 0);
         }

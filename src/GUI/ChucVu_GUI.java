@@ -23,11 +23,10 @@ public class ChucVu_GUI extends JPanel {
     public ChucVu_GUI() {
         setLayout(new BorderLayout());
 
-        // --- KHU VỰC TÌM KIẾM VÀ TOOLBAR ---
         pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnHeader.setBackground(new Color(150, 214, 255));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
-        lblTitle = new JLabel("Quản Lý Chức Vụ"); // Đổi lại tiêu đề
+        lblTitle = new JLabel("Quản Lý Chức Vụ");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         pnHeader.add(lblTitle);
 
@@ -58,7 +57,6 @@ public class ChucVu_GUI extends JPanel {
         pnSearch.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearch, BorderLayout.NORTH);
 
-        // --- KHU VỰC BẢNG (CHỈ CÒN DUY NHẤT BẢNG CHỨC VỤ) ---
         String[] colsCV = {"Mã Chức Vụ", "Tên Chức Vụ", "Mô Tả"};
         modelCV = new DefaultTableModel(colsCV, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -70,10 +68,8 @@ public class ChucVu_GUI extends JPanel {
         JScrollPane scrollCV = new JScrollPane(tableCV);
         scrollCV.setBorder(BorderFactory.createTitledBorder("Danh sách Chức Vụ"));
 
-        // Add thẳng bảng vào giữa (Không dùng JSplitPane nữa)
         add(scrollCV, BorderLayout.CENTER);
 
-        // --- SỰ KIỆN ---
         taiDuLieuLenBangCV();
         addEvents();
     }
@@ -145,7 +141,6 @@ public class ChucVu_GUI extends JPanel {
             dialog.setVisible(true);
         });
 
-        // SỰ KIỆN MỞ FORM QUẢN LÝ CHI TIẾT PHỤ CẤP
         btnQuanLyPhuCap.addActionListener(e -> {
             int row = tableCV.getSelectedRow();
             if (row == -1) {
@@ -155,7 +150,6 @@ public class ChucVu_GUI extends JPanel {
             String maCV = tableCV.getValueAt(row, 0).toString();
             String tenCV = tableCV.getValueAt(row, 1).toString();
             
-            // Gọi màn hình ChiTietChucVu_Dialog lên
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
             ChiTietChucVu_Dialog dialog = new ChiTietChucVu_Dialog(parentWindow, maCV, tenCV);
             dialog.setPhanQuyen(currentRole);
@@ -168,10 +162,8 @@ public class ChucVu_GUI extends JPanel {
         this.currentMaNV = maNV;
 
         if (quyen.equalsIgnoreCase("User")) {
-            // 1. Chỉ load chức vụ của chính nhân viên đó
             taiDuLieuLenBangUser(maNV);
             
-            // 2. Ẩn toàn bộ các nút tác động dữ liệu
             btnAdd.setVisible(false);
             btnEdit.setVisible(false);
             btnDelete.setVisible(false);            

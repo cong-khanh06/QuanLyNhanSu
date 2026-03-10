@@ -27,7 +27,6 @@ public class TrangChu_GUI extends JPanel {
         pnCards.setBackground(new Color(240, 242, 245));
         pnCards.setPreferredSize(new Dimension(0, 130)); 
 
-        // Thêm 4 thẻ với các màu sắc khác nhau
         pnCards.add(taoTheThongKe("Tổng Nhân Viên", busNv.soLuongNhanVien(), new Color(74, 144, 226)));   
         pnCards.add(taoTheThongKe("Phòng Ban", busPb.soLuongPhongban(), new Color(80, 227, 194)));          
         pnCards.add(taoTheThongKe("Dự Án Đang Chạy",  busDa.soLuongDuAnDangThucHien(), new Color(245, 166, 35)));
@@ -35,16 +34,11 @@ public class TrangChu_GUI extends JPanel {
 
         add(pnCards, BorderLayout.NORTH);
 
-        // ==========================================
-        // 2. KHU VỰC NỘI DUNG CHÍNH (CENTER)
-        // ==========================================
-        JPanel pnContent = new JPanel(new GridLayout(1, 2, 20, 0)); // Chia làm 2 cột bằng nhau
+        JPanel pnContent = new JPanel(new GridLayout(1, 2, 20, 0)); 
         pnContent.setBackground(new Color(240, 242, 245));
 
-        // --- Cột Trái: Chỗ để Biểu đồ ---
         JPanel pnChart = new JPanel(new BorderLayout());
         pnChart.setBackground(Color.WHITE);
-        // Tạo viền nhẹ cho đẹp
         pnChart.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(220, 220, 220)),
                 new EmptyBorder(10, 10, 10, 10)
@@ -59,7 +53,6 @@ public class TrangChu_GUI extends JPanel {
 
         pnChart.add(pnBieuDo, BorderLayout.CENTER);
 
-        // --- Cột Phải: Bảng Nhắc nhở / Cảnh báo ---
         JPanel pnAlerts = new JPanel(new BorderLayout(0, 10));
         pnAlerts.setBackground(Color.WHITE);
         pnAlerts.setBorder(BorderFactory.createCompoundBorder(
@@ -71,7 +64,6 @@ public class TrangChu_GUI extends JPanel {
         lblAlertTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         pnAlerts.add(lblAlertTitle, BorderLayout.NORTH);
 
-        // Tạo bảng thông báo giả lập
         String[] colsAlert = {"Loại", "Nội dung", "Thời hạn"};
         Object[][] dataAlert = {
             {"Sinh nhật", "Nguyễn Văn A (Phòng IT)", "Hôm nay"},
@@ -80,14 +72,12 @@ public class TrangChu_GUI extends JPanel {
             {"Dự án", "Họp tiến độ dự án Alpha", "Ngày mai"}
         };
         JTable tableAlert = new JTable(new DefaultTableModel(dataAlert, colsAlert));
-        tableAlert.setRowHeight(35); // Dòng cao cho dễ nhìn
+        tableAlert.setRowHeight(35); 
         tableAlert.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableAlert.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        tableAlert.setShowVerticalLines(false); // Bỏ đường kẻ dọc cho hiện đại
+        tableAlert.setShowVerticalLines(false);
         
         pnAlerts.add(new JScrollPane(tableAlert), BorderLayout.CENTER);
-
-        // Thêm 2 cột vào nội dung
         pnContent.add(pnChart);
         pnContent.add(pnAlerts);
 

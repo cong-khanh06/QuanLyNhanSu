@@ -231,8 +231,7 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
         } else {
             for (int i = 0; i < comboBox_tp.getItemCount(); i++) {
                 String item = comboBox_tp.getItemAt(i).toString();
-                
-                // So sánh: Nếu mục bắt đầu bằng "Mã -", chắc chắn là người đó
+
                 if (item.startsWith(matp + " -")) {
                     comboBox_tp.setSelectedIndex(i);
                     break; 

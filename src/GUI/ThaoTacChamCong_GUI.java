@@ -43,7 +43,7 @@ public class ThaoTacChamCong_GUI extends JPanel {
     private ButtonGroup gioGroup;
     private int soGioChon = 0;
 
-    private String mode = ""; // lưu control đang được chọn
+    private String mode = "";
 
     private Set<Integer> nghi = new HashSet<>();
     private Set<Integer> tre = new HashSet<>();
@@ -86,7 +86,6 @@ public class ThaoTacChamCong_GUI extends JPanel {
         btnTangCa.setBackground(Color.WHITE);
     }
 
-    // khởi tạo giao diện
     private void initUI() {
         setLayout(new BorderLayout(10, 10));
 

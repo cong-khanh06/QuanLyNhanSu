@@ -14,7 +14,6 @@ public class CalendarGrid extends JDialog {
     private Calendar cal = Calendar.getInstance();
     private boolean isUpdating = false;
     
-    // ĐỔI THÀNH ĐỊNH DẠNG DATABASE: Năm-Tháng-Ngày
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
     public CalendarGrid(JTextField target) {
@@ -25,7 +24,6 @@ public class CalendarGrid extends JDialog {
         setLocationRelativeTo(target);
         setLayout(new BorderLayout());
 
-        // --- Header: Điều hướng và ComboBox ---
         JPanel pHeader = new JPanel(new BorderLayout());
         pHeader.setBackground(new Color(240, 240, 240));
         pHeader.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -41,7 +39,6 @@ public class CalendarGrid extends JDialog {
             "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
         });
         
-        // Tạo danh sách năm từ 1950 đến 2050
         Integer[] years = new Integer[101];
         for (int i = 0; i <= 100; i++) years[i] = 1950 + i;
         cbYear = new JComboBox<>(years);
@@ -53,7 +50,6 @@ public class CalendarGrid extends JDialog {
         pHeader.add(pCenterHeader, BorderLayout.CENTER);
         pHeader.add(btnNext, BorderLayout.EAST);
 
-        // Sự kiện nút bấm
         btnPrev.addActionListener(e -> { cal.add(Calendar.MONTH, -1); syncControls(); updateCalendar(); });
         btnNext.addActionListener(e -> { cal.add(Calendar.MONTH, 1); syncControls(); updateCalendar(); });
 
@@ -67,14 +63,12 @@ public class CalendarGrid extends JDialog {
         cbMonth.addActionListener(comboListener);
         cbYear.addActionListener(comboListener);
 
-        // --- Đọc ngày từ TextField (Định dạng yyyy-MM-dd) ---
         try {
             String text = target.getText().trim();
             if (!text.isEmpty()) {
                 cal.setTime(sdf.parse(text));
             }
         } catch (Exception e) {
-            // Nếu lỗi định dạng hoặc rỗng, mặc định lấy ngày hiện tại
             cal = Calendar.getInstance(); 
         }
 
@@ -97,7 +91,6 @@ public class CalendarGrid extends JDialog {
     private void updateCalendar() {
         pDays.removeAll();
         
-        // Vẽ tiêu đề thứ
         String[] heads = {"CN", "T2", "T3", "T4", "T5", "T6", "T7"};
         for (String h : heads) {
             JLabel l = new JLabel(h, JLabel.CENTER);
@@ -111,12 +104,10 @@ public class CalendarGrid extends JDialog {
         int startOffset = t.get(Calendar.DAY_OF_WEEK) - 1;
         int maxDays = t.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        // Ô trống đầu tháng
         for (int i = 0; i < startOffset; i++) {
             pDays.add(new JLabel(""));
         }
 
-        // Các nút ngày
         for (int i = 1; i <= maxDays; i++) {
             final int day = i;
             JButton btn = new JButton(String.valueOf(i));
@@ -124,7 +115,6 @@ public class CalendarGrid extends JDialog {
             btn.setBackground(Color.WHITE);
             btn.setMargin(new Insets(2, 2, 2, 2));
             
-            // Highlight ngày đang chọn
             if (i == cal.get(Calendar.DAY_OF_MONTH)) {
                 btn.setBackground(new Color(63, 81, 181));
                 btn.setForeground(Color.WHITE);
@@ -133,7 +123,7 @@ public class CalendarGrid extends JDialog {
 
             btn.addActionListener(e -> {
                 cal.set(Calendar.DAY_OF_MONTH, day);
-                target.setText(sdf.format(cal.getTime())); // Xuất ra yyyy-MM-dd
+                target.setText(sdf.format(cal.getTime())); 
                 dispose();
             });
             pDays.add(btn);

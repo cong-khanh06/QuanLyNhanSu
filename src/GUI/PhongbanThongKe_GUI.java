@@ -20,7 +20,6 @@ public class PhongbanThongKe_GUI extends JDialog {
         JPanel pnNorth = new JPanel(new BorderLayout());
         pnNorth.setBackground(new Color(0, 153, 153)); 
 
-        // Tiêu đề động
         JLabel lblHeader = new JLabel("THỐNG KÊ: " + tenpb.toUpperCase(), SwingConstants.CENTER);
         lblHeader.setFont(new Font("Arial", Font.BOLD, 22));
         lblHeader.setForeground(Color.WHITE);
@@ -49,19 +48,17 @@ public class PhongbanThongKe_GUI extends JDialog {
         PiePlot plot = (PiePlot) chart.getPlot();
         org.jfree.chart.title.LegendTitle legend = chart.getLegend();
         if (legend != null) {
-            Font legendFont = new Font("Arial", Font.BOLD, 14); // Thử đổi sang Tahoma hoặc Segoe UI
+            Font legendFont = new Font("Arial", Font.BOLD, 14); 
             legend.setItemFont(legendFont);
-            legend.setItemPaint(Color.DARK_GRAY); // Thử đổi màu để xác nhận code có chạy vào đây
+            legend.setItemPaint(Color.DARK_GRAY); 
         }
-        // CẤU HÌNH HIỂN THỊ PHẦN TRĂM (%)
-        // {0} là tên nhãn, {1} là giá trị số, {2} là phần trăm
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{2}")); 
         
-        // Tinh chỉnh font chữ và màu nền cho nhãn
+
         plot.setLabelFont(new Font("SansSerif", Font.BOLD, 12));
-        plot.setLabelBackgroundPaint(new Color(255, 255, 255, 0)); // Trong suốt
-        plot.setLabelOutlinePaint(null); // Bỏ viền nhãn
-        plot.setLabelShadowPaint(null); // Bỏ bóng nhãn
+        plot.setLabelBackgroundPaint(new Color(255, 255, 255, 0)); 
+        plot.setLabelOutlinePaint(null); 
+        plot.setLabelShadowPaint(null); 
         
         plot.setBackgroundPaint(Color.WHITE);
         plot.setSectionOutlinesVisible(false);

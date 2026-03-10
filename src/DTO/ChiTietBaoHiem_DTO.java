@@ -6,17 +6,14 @@ public class ChiTietBaoHiem_DTO {
     private String maCTBH, soTheBH, noiCap, maNV, maBH;
     private LocalDate ngayCap;
     
-    // Dùng cho Dialog (Hiển thị chi tiết bảo hiểm)
     private String tenBH;
     private double tyLeNV, tyLeCT;
 
-    // Dùng cho GUI Chính (Hiển thị danh sách nhân viên)
     private String tenNV;
     private int soLuongBH;
 
     public ChiTietBaoHiem_DTO() {}
 
-    // 1. Constructor dùng khi THÊM mới (từ GUI xuống DB)
     public ChiTietBaoHiem_DTO(String maCTBH, String soTheBH, String noiCap, String maNV, String maBH, LocalDate ngayCap) {
         this.maCTBH = maCTBH;
         this.soTheBH = soTheBH;
@@ -26,7 +23,6 @@ public class ChiTietBaoHiem_DTO {
         this.ngayCap = ngayCap;
     }
 
-    // 2. Constructor dùng khi LOAD dữ liệu lên Dialog
     public ChiTietBaoHiem_DTO(String maCTBH, String soTheBH, String noiCap, String maNV, String maBH, LocalDate ngayCap, String tenBH, double tyLeNV, double tyLeCT) {
         this.maCTBH = maCTBH;
         this.soTheBH = soTheBH;
@@ -39,14 +35,12 @@ public class ChiTietBaoHiem_DTO {
         this.tyLeCT = tyLeCT;
     }
 
-    // 3. Constructor MỚI dùng khi LOAD dữ liệu lên GUI Chính (Thống kê nhân viên)
     public ChiTietBaoHiem_DTO(String maNV, String tenNV, int soLuongBH) {
         this.maNV = maNV;
         this.tenNV = tenNV;
         this.soLuongBH = soLuongBH;
     }
 
-    // --- GETTERS & SETTERS ---
     public String getMaCTBH() { return maCTBH; }
     public void setMaCTBH(String maCTBH) { this.maCTBH = maCTBH; }
     public String getSoTheBH() { return soTheBH; }

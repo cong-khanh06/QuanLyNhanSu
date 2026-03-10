@@ -76,11 +76,9 @@ public class TaiKhoan_BUS {
             return "Mã tài khoản và Tên đăng nhập không được để trống!";
         }
         
-        // --- THÊM KIỂM TRA MẬT KHẨU TẠI ĐÂY ---
         if (tk.getMatkhau() == null || tk.getMatkhau().length() < 6) {
             return "Mật khẩu khởi tạo phải có ít nhất 6 ký tự!";
         }
-        // --------------------------------------
 
         if (taikhoandao.checkExistMaTK(tk.getMataikhoan())) {
             return "Mã tài khoản này đã tồn tại!";
@@ -106,7 +104,6 @@ public class TaiKhoan_BUS {
         if (tk.getMatkhau() != null && !tk.getMatkhau().isEmpty() && tk.getMatkhau().length() < 6) {
             return "Mật khẩu mới phải có ít nhất 6 ký tự!";
         }
-        // ---------------------------------------------------------------
 
         if (taikhoandao.update(tk)) {
             return "Cập nhật thành công!";

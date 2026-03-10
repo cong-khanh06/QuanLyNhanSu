@@ -14,7 +14,6 @@ public class BangCap_DAO extends Connection_DAO {
     Connection con = getCon();
     Statement stmt = getStmt();
 
-    // 1. Lấy toàn bộ danh sách bằng cấp
     public List<BangCap_DTO> layDanhSachBangCap() {
         List<BangCap_DTO> list = new ArrayList<>();
         try {
@@ -40,7 +39,6 @@ public class BangCap_DAO extends Connection_DAO {
         return list;
     }
 
-    // 2. Lấy danh sách bằng cấp theo Mã Nhân Viên (Rất cần thiết khi xem hồ sơ 1 nhân viên)
     public List<BangCap_DTO> layDanhSachBangCapTheoNV(String maNVien) {
         List<BangCap_DTO> list = new ArrayList<>();
         String sql = "SELECT * FROM BangCap WHERE ma_nv = ?";
@@ -67,7 +65,6 @@ public class BangCap_DAO extends Connection_DAO {
         return list;
     }
 
-    // 3. Thêm bằng cấp mới
     public boolean insertBangCap(BangCap_DTO bc) {
         String sql = "INSERT INTO BangCap (ma_bc, ten_bc, noi_cap, ngay_cap, ma_nv) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -75,10 +72,8 @@ public class BangCap_DAO extends Connection_DAO {
             ps.setString(2, bc.getTenBC());
             ps.setString(3, bc.getNoiCap());
             
-            // Xử lý cẩn thận null cho ngày tháng
             ps.setDate(4, bc.getNgayCap() != null ? java.sql.Date.valueOf(bc.getNgayCap()) : null);
             
-            // Xử lý mã nhân viên, nếu rỗng thì truyền NULL vào DB để không lỗi khóa ngoại
             if (bc.getMaNV() == null || bc.getMaNV().isEmpty()) {
                 ps.setNull(5, java.sql.Types.VARCHAR);
             } else {
@@ -92,7 +87,6 @@ public class BangCap_DAO extends Connection_DAO {
         return false;
     }
 
-    // 4. Cập nhật thông tin bằng cấp
     public boolean updateBangCap(BangCap_DTO bc) {
         String sql = "UPDATE BangCap SET ten_bc = ?, noi_cap = ?, ngay_cap = ?, ma_nv = ? WHERE ma_bc = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -115,7 +109,6 @@ public class BangCap_DAO extends Connection_DAO {
         return false;
     }
 
-    // 5. Xóa bằng cấp
     public boolean deleteBangCap(String maBC) {
         String sql = "DELETE FROM BangCap WHERE ma_bc = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -127,7 +120,6 @@ public class BangCap_DAO extends Connection_DAO {
         return false;
     }
 
-    // 6. Tạo mã bằng cấp tự động (BC01, BC02...)
     public String getNewestMaBC() {
         String sql = "SELECT TOP 1 ma_bc FROM BangCap ORDER BY CAST(SUBSTRING(ma_bc, 3, LEN(ma_bc)) AS INT) DESC";
         try (PreparedStatement ps = con.prepareStatement(sql);
@@ -135,23 +127,19 @@ public class BangCap_DAO extends Connection_DAO {
              
             if (rs.next()) {
                 String lastID = rs.getString("ma_bc"); 
-                // Cắt 2 chữ cái đầu "BC"
                 String numberPart = lastID.substring(2);
                 int number = Integer.parseInt(numberPart);
                 number++; 
-                
-                // Ghép lại thành chuỗi BC + 2 chữ số (VD: BC05)
                 return String.format("BC%02d", number);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "BC01"; // Nếu bảng rỗng, trả về mã đầu tiên
+        return "BC01"; 
     }
     
     public List<BangCap_DTO> timKiemBangCap(String tuKhoa) {
         List<BangCap_DTO> list = new ArrayList<>();
-        // Tìm kiếm chứa từ khóa trên các cột: mã bằng, tên bằng, nơi cấp, mã nhân viên
         String sql = "SELECT * FROM BangCap WHERE ma_bc LIKE ? OR ten_bc LIKE ? OR noi_cap LIKE ? OR ma_nv LIKE ?";
         
         try (PreparedStatement ps = con.prepareStatement(sql)) {
