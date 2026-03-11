@@ -374,7 +374,7 @@ public class DuAn_GUI extends JPanel {
 
     private void taiDuLieu(){
         btnDown.addActionListener(e -> {
-            // Truyền cái tableDA (hoặc bảng nào bạn muốn xuất) vào hàm
+            
             ExcelExporter.exportJTableToExcel(tableDA); 
         });
     }

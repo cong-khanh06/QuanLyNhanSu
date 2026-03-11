@@ -26,6 +26,7 @@ import DTO.Phongban_DTO;
 import BUS.Phongban_BUS;
 import BUS.ChucVu_BUS;
 import java.awt.event.MouseEvent;
+import BUS.ExcelExporter;
 
 public class NhanVien_GUI extends JPanel{
     JPanel pnSearchNV,pnHeader,pnToolBar;
@@ -160,6 +161,7 @@ public class NhanVien_GUI extends JPanel{
         addEventRefresh();
         addEventAdd();
         addEventSearch();
+        taiDuLieu();
         taiDuLieuLenBang();
         
     }
@@ -302,6 +304,13 @@ public class NhanVien_GUI extends JPanel{
                 nv.getTrangThai()
             });
     }
+    
+    public void taiDuLieu(){
+        btnDown.addActionListener(e->{
+            ExcelExporter.exportJTableToExcel(tableNV);
+        });
+    }
+    
     public void setphanquyenuser(boolean kiemtra,String manv)
     {
     	btnAdd.setEnabled(kiemtra);
