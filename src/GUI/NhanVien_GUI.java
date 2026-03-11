@@ -23,7 +23,8 @@ import BUS.NhanVien_BUS;
 import DTO.ChucVu_DTO;
 import java.awt.event.MouseAdapter;
 import DTO.Phongban_DTO;
-import javax.swing.JOptionPane;
+import BUS.Phongban_BUS;
+import BUS.ChucVu_BUS;
 import java.awt.event.MouseEvent;
 
 public class NhanVien_GUI extends JPanel{
@@ -36,7 +37,9 @@ public class NhanVien_GUI extends JPanel{
     JComboBox<Phongban_DTO> cbPhongBan;
     JComboBox<ChucVu_DTO> cbChucVu;
     JLabel lblTitle;
-    NhanVien_DAO dao=new NhanVien_DAO();
+    NhanVien_BUS busnv=new NhanVien_BUS();
+    Phongban_BUS buspb=new Phongban_BUS();
+    ChucVu_BUS buscv=new ChucVu_BUS();
     
     List<Phongban_DTO> dsPhongBan;
     List<ChucVu_DTO> dsChucVu;
@@ -80,8 +83,8 @@ public class NhanVien_GUI extends JPanel{
         loadComboPhongBanSearch();
         cbChucVu=new JComboBox<>();   
         loadComboChucVuSearch();
-        dsPhongBan = dao.layDanhSachPB();
-        dsChucVu = dao.layDanhSachCV();
+        dsPhongBan = buspb.layDanhSachPB();
+        dsChucVu = buscv.layDanhSachChucVu();
         cbGioiTinh = new JComboBox<>(new String[]{"Tất cả", "Nam", "Nữ"});
         cbPhongBan.setPreferredSize(new Dimension(150, 36));
         cbGioiTinh.setPreferredSize(new Dimension(120, 36));
@@ -148,7 +151,7 @@ public class NhanVien_GUI extends JPanel{
                 int row = tableNV.getSelectedRow();
                 if (row != -1) {
                     String maNV = tableNV.getValueAt(row, 0).toString();
-                    NhanVien_DTO nv = dao.getNhanVienById(maNV);
+                    NhanVien_DTO nv = busnv.getNhanVienByID(maNV);
                     pndetail.hienThiNhanVien(nv); 
                 }
             }
@@ -164,7 +167,7 @@ public class NhanVien_GUI extends JPanel{
     public void taiDuLieuLenBang(){
         modelNV.setRowCount(0);
         
-        List<NhanVien_DTO> danhsach= dao.layDanhSachNV();
+        List<NhanVien_DTO> danhsach= busnv.layDanhSachNhanVien();
         
         for(NhanVien_DTO nv: danhsach){
             modelNV.addRow(new Object[]{
@@ -233,7 +236,7 @@ public class NhanVien_GUI extends JPanel{
     
     
     private void loadComboPhongBanSearch() {
-        List<Phongban_DTO> list = dao.layDanhSachPB();
+        List<Phongban_DTO> list = buspb.layDanhSachPB();
 
         cbPhongBan.removeAllItems();
 
@@ -250,7 +253,7 @@ public class NhanVien_GUI extends JPanel{
 
     
     private void loadComboChucVuSearch(){
-        List<ChucVu_DTO> list=dao.layDanhSachCV();
+        List<ChucVu_DTO> list=buscv.layDanhSachChucVu();
         
         cbChucVu.removeAllItems();
         ChucVu_DTO tatCa=new ChucVu_DTO();
@@ -284,7 +287,7 @@ public class NhanVien_GUI extends JPanel{
     public void Loaddatatheoma(String manv){
         modelNV.setRowCount(0);
         
-        NhanVien_DTO nv= dao.getNhanVienById(manv);
+        NhanVien_DTO nv= busnv.getNhanVienByID(manv);
         
        
             modelNV.addRow(new Object[]{

@@ -51,4 +51,8 @@ public class NhanVien_BUS {
     public List<NhanVien_DTO> layDanhSachNhanVien(){
         return dao.layDanhSachNV();
     }
+    
+    public NhanVien_DTO getNhanVienByID(String maNV){
+        return dao.getNhanVienById(maNV);
+    }
 }

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class BangLuong1_GUI extends JDialog {
-    private JTextField txtMaBL, txtTenNV, txtLuongCB, txtPhuCap, txtKhauTru, txtThucLanh,txtMaNV;
+    private JTextField txtMaBL, txtTenNV, txtLuongCB, txtPhuCap, txtKhauTru, txtThucLanh;
     private JComboBox<String> cbNhanVien, cbThang, cbNam, cbTrangThai;
     private JButton btnLuu, btnHuy;
     

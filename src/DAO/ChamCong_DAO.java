@@ -8,11 +8,11 @@ import java.time.LocalDate;
 
 public class ChamCong_DAO extends Connection_DAO {
     
-    // 1. Lấy danh sách (Đã nâng cấp bộ lọc động)
+    
     public List<ChamCong_DTO> getDanhSachChamCong(int thang, int nam, String phong, String keyword) {
         List<ChamCong_DTO> list = new ArrayList<>();
         
-        // Dùng LEFT JOIN để lỡ dữ liệu cũ bị mất NhanVien thì vẫn hiện lên bảng
+        
         StringBuilder sql = new StringBuilder(
             "SELECT cc.*, nv.ho_ten " +
             "FROM BangChamCong cc " +
@@ -20,7 +20,7 @@ public class ChamCong_DAO extends Connection_DAO {
             "WHERE 1=1 "
         );
 
-        // Nếu tháng > 0 (không phải Tất cả) thì mới ghép điều kiện
+        
         if (thang > 0) {
             sql.append(" AND MONTH(cc.ngay_tao) = ?");
         }
@@ -76,7 +76,7 @@ public class ChamCong_DAO extends Connection_DAO {
         return list;
     }
 
-    // 2. Thêm mới
+    
     public boolean insertChamCong(ChamCong_DTO cc) {
         String sql = "INSERT INTO BangChamCong (ma_cc, ngay_tao, gio_vao, gio_ra, so_gio_tang_ca, trang_thai, ma_nv) VALUES (?,?,?,?,?,?,?)";
         try (Connection con = getCon(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -96,7 +96,7 @@ public class ChamCong_DAO extends Connection_DAO {
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
-    // 3. Cập nhật
+    
     public boolean updateChamCong(ChamCong_DTO cc) {
         String sql = "UPDATE BangChamCong SET ngay_tao=?, gio_vao=?, gio_ra=?, so_gio_tang_ca=?, trang_thai=?, ma_nv=? WHERE ma_cc=?";
         try (Connection con = getCon(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -116,7 +116,7 @@ public class ChamCong_DAO extends Connection_DAO {
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
-    // 4. Xóa
+    
     public boolean deleteChamCong(String maCC) {
         String sql = "DELETE FROM BangChamCong WHERE ma_cc=?";
         try (Connection con = getCon(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -125,7 +125,7 @@ public class ChamCong_DAO extends Connection_DAO {
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
-    // 5. Tiện ích sinh mã tự động & Lấy danh sách NV
+    
     public String getNewestMaCC() {
         String sql = "SELECT TOP 1 ma_cc FROM BangChamCong ORDER BY CAST(SUBSTRING(ma_cc, 3, LEN(ma_cc)) AS INT) DESC";
         try (Connection con = getCon(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {

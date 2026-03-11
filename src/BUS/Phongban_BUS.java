@@ -11,6 +11,7 @@ import org.jfree.data.general.DefaultPieDataset;
 import DAO.Phongban_DAO;
 	import DTO.Phongban_DTO;
 	import DTO.NhanVien_DTO;
+import java.util.List;
 	public class Phongban_BUS {
 	private ArrayList<Phongban_DTO>arr;
 	private Phongban_DAO pbdao;
@@ -198,5 +199,8 @@ import DAO.Phongban_DAO;
         
         public int soLuongPhongban(){
             return pbdao.soLuongPhongBan();
+        }
+        public List<Phongban_DTO> layDanhSachPB(){
+            return pbdao.getList();
         }
 }

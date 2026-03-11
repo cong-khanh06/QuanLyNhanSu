@@ -188,7 +188,7 @@ public class NhanVien_DAO extends Connection_DAO{
             else{
                 con.setAutoCommit(false);
                 try {
-                    String[] tablesToDelete = {"TaiKhoan", "BangCap", "ChiTietBaoHiem", "PhanCongDuAn", "ChiTietDon"};
+                    String[] tablesToDelete = {"TaiKhoan", "BangCap", "ChiTietBaoHiem", "PhanCongDuAn"};
                     for (String table : tablesToDelete) {
                         String delSubSql = "DELETE FROM " + table + " WHERE ma_nv = ?";
                         PreparedStatement psDelSub = con.prepareStatement(delSubSql);
@@ -200,11 +200,6 @@ public class NhanVien_DAO extends Connection_DAO{
                     PreparedStatement psUpPB = con.prepareStatement(updatePhongBan);
                     psUpPB.setString(1, maNV);
                     psUpPB.executeUpdate();
-                    
-                    String updateChiTietDon = "UPDATE ChiTietDon SET nguoi_duyet_id = NULL WHERE nguoi_duyet_id = ?";
-                    PreparedStatement psUpDon = con.prepareStatement(updateChiTietDon);
-                    psUpDon.setString(1, maNV);
-                    psUpDon.executeUpdate();
                     
                     String delNVSql = "DELETE FROM NhanVien WHERE ma_nv = ?";
                     PreparedStatement psDelNV = con.prepareStatement(delNVSql);
