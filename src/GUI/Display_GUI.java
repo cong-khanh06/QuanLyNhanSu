@@ -132,7 +132,6 @@ public class Display_GUI extends JFrame{
         pnLeft.add(pnCard);
 
         pnRight=new JPanel(cardlayout);
-        pnRight.setBackground(Color.white);
         
         pnRight.add(trangchu,"panelTC");
         pnRight.add(nhanvien,"panelNV");

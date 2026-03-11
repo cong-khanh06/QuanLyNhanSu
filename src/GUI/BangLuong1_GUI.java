@@ -46,8 +46,6 @@ public class BangLuong1_GUI extends JDialog {
         setTitle("Sửa Bảng Lương");
         btnLuu.setText("Cập Nhật");
         
-        txtMaNV.setEditable(false);
-        
         cbNhanVien.setEnabled(false); 
         cbThang.setEnabled(false);
         cbNam.setEnabled(false);
@@ -102,7 +100,7 @@ public class BangLuong1_GUI extends JDialog {
         }
         pnForm.add(cbNhanVien);
         
-        // Sự kiện: Khi chọn 1 nhân viên khác, tự động điền Tên NV xuống Textfield dưới
+        
         cbNhanVien.addActionListener(e -> capNhatTenNV());
         
         pnForm.add(new JLabel("Tên Nhân Viên:"));

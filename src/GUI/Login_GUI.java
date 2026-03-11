@@ -70,7 +70,7 @@ public class Login_GUI extends JFrame implements ActionListener {
         panelRight = new JPanel(new CardLayout());
         panelRight.setBackground(Color.WHITE);
         panelRight.add(logindangnhap, "formdangnhap");
-        panelRight.add(logindmk, "formdmk");
+//        panelRight.add(logindmk, "formdmk");
 
         contentPane.add(panelLeft);
         contentPane.add(panelRight);

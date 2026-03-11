@@ -17,4 +17,9 @@ public class ChucVu_DTO {
     public void setTenCV(String tenCV) { this.tenCV = tenCV; }
     public String getMoTa() { return moTa; }
     public void setMoTa(String moTa) { this.moTa = moTa; }
+    
+    @Override
+    public String toString(){
+        return this.tenCV;
+    }
 }
