@@ -1,6 +1,9 @@
 package GUI;
 
 import BUS.BangLuong_BUS;
+import BUS.HopDong_BUS;
+import BUS.ChucVu_BUS;
+import BUS.ChiTietBaoHiem_BUS;
 import DTO.BangLuong_DTO;
 import GUI.button.ButtonToolBar;
 
@@ -21,6 +24,9 @@ public class BangLuong_GUI extends JPanel {
     JLabel lblTitle;
     
     BangLuong_BUS bus = new BangLuong_BUS();
+    HopDong_BUS bushd=new HopDong_BUS();
+    ChucVu_BUS buscv=new ChucVu_BUS();
+    ChiTietBaoHiem_BUS busctbh=new ChiTietBaoHiem_BUS();
     JLabel lblTongQuyLuong, lblTongDaThanhToan, lblTongChuaThanhToan; 
     DecimalFormat df = new DecimalFormat("#,### VNĐ");
     private boolean check=true;
@@ -56,7 +62,7 @@ public class BangLuong_GUI extends JPanel {
         pnSearch.add(txtSearch, BorderLayout.CENTER);
         pnSearch.add(btnSearch, BorderLayout.EAST);
         
-        // 2. Nhóm Chức năng & Lọc (Cố định đẩy về bên phải)
+        
         JPanel pnAction = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnAction.setBackground(new Color(150, 214, 255));
         
@@ -158,9 +164,9 @@ public class BangLuong_GUI extends JPanel {
                 bl.getMaNV(), 
                 bl.getTenNV(), 
                 kyLuong, 
-                df.format(bl.getLuongCoBan()), 
-                df.format(bl.getTongPhuCap()), 
-                df.format(bl.getTongKhauTru()), 
+                df.format(bushd.getMucLuongCoBanTheoMaNV(bl.getMaNV())), 
+                df.format(buscv.getTongPhuCapCuaNhanVien(bl.getMaNV())), 
+                df.format(busctbh.tongTienBaoHiem(bl.getMaNV())), 
                 df.format(bl.getThucLanh()), 
                 bl.getTrangThai()
             });

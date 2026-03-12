@@ -39,7 +39,7 @@ public class ChiTietChucVu_Dialog extends JDialog {
         cbPhuCap.setPreferredSize(new Dimension(250, 30));
         
         btnThem = new JButton("Thêm Phụ Cấp");
-        btnXoa = new JButton("Xóa Phụ Cấp (Đang chọn)");
+        btnXoa = new JButton("Xóa Phụ Cấp");
         
         pnTop.add(new JLabel("Chọn Phụ Cấp:"));
         pnTop.add(cbPhuCap);

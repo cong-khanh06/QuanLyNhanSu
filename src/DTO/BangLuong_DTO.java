@@ -13,7 +13,7 @@ public class BangLuong_DTO {
     private int thang;
     private int nam;
     
-    // Thuộc tính phụ để hiển thị lên bảng (không lưu trực tiếp vào CSDL bảng BangLuong)
+    
     private String tenNV;
 
     public BangLuong_DTO() {}
@@ -32,7 +32,7 @@ public class BangLuong_DTO {
         this.tenNV = tenNV;
     }
 
-    // --- GETTER & SETTER ---
+    
     public String getMaBL() { return maBL; }
     public void setMaBL(String maBL) { this.maBL = maBL; }
 

@@ -2,6 +2,10 @@ package GUI;
 
 import BUS.BangLuong_BUS;
 import BUS.NhanVien_BUS;
+import BUS.HopDong_BUS;
+import BUS.ChiTietBaoHiem_BUS;
+import BUS.ChucVu_BUS;
+
 import DTO.BangLuong_DTO;
 import DTO.NhanVien_DTO;
 
@@ -20,6 +24,9 @@ public class BangLuong1_GUI extends JDialog {
     
     private BangLuong_BUS busBL = new BangLuong_BUS();
     private NhanVien_BUS busNV = new NhanVien_BUS(); 
+    private HopDong_BUS busHd=new HopDong_BUS();
+    private ChiTietBaoHiem_BUS busctbh=new ChiTietBaoHiem_BUS();
+    private ChucVu_BUS buscv=new ChucVu_BUS();
     private BangLuong_GUI parentGUI;
     private boolean isEditMode = false; 
     
@@ -65,7 +72,7 @@ public class BangLuong1_GUI extends JDialog {
         cbThang.setSelectedItem(String.valueOf(blEdit.getThang()));
         cbNam.setSelectedItem(String.valueOf(blEdit.getNam()));
         
-        txtLuongCB.setText(blEdit.getLuongCoBan().toString());
+        txtLuongCB.setText(String.valueOf(busHd.getMucLuongCoBanTheoMaNV(maNVEdit)));
         txtPhuCap.setText(blEdit.getTongPhuCap().toString());
         txtKhauTru.setText(blEdit.getTongKhauTru().toString());
         txtThucLanh.setText(blEdit.getThucLanh().toString());
@@ -163,7 +170,18 @@ public class BangLuong1_GUI extends JDialog {
             String selectedItem = cbNhanVien.getSelectedItem().toString();
             String[] parts = selectedItem.split(" - ");
             if (parts.length > 1) {
+                String manv=parts[0].trim();
                 txtTenNV.setText(parts[1].trim());
+                
+                if(!isEditMode){
+                    BigDecimal luongCB = BigDecimal.valueOf(busHd.getMucLuongCoBanTheoMaNV(manv));
+                    BigDecimal phuCap = BigDecimal.valueOf(buscv.getTongPhuCapCuaNhanVien(manv));
+                    BigDecimal khauTru = BigDecimal.valueOf(busctbh.tongTienBaoHiem(manv));
+                
+                txtLuongCB.setText(luongCB != null ? luongCB.toPlainString() : "0");
+                txtPhuCap.setText(phuCap != null ? phuCap.toPlainString() : "0");
+                txtKhauTru.setText(khauTru != null ? khauTru.toPlainString() : "0");
+                }
             }
         }
     }
@@ -210,7 +228,7 @@ public class BangLuong1_GUI extends JDialog {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đủ thông tin và kiểm tra lại số tiền!");
                 return;
             }
-
+            
             BigDecimal luongCB = new BigDecimal(txtLuongCB.getText().trim());
             BigDecimal phuCap = new BigDecimal(txtPhuCap.getText().trim());
             BigDecimal khauTru = new BigDecimal(txtKhauTru.getText().trim());

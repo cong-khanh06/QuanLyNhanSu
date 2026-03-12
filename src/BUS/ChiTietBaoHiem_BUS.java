@@ -40,4 +40,7 @@ public class ChiTietBaoHiem_BUS {
     {
     	return dao.layDanhSachNhanVienBaoHiemtumanv(manv);
     }
+    public double tongTienBaoHiem(String manv){
+        return dao.tinhTongTienBaoHiemNhanVien(manv);
+    }
 }

@@ -54,12 +54,12 @@ public class UngLuong_GUI extends JPanel {
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         pnHeader.add(lblTitle);
         
-        // --- TOOLBAR CO GIÃN TỰ ĐỘNG ---
-        pnToolBar = new JPanel(new BorderLayout(10, 10)); // Dùng BorderLayout
+        
+        pnToolBar = new JPanel(new BorderLayout(10, 10)); 
         pnToolBar.setBackground(new Color(150, 214, 255));
         pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
         
-        // 1. Nhóm Tìm kiếm (Đặt ở CENTER để co giãn)
+        
         JPanel pnSearch = new JPanel(new BorderLayout(5, 0));
         pnSearch.setBackground(new Color(150, 214, 255));
         

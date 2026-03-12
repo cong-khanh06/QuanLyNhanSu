@@ -156,4 +156,29 @@ public class ChiTietBaoHiem_DAO extends Connection_DAO {
         }
         return list;
     }
+    public double tinhTongTienBaoHiemNhanVien(String maNV) {
+        
+        String sql = "SELECT (hd.muc_luong_co_ban * SUM(lbh.ty_le_nv_dong) / 100) AS tong_tien_bao_hiem " +
+                     "FROM NhanVien nv " +
+                     "JOIN HopDong hd ON nv.ma_nv = hd.ma_nv " +
+                     "JOIN ChiTietBaoHiem ctbh ON nv.ma_nv = ctbh.ma_nv " +
+                     "JOIN LoaiBaoHiem lbh ON ctbh.ma_bh = lbh.ma_bh " +
+                     "WHERE nv.ma_nv = ? AND hd.trang_thai = 'HieuLuc' " +
+                     "GROUP BY nv.ma_nv, hd.muc_luong_co_ban";
+
+        try (Connection conn = getCon(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, maNV);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                
+                return rs.getDouble("tong_tien_bao_hiem");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0; 
+    }
 }
