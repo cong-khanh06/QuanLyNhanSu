@@ -164,9 +164,9 @@ public class BangLuong_GUI extends JPanel {
                 bl.getMaNV(), 
                 bl.getTenNV(), 
                 kyLuong, 
-                df.format(bushd.getMucLuongCoBanTheoMaNV(bl.getMaNV())), 
-                df.format(buscv.getTongPhuCapCuaNhanVien(bl.getMaNV())), 
-                df.format(busctbh.tongTienBaoHiem(bl.getMaNV())), 
+                df.format(bl.getLuongCoBan()), 
+                df.format(bl.getTongPhuCap()), 
+                df.format(bl.getTongKhauTru()), 
                 df.format(bl.getThucLanh()), 
                 bl.getTrangThai()
             });

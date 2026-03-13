@@ -72,9 +72,9 @@ public class BangLuong1_GUI extends JDialog {
         cbThang.setSelectedItem(String.valueOf(blEdit.getThang()));
         cbNam.setSelectedItem(String.valueOf(blEdit.getNam()));
         
-        txtLuongCB.setText(String.valueOf(busHd.getMucLuongCoBanTheoMaNV(maNVEdit)));
-        txtPhuCap.setText(blEdit.getTongPhuCap().toString());
-        txtKhauTru.setText(blEdit.getTongKhauTru().toString());
+        txtLuongCB.setText(blEdit.getLuongCoBan().toPlainString());
+        txtPhuCap.setText(blEdit.getTongPhuCap().toPlainString());
+        txtKhauTru.setText(blEdit.getTongKhauTru().toPlainString());
         txtThucLanh.setText(blEdit.getThucLanh().toString());
         cbTrangThai.setSelectedItem(blEdit.getTrangThai());
     }
