@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 
 public class Display_GUI extends JFrame{
     JPanel pnLeft,pnRight,pnRAN,pnCard;
@@ -61,6 +63,7 @@ public class Display_GUI extends JFrame{
         pnLeft=new JPanel();
         pnLeft.setPreferredSize(new Dimension(250,800));
         pnLeft.setBackground(new Color(150,214,255));
+        pnLeft.setLayout(new BorderLayout());
         
         name=new JLabel("Tên Đăng nhập: ");
         role=new JLabel("Chức vụ: ");
@@ -78,7 +81,7 @@ public class Display_GUI extends JFrame{
         pnRAN.add(role);
         pnRAN.add(roleValue);
         
-        pnLeft.add(pnRAN);
+        pnLeft.add(pnRAN,BorderLayout.NORTH);
         
         pnCard=new JPanel();
         pnCard.setPreferredSize(new Dimension(250,700));
@@ -128,8 +131,12 @@ public class Display_GUI extends JFrame{
         btnCTBH.setHorizontalAlignment(SwingConstants.LEFT);
         btnUL.setHorizontalAlignment(SwingConstants.LEFT);
         btnTB.setHorizontalAlignment(SwingConstants.LEFT);
-
-        pnLeft.add(pnCard);
+        
+        JScrollPane scrollSidebar=new JScrollPane(pnCard);
+        scrollSidebar.setBorder(null); 
+        scrollSidebar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollSidebar.getVerticalScrollBar().setUnitIncrement(16);
+        pnLeft.add(scrollSidebar,BorderLayout.CENTER);
 
         pnRight=new JPanel(cardlayout);
         
