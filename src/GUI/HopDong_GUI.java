@@ -240,7 +240,16 @@ public class HopDong_GUI extends JPanel {
     }
 
     public void loadData() { renderTable(bus.getAll()); }
-    private void searchAction() { renderTable(bus.search(txtSearch.getText().trim())); }
+    private void searchAction() { 
+        if("Hiệu lực".equals(txtSearch.getText().trim())) {
+            renderTable(bus.search("HieuLuc"));
+        }else if("Hết hạn".equals(txtSearch.getText().trim())){
+            renderTable(bus.search("HetHan"));
+        }
+        else{
+            renderTable(bus.search(txtSearch.getText().trim()));
+        }
+    }
     
     private void deleteAction() {
         int row = table.getSelectedRow();

@@ -104,7 +104,7 @@ public class HopDong_DAO {
     
     public ArrayList<HopDong_DTO> search(String keyword) {
         ArrayList<HopDong_DTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM HopDong WHERE ma_hd LIKE ? OR ma_nv LIKE ? OR loai_hop_dong LIKE ?";
+        String sql = "SELECT * FROM HopDong WHERE ma_hd LIKE ? OR ma_nv LIKE ? OR loai_hop_dong LIKE ? OR trang_thai LIKE ? ";
         
         try (Connection con = connDAO.getCon();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -113,6 +113,7 @@ public class HopDong_DAO {
             ps.setString(1, value);
             ps.setString(2, value);
             ps.setString(3, value);
+            ps.setString(4, value);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
