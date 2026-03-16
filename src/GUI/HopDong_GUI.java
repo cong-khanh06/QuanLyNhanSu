@@ -217,7 +217,7 @@ public class HopDong_GUI extends JPanel {
         valTuNgay.setText(hd.getNgayBatDau() != null ? sdf.format(hd.getNgayBatDau()) : "---");
         valDenNgay.setText(hd.getNgayKetThuc() != null ? sdf.format(hd.getNgayKetThuc()) : "Vô thời hạn");
         valLuong.setText(String.format("%,.0f VNĐ", hd.getMucLuongCoBan()));
-        valTrangThai.setText(hd.getTrangThai());
+        valTrangThai.setText(formatTrangThai(hd.getTrangThai()));
         valLanKy.setText(String.valueOf(hd.getLanKy()));
         valNgayLenLuong.setText(hd.getNgayLenLuongGanNhat() != null ? sdf.format(hd.getNgayLenLuongGanNhat()) : "---");
         txtNoiDungChiTiet.setText(hd.getNoiDung());
@@ -260,7 +260,7 @@ public class HopDong_GUI extends JPanel {
         for (HopDong_DTO hd : list) {
             model.addRow(new Object[]{
                 hd.getMaHD(), hd.getMaNV(), hd.getLoaiHopDong(),
-                String.format("%,.0f", hd.getMucLuongCoBan()), hd.getTrangThai()
+                String.format("%,.0f", hd.getMucLuongCoBan()), formatTrangThai(hd.getTrangThai())
             });
         }
     }
@@ -275,7 +275,20 @@ public class HopDong_GUI extends JPanel {
         ArrayList<HopDong_DTO> list = bus.getHopDongTheoMaNV(manv);
         renderTable(list);
     }
-
+    
+    private String formatTrangThai(String trangThai){
+        if(trangThai==null) return "---";
+        String strtt=trangThai.trim().toLowerCase();
+        switch(strtt){
+            case "hethan":
+                return "Hết hạn";
+            case "hieuluc":
+                return "Hiệu lực";
+            default:
+                return trangThai;
+        }
+    }
+    
     public void setphanquyenUser(boolean kq, String manv) {
         btthem.setEnabled(kq);
         btsua.setEnabled(kq);

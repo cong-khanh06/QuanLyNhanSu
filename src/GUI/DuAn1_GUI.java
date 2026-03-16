@@ -14,7 +14,7 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 
 public class DuAn1_GUI extends JDialog {
     private JTextField txtMaDA, txtTenDA;
-    private JComboBox<String> cbNguoiQuanLy; // Thay JTextField bằng JComboBox
+    private JComboBox<String> cbNguoiQuanLy; 
     private DatePicker dpNgayBD, dpNgayKT;
     private JComboBox<String> cbTrangThai;
     private JButton btnLuu, btnHuy;
@@ -44,11 +44,11 @@ public class DuAn1_GUI extends JDialog {
         dpNgayKT.setDate(daEdit.getNgayKetThuc());
         cbTrangThai.setSelectedItem(daEdit.getTrangThai());
         
-        // Logic để chọn đúng người quản lý cũ khi bấm nút Sửa
+        
         String maNQL = daEdit.getNguoiQuanLy();
         if (maNQL != null && !maNQL.isEmpty()) {
             for (int i = 0; i < cbNguoiQuanLy.getItemCount(); i++) {
-                // Nếu item (Ví dụ: "NV01 - Nguyễn Văn A") bắt đầu bằng "NV01" thì chọn item đó
+                
                 if (cbNguoiQuanLy.getItemAt(i).startsWith(maNQL)) {
                     cbNguoiQuanLy.setSelectedIndex(i);
                     break;
@@ -89,7 +89,7 @@ public class DuAn1_GUI extends JDialog {
         }
         pnForm.add(cbNguoiQuanLy);
         
-        // --- NGÀY BẮT ĐẦU ---
+       
 
         pnForm.add(new JLabel("Ngày Bắt Đầu:"));
         DatePickerSettings setBD = new DatePickerSettings();
@@ -104,7 +104,7 @@ public class DuAn1_GUI extends JDialog {
         pnForm.add(dpNgayKT);
 
         pnForm.add(new JLabel("Trạng Thái:"));
-        cbTrangThai = new JComboBox<>(new String[]{"Chuẩn bị", "Đang thực hiện", "Hoàn thành"});
+        cbTrangThai = new JComboBox<>(new String[]{"Chuẩn bị", "Đang thực hiện", "Hoàn thành","Bị hủy"});
         pnForm.add(cbTrangThai);
 
         add(pnForm, BorderLayout.CENTER);
@@ -130,7 +130,7 @@ public class DuAn1_GUI extends JDialog {
             LocalDate ngayKT = dpNgayKT.getDate();
             String trangThai = cbTrangThai.getSelectedItem().toString();
             
-            // Xử lý lấy mã nhân viên từ ComboBox (Tách lấy phần chữ trước dấu " - ")
+            
             String nguoiQuanLy = "";
             if (cbNguoiQuanLy.getSelectedItem() != null) {
                 nguoiQuanLy = cbNguoiQuanLy.getSelectedItem().toString().split(" - ")[0].trim();
