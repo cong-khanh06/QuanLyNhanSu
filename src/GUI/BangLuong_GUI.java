@@ -6,7 +6,7 @@ import BUS.ChucVu_BUS;
 import BUS.ChiTietBaoHiem_BUS;
 import DTO.BangLuong_DTO;
 import GUI.button.ButtonToolBar;
-
+import BUS.ExcelExporter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class BangLuong_GUI extends JPanel {
     JTable tableBL;
     DefaultTableModel modelBL;
     JTextField txtSearch;
-    JButton btnSearch, btnAdd, btnEdit, btnDelete, btnRefresh;
+    JButton btnSearch, btnAdd, btnEdit, btnDelete, btnRefresh,btnDown;
     JComboBox<String> cbThang, cbNam, cbTrangThai; 
     JLabel lblTitle;
     
@@ -32,119 +32,143 @@ public class BangLuong_GUI extends JPanel {
     private boolean check=true;
     private String manhanvien="";
     public BangLuong_GUI() {
-        setLayout(new BorderLayout());
+        // NỀN TỔNG THỂ XÁM NHẠT
+        setBackground(new Color(226, 232, 240)); 
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        
-        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnHeader.setBackground(new Color(150, 214, 255));
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
+        Font modernFont = new Font("Segoe UI", Font.PLAIN, 14);
 
-        lblTitle = new JLabel("Quản Lý Bảng Lương");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        pnHeader.add(lblTitle);
-        
-        
-        pnToolBar = new JPanel(new BorderLayout(10, 10)); 
-        pnToolBar.setBackground(new Color(150, 214, 255));
-        pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
-        
-        
-        JPanel pnSearch = new JPanel(new BorderLayout(5, 0));
-        pnSearch.setBackground(new Color(150, 214, 255));
-        
-        txtSearch = new JTextField();
-        txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        txtSearch.setToolTipText("Tìm mã NV, tên NV, mã BL...");
-        
-        btnSearch = new ButtonToolBar("Tìm");
-        btnSearch.setPreferredSize(new Dimension(80, 36));
-        
-        pnSearch.add(txtSearch, BorderLayout.CENTER);
-        pnSearch.add(btnSearch, BorderLayout.EAST);
-        
-        
-        JPanel pnAction = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        pnAction.setBackground(new Color(150, 214, 255));
-        
-        btnAdd = new ButtonToolBar("Thêm Mới");
-        btnEdit = new ButtonToolBar("Sửa");     
-        btnDelete = new ButtonToolBar("Xóa");
-        btnRefresh = new ButtonToolBar("Tải Lại");
-        
-        btnEdit.setPreferredSize(new Dimension(80, 36));   
-        btnDelete.setPreferredSize(new Dimension(80, 36));
-        btnAdd.setPreferredSize(new Dimension(100, 36));
-        btnRefresh.setPreferredSize(new Dimension(100, 36));
-        
-        cbThang = new JComboBox<>(new String[]{"Tất cả", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
-        cbThang.setPreferredSize(new Dimension(90, 36));
-        cbThang.setToolTipText("Chọn Tháng");
-        
-        cbNam = new JComboBox<>(new String[]{"Tất cả", "2024", "2025", "2026", "2027"});
-        cbNam.setPreferredSize(new Dimension(90, 36));
-        cbNam.setToolTipText("Chọn Năm");
-
-        cbTrangThai = new JComboBox<>(new String[]{"Tất cả", "Chưa thanh toán", "Đã thanh toán"});
-        cbTrangThai.setPreferredSize(new Dimension(140, 36));
-
-        pnAction.add(new JLabel("Tháng:")); pnAction.add(cbThang);
-        pnAction.add(new JLabel("Năm:")); pnAction.add(cbNam);
-        pnAction.add(cbTrangThai); 
-        pnAction.add(btnAdd);
-        pnAction.add(btnEdit);   
-        pnAction.add(btnDelete);
-        pnAction.add(btnRefresh);
-
-        pnToolBar.add(pnSearch, BorderLayout.CENTER);
-        pnToolBar.add(pnAction, BorderLayout.EAST);
-        
+        // ================= PHẦN HEADER & TOOLBAR (Card Trắng) =================
         pnSearchBL = new JPanel(new BorderLayout());
         pnSearchBL.setBackground(Color.WHITE);
+        // Viền Xanh Đậm (Indigo) ở trên cùng
         pnSearchBL.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(79, 70, 229)),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
         ));
+
+        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        pnHeader.setBackground(Color.WHITE);
+        lblTitle = new JLabel("Quản Lý Bảng Lương");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitle.setForeground(new Color(30, 41, 59));
+        pnHeader.add(lblTitle);
+        
+        pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0)); 
+        pnToolBar.setBackground(Color.WHITE);
+        pnToolBar.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+        
+        txtSearch = new JTextField();
+        txtSearch.setPreferredSize(new Dimension(180, 36));
+        txtSearch.setFont(modernFont);
+        txtSearch.setToolTipText("Tìm mã NV, tên NV, mã BL...");
+        
+        btnSearch = createFlatButton("Tìm", "primary");
+        btnSearch.setPreferredSize(new Dimension(80, 36));
+
+        cbThang = new JComboBox<>(new String[]{"Tất cả", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+        cbThang.setPreferredSize(new Dimension(90, 36)); cbThang.setFont(modernFont);
+        
+        cbNam = new JComboBox<>(new String[]{"Tất cả", "2024", "2025", "2026", "2027"});
+        cbNam.setPreferredSize(new Dimension(90, 36)); cbNam.setFont(modernFont);
+
+        cbTrangThai = new JComboBox<>(new String[]{"Tất cả", "Chưa thanh toán", "Đã thanh toán"});
+        cbTrangThai.setPreferredSize(new Dimension(140, 36)); cbTrangThai.setFont(modernFont);
+
+        btnAdd = createFlatButton("Thêm Mới", "primary");
+        btnEdit = createFlatButton("Sửa", "");     
+        btnDelete = createFlatButton("Xóa", "danger");
+        btnRefresh = createFlatButton("Tải Lại", "");
+        btnDown = createFlatButton("Tải xuống", "success");
+
+        pnToolBar.add(txtSearch); pnToolBar.add(btnSearch);
+        pnToolBar.add(new JLabel("Tháng:")); pnToolBar.add(cbThang);
+        pnToolBar.add(new JLabel("Năm:")); pnToolBar.add(cbNam);
+        pnToolBar.add(cbTrangThai); 
+        
+        pnToolBar.add(btnAdd); pnToolBar.add(btnEdit);   
+        pnToolBar.add(btnDelete); pnToolBar.add(btnRefresh); pnToolBar.add(btnDown);
+        
         pnSearchBL.add(pnHeader, BorderLayout.NORTH);
         pnSearchBL.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearchBL, BorderLayout.NORTH);
         
-        
+        // ================= PHẦN BẢNG DỮ LIỆU =================
         String[] colsBL = {
             "Mã BL", "Mã NV", "Tên Nhân Viên", "Kỳ Lương", "Lương CB", "Phụ Cấp", "Khấu Trừ", "THỰC LÃNH", "Trạng Thái"
         };
         modelBL = new DefaultTableModel(colsBL, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tableBL = new JTable(modelBL);
-        tableBL.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tableBL.setRowHeight(28);
-        tableBL.setShowGrid(true);
-        tableBL.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        styleTable(tableBL);
         
-        add(new JScrollPane(tableBL), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(tableBL);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        scrollPane.getViewport().setBackground(Color.WHITE);
         
+        JPanel pnTableCard = new JPanel(new BorderLayout());
+        pnTableCard.setBackground(Color.WHITE);
+        pnTableCard.add(scrollPane, BorderLayout.CENTER);
+        add(pnTableCard, BorderLayout.CENTER);
+        
+        // ================= PHẦN THỐNG KÊ (Card Đẹp) =================
         JPanel pnThongKe = new JPanel(new GridLayout(1, 3, 20, 0)); 
-        pnThongKe.setBackground(Color.WHITE);
-        pnThongKe.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        pnThongKe.setBackground(new Color(226, 232, 240)); 
+        pnThongKe.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
         
-        lblTongQuyLuong = new JLabel();
-        lblTongDaThanhToan = new JLabel();
-        lblTongChuaThanhToan = new JLabel();
+        lblTongQuyLuong = new JLabel("0 VNĐ"); lblTongDaThanhToan = new JLabel("0 VNĐ"); lblTongChuaThanhToan = new JLabel("0 VNĐ");
         
-        pnThongKe.add(taoOThongKe("Tổng Quỹ Lương (Kết quả lọc)", new Color(255, 235, 153), lblTongQuyLuong));        
-        pnThongKe.add(taoOThongKe("Đã Thanh Toán", new Color(153, 255, 153), lblTongDaThanhToan)); 
-        pnThongKe.add(taoOThongKe("Còn Nợ (Chưa thanh toán)", new Color(255, 153, 153), lblTongChuaThanhToan));       
+        pnThongKe.add(taoOThongKe("Tổng Quỹ Lương (Kết quả lọc)", new Color(245, 158, 11), lblTongQuyLuong));        
+        pnThongKe.add(taoOThongKe("Đã Thanh Toán", new Color(16, 185, 129), lblTongDaThanhToan)); 
+        pnThongKe.add(taoOThongKe("Còn Nợ (Chưa thanh toán)", new Color(239, 68, 68), lblTongChuaThanhToan));       
         
         add(pnThongKe, BorderLayout.SOUTH);
 
-        addEventRefresh();
-        addEventSearch();
-        addEventAdd();
-        addEventEdit();
-        addEventDelete();
+        btnDown.addActionListener(e -> ExcelExporter.exportJTableToExcel(tableBL));
+        addEventRefresh(); addEventSearch(); addEventAdd(); addEventEdit(); addEventDelete();
         
         taiDuLieuLenBang();
+    }
+
+    // --- CÁC HÀM UI ---
+    private JButton createFlatButton(String text, String style) {
+        JButton btn = new JButton(text);
+        btn.setPreferredSize(new Dimension(100, 36));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (!style.isEmpty()) btn.putClientProperty("FlatLaf.styleClass", style);
+        return btn;
+    }
+
+    private void styleTable(JTable tb) {
+        tb.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tb.setRowHeight(30);
+        tb.setShowVerticalLines(false); tb.setShowHorizontalLines(true);
+        tb.setGridColor(new Color(230, 230, 230));
+        tb.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tb.getTableHeader().setBackground(new Color(248, 250, 252));
+    }
+
+    private JPanel taoOThongKe(String tieuDe, Color accentColor, JLabel lblSoTien) {
+        JPanel pnBox = new JPanel(new BorderLayout());
+        pnBox.setBackground(Color.WHITE);
+        pnBox.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 4, 0, 0, accentColor),
+            BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
+        
+        JLabel lblTitle = new JLabel(tieuDe);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        lblTitle.setForeground(new Color(100, 116, 139)); 
+        
+        lblSoTien.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblSoTien.setForeground(new Color(30, 41, 59));
+        
+        pnBox.add(lblTitle, BorderLayout.NORTH);
+        pnBox.add(lblSoTien, BorderLayout.SOUTH);
+        return pnBox;
     }
     
     public void taiDuLieuLenBang() {
@@ -261,29 +285,6 @@ public class BangLuong_GUI extends JPanel {
                 }
             }
         });
-    }
-
-    private JPanel taoOThongKe(String tieuDe, Color mauNen, JLabel lblSoTien) {
-        JPanel pnBox = new JPanel();
-        pnBox.setLayout(new BoxLayout(pnBox, BoxLayout.Y_AXIS)); 
-        pnBox.setBackground(mauNen);
-        pnBox.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-            BorderFactory.createEmptyBorder(15, 10, 15, 10)
-        ));
-        
-        JLabel lblTitle = new JLabel(tieuDe);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        lblSoTien.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblSoTien.setForeground(new Color(50, 50, 50));
-        lblSoTien.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        pnBox.add(lblTitle);
-        pnBox.add(Box.createVerticalStrut(10)); 
-        pnBox.add(lblSoTien);
-        return pnBox;
     }
     
     private void capNhatThongKe(List<BangLuong_DTO> danhSach) {

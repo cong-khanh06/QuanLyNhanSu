@@ -59,6 +59,8 @@ public class BangCap_Dialog extends JDialog {
 
         JPanel pnForm = new JPanel(new GridLayout(5, 2, 10, 15));
         pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        pnForm.setBackground(Color.WHITE);
+        getContentPane().setBackground(Color.WHITE);
 
         pnForm.add(new JLabel("Mã Bằng Cấp:"));
         txtMaBC = new JTextField();
@@ -88,9 +90,15 @@ public class BangCap_Dialog extends JDialog {
         add(pnForm, BorderLayout.CENTER);
 
         JPanel pnButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnButtons.setBackground(Color.WHITE);
         btnLuu = new JButton("Lưu");
         btnHuy = new JButton("Hủy");
-
+        
+        btnLuu.putClientProperty("FlatLaf.styleClass", "primary");
+        btnHuy.putClientProperty("FlatLaf.styleClass", "danger");
+        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         pnButtons.add(btnLuu);
         pnButtons.add(btnHuy);
         add(pnButtons, BorderLayout.SOUTH);

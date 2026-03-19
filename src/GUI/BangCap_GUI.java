@@ -23,90 +23,86 @@ public class BangCap_GUI extends JPanel {
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public BangCap_GUI() {
-        setLayout(new BorderLayout());
-
-        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnHeader.setBackground(new Color(150, 214, 255));
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
-
-        lblTitle = new JLabel("Quản Lý Bằng Cấp Nhân Viên");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        pnHeader.add(lblTitle);
-
-        pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        pnToolBar.setBackground(new Color(150, 214, 255));
-        pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
-
-        txtSearch = new JTextField();
-        txtSearch.setPreferredSize(new Dimension(220, 36));
-        txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-
-        btnSearch = new JButton("Tìm kiếm");
-        btnAdd = new JButton("Thêm");
-        btnEdit = new JButton("Sửa");
-        btnDelete = new JButton("Xóa");
-        btnRefresh = new JButton("Tải lại");
-
-        Dimension btnSize = new Dimension(100, 36);
-        btnSearch.setPreferredSize(btnSize);
-        btnAdd.setPreferredSize(btnSize);
-        btnEdit.setPreferredSize(btnSize);
-        btnDelete.setPreferredSize(btnSize);
-        btnRefresh.setPreferredSize(btnSize);
-
-        pnToolBar.add(txtSearch);
-        pnToolBar.add(btnSearch);
-        pnToolBar.add(btnAdd);
-        pnToolBar.add(btnEdit);
-        pnToolBar.add(btnDelete);
-        pnToolBar.add(btnRefresh);
+        setBackground(new Color(226, 232, 240)); 
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         pnSearch = new JPanel(new BorderLayout());
+        pnSearch.setBackground(Color.WHITE);
+        // Điểm nhấn viền Xanh Ngọc
+        pnSearch.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(16, 185, 129)),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+
+        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        pnHeader.setBackground(Color.WHITE);
+        lblTitle = new JLabel("Quản Lý Bằng Cấp Nhân Viên");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitle.setForeground(new Color(30, 41, 59));
+        pnHeader.add(lblTitle);
+
+        pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        pnToolBar.setBackground(Color.WHITE);
+        pnToolBar.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+
+        txtSearch = new JTextField();
+        txtSearch.setPreferredSize(new Dimension(250, 36));
+        txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        // Áp dụng FlatLaf styles
+        btnSearch = createFlatButton("Tìm kiếm", "primary");
+        btnAdd = createFlatButton("Thêm", "primary");
+        btnEdit = createFlatButton("Sửa", "");
+        btnDelete = createFlatButton("Xóa", "danger");
+        btnRefresh = createFlatButton("Tải lại", "");
+
+        pnToolBar.add(txtSearch); pnToolBar.add(btnSearch);
+        pnToolBar.add(btnAdd); pnToolBar.add(btnEdit);
+        pnToolBar.add(btnDelete); pnToolBar.add(btnRefresh);
+
         pnSearch.add(pnHeader, BorderLayout.NORTH);
         pnSearch.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearch, BorderLayout.NORTH);
 
         String[] cols = {"Mã Bằng Cấp", "Tên Bằng Cấp", "Nơi Cấp", "Ngày Cấp", "Mã Nhân Viên"};
         modelBC = new DefaultTableModel(cols, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tableBC = new JTable(modelBC);
-        tableBC.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tableBC.setRowHeight(28);
-        tableBC.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        styleTable(tableBC); // Nhớ copy hàm styleTable từ phần Ứng Lương ở trên xuống nhé
 
-        add(new JScrollPane(tableBC), BorderLayout.CENTER);
-
-        btnSearch.addActionListener(e -> {
-            String tuKhoa = txtSearch.getText().trim();
-            
-            List<BangCap_DTO> ketQua = bus.timkiem(tuKhoa);
-
-            modelBC.setRowCount(0);
-
-            for (BangCap_DTO bc : ketQua) {
-                String strNgayCap = (bc.getNgayCap() != null) ? bc.getNgayCap().format(dtf) : "";
-                
-                modelBC.addRow(new Object[]{
-                    bc.getMaBC(), 
-                    bc.getTenBC(), 
-                    bc.getNoiCap(), 
-                    strNgayCap, 
-                    bc.getMaNV()
-                });
-            }
-            
-            if (ketQua.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy bằng cấp nào khớp với từ khóa: " + tuKhoa, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+        JScrollPane scrollPane = new JScrollPane(tableBC);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        
+        JPanel pnTableCard = new JPanel(new BorderLayout());
+        pnTableCard.setBackground(Color.WHITE);
+        pnTableCard.add(scrollPane, BorderLayout.CENTER);
+        add(pnTableCard, BorderLayout.CENTER);
         taiDuLieuLenBang();
         addEvents();
     }
-
+    
+    private void styleTable(JTable tb) {
+        tb.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tb.setRowHeight(30);
+        tb.setShowVerticalLines(false);
+        tb.setShowHorizontalLines(true);
+        tb.setGridColor(new Color(230, 230, 230));
+        tb.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tb.getTableHeader().setBackground(new Color(248, 250, 252));
+    }
+    
+    private JButton createFlatButton(String text, String style) {
+        JButton btn = new JButton(text);
+        btn.setPreferredSize(new Dimension(100, 36));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (!style.isEmpty()) btn.putClientProperty("FlatLaf.styleClass", style);
+        return btn;
+    }
+    
     public void taiDuLieuLenBang() {
         modelBC.setRowCount(0);
         List<BangCap_DTO> list = bus.layDanhSachBangCap();

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import BUS.Phongban_BUS;
 import DTO.Phongban_DTO;
 
@@ -17,106 +18,96 @@ public class Phongban2_GUI extends JFrame implements ActionListener {
     private JLabel lblTitle;
 
     public Phongban2_GUI() {
-        this.setSize(780, 280);
+        this.setSize(750, 320);
         this.setLocationRelativeTo(null);
         this.setUndecorated(true); 
-        this.getContentPane().setLayout(null);
+        this.setLayout(new BorderLayout());
 
-        JPanel p1 = new JPanel();
-        p1.setBounds(0, 0, 780, 280);
-        p1.setBackground(Color.decode("#3498db")); 
-        p1.setLayout(null);
-        this.getContentPane().add(p1);
-
+        // Tiêu đề màu xanh dịu
+        JPanel pTitle = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        pTitle.setBackground(new Color(41, 128, 185)); // Xanh dương đậm hiện đại
         lblTitle = new JLabel("Thêm phòng ban");
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 14));
-        lblTitle.setForeground(Color.white);
-        lblTitle.setBounds(10, 0, 300, 35); 
-        p1.add(lblTitle);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblTitle.setForeground(Color.WHITE);
+        pTitle.add(lblTitle);
+        this.add(pTitle, BorderLayout.NORTH);
 
-        JPanel p2 = new JPanel();
-        p2.setBounds(5, 35, 770, 240); 
-        p2.setBackground(Color.white);
-        p2.setLayout(null);
-        p1.add(p2);
+        // Body chứa form (Dùng GridLayout cho đều và an toàn)
+        JPanel pBody = new JPanel(new BorderLayout());
+        pBody.setBackground(Color.WHITE);
+        pBody.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(41, 128, 185), 2), // Viền xanh tổng thể
+            new EmptyBorder(20, 30, 10, 30) // Padding trong
+        ));
 
-        JLabel jlmaphong = new JLabel("Mã phòng: ");
-        jlmaphong.setBounds(20, 25, 100, 28);
-        jlmaphong.setFont(new Font("Arial", Font.BOLD, 13));
-        p2.add(jlmaphong);
-
-        jtfMaPhong = new JTextField();
-        jtfMaPhong.setBounds(130, 25, 220, 28);
-        p2.add(jtfMaPhong);
-
-        JLabel jlten = new JLabel("Tên phòng: ");
-        jlten.setBounds(400, 25, 100, 28);
-        jlten.setFont(new Font("Arial", Font.BOLD, 13));
-        p2.add(jlten);
-
-        jtfTenPhong = new JTextField();
-        jtfTenPhong.setBounds(520, 25, 220, 28);
-        p2.add(jtfTenPhong);
-
-        JLabel jldiachi = new JLabel("Địa chỉ:");
-        jldiachi.setBounds(20, 75, 100, 28);
-        jldiachi.setFont(new Font("Arial", Font.BOLD, 13));
-        p2.add(jldiachi);
-
-        jtfdiachi = new JTextField();
-        jtfdiachi.setBounds(130, 75, 220, 28);
-        p2.add(jtfdiachi);
-
-        JLabel jlsdt = new JLabel("Số điện thoại: ");
-        jlsdt.setBounds(400, 75, 100, 28);
-        jlsdt.setFont(new Font("Arial", Font.BOLD, 13));
-        p2.add(jlsdt);
-
-        jtfsdt = new JTextField();
-        jtfsdt.setBounds(520, 75, 220, 28);
-        p2.add(jtfsdt);
-
-        JLabel jlbophan = new JLabel("Mã bộ phận:");
-        jlbophan.setBounds(20, 125, 100, 28);
-        jlbophan.setFont(new Font("Arial", Font.BOLD, 13));
-        p2.add(jlbophan);
-
-        comboBox = new JComboBox();
-        comboBox.setBounds(130, 128, 220, 22);
-        p2.add(comboBox);
-
-        JLabel jltp = new JLabel("Trưởng phòng:");
-        jltp.setBounds(400, 125, 110, 28);
-        jltp.setFont(new Font("Arial", Font.BOLD, 13));
-        p2.add(jltp);
-
-        comboBox_tp = new JComboBox();
-        comboBox_tp.setEnabled(false);
-        comboBox_tp.setBounds(520, 128, 220, 22);
+        JPanel pForm = new JPanel(new GridLayout(3, 4, 20, 20)); // 3 dòng, 4 cột (Nhãn-Input-Nhãn-Input)
+        pForm.setBackground(Color.WHITE);
         
-        p2.add(comboBox_tp);
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontInput = new Font("Segoe UI", Font.PLAIN, 14);
+
+        // Dòng 1
+        pForm.add(createLabel("Mã phòng:", fontLabel));
+        jtfMaPhong = new JTextField(); jtfMaPhong.setFont(fontInput);
+        pForm.add(jtfMaPhong);
+
+        pForm.add(createLabel("Tên phòng:", fontLabel));
+        jtfTenPhong = new JTextField(); jtfTenPhong.setFont(fontInput);
+        pForm.add(jtfTenPhong);
+
+        // Dòng 2
+        pForm.add(createLabel("Địa chỉ:", fontLabel));
+        jtfdiachi = new JTextField(); jtfdiachi.setFont(fontInput);
+        pForm.add(jtfdiachi);
+
+        pForm.add(createLabel("Số điện thoại:", fontLabel));
+        jtfsdt = new JTextField(); jtfsdt.setFont(fontInput);
+        pForm.add(jtfsdt);
+
+        // Dòng 3
+        pForm.add(createLabel("Mã bộ phận:", fontLabel));
+        comboBox = new JComboBox(); comboBox.setFont(fontInput);
+        pForm.add(comboBox);
+
+        pForm.add(createLabel("Trưởng phòng:", fontLabel));
+        comboBox_tp = new JComboBox(); comboBox_tp.setFont(fontInput);
+        comboBox_tp.setEnabled(false);
+        pForm.add(comboBox_tp);
+
+        pBody.add(pForm, BorderLayout.CENTER);
+
+        // Phần Nút bấm
+        JPanel pButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        pButtons.setBackground(Color.WHITE);
 
         bthuy = new JButton("Hủy");
-        bthuy.setForeground(new Color(255, 255, 255));
-        bthuy.setBounds(265, 190, 85, 30);
-        bthuy.setBackground(new Color(255, 0, 0));
-        bthuy.setFont(new Font("Arial", Font.BOLD, 12));
-        bthuy.setBorderPainted(false);
+        bthuy.setPreferredSize(new Dimension(100, 35));
+        bthuy.setFont(fontLabel);
+        bthuy.putClientProperty("FlatLaf.styleClass", "danger"); // Nút đỏ
+        bthuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
         bthuy.addActionListener(this);
-        p2.add(bthuy);
-
+        
         btluu = new JButton("Lưu");
-        btluu.setBounds(400, 190, 85, 30);
-        btluu.setBackground(Color.decode("#4cd137"));
-        btluu.setForeground(Color.WHITE);
-        btluu.setFont(new Font("Arial", Font.BOLD, 12));
-        btluu.setBorderPainted(false);
+        btluu.setPreferredSize(new Dimension(100, 35));
+        btluu.setFont(fontLabel);
+        btluu.putClientProperty("FlatLaf.styleClass", "primary"); // Nút xanh lục/xanh dương
+        btluu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btluu.addActionListener(this);
-        p2.add(btluu);
+
+        pButtons.add(bthuy);
+        pButtons.add(btluu);
+        pBody.add(pButtons, BorderLayout.SOUTH);
+
+        this.add(pBody, BorderLayout.CENTER);
 
         LoaddataComboboxbophan();
     }
 
+    private JLabel createLabel(String text, Font f) {
+        JLabel lbl = new JLabel(text);
+        lbl.setFont(f);
+        return lbl;
+    }
     public void setEditMode(String ma, String ten, String diachi, String sdt) {
         lblTitle.setText("Sửa phòng ban");
         jtfMaPhong.setText(ma);

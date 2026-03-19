@@ -34,6 +34,7 @@ public class ChucVu_Dialog extends JDialog {
     }
 
     private void khoiTaoGiaoDien() {
+        getContentPane().setBackground(Color.WHITE);
         setTitle("Thêm Chức Vụ");
         setSize(400, 280);
         setLocationRelativeTo(parentGUI);
@@ -65,7 +66,12 @@ public class ChucVu_Dialog extends JDialog {
         JPanel pnButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnLuu = new JButton("Lưu");
         btnHuy = new JButton("Hủy");
-
+        
+        btnLuu.putClientProperty("FlatLaf.styleClass", "primary");
+        btnHuy.putClientProperty("FlatLaf.styleClass", "danger");
+        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         pnButtons.add(btnLuu);
         pnButtons.add(btnHuy);
         add(pnButtons, BorderLayout.SOUTH);

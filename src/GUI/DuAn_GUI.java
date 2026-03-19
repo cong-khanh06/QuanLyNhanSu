@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import DTO.PhanCongDuAn_DTO;
 import BUS.PhanCongDuAn_BUS;
 import BUS.ExcelExporter;
+import java.awt.Cursor;
 
 public class DuAn_GUI extends JPanel {
     JPanel pnSearchDA, pnHeader, pnToolBar;
@@ -53,97 +54,82 @@ public class DuAn_GUI extends JPanel {
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     
     public DuAn_GUI() {
-        setLayout(new BorderLayout());
-        
+        setLayout(new BorderLayout(15, 15));
+        setBackground(new Color(226, 232, 240)); 
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnHeader.setBackground(new Color(150, 214, 255));
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
+        // ================= HEADER & TOOLBAR (Card Trắng) =================
+        pnSearchDA = new JPanel(new BorderLayout());
+        pnSearchDA.setBackground(Color.WHITE);
+        pnSearchDA.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(14, 165, 233)), // Viền Xanh Sky
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
 
+        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        pnHeader.setBackground(Color.WHITE);
         lblTitle = new JLabel("Danh sách dự án");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitle.setForeground(new Color(30, 41, 59));
         pnHeader.add(lblTitle);
         
-
         pnToolBar = new JPanel(new BorderLayout(10, 10));
-
-        pnToolBar.setBackground(new Color(150, 214, 255));
-        pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
+        pnToolBar.setBackground(Color.WHITE);
+        pnToolBar.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
         
         JPanel pnSearch = new JPanel(new BorderLayout(5, 0));
-        pnSearch.setBackground(new Color(150, 214, 255));
-        
+        pnSearch.setBackground(Color.WHITE);
         txtSearch = new JTextField();
+        txtSearch.setPreferredSize(new Dimension(200, 36));
         txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         
-        btnSearch = new ButtonToolBar("Tìm kiếm");
-        btnSearch.setPreferredSize(new Dimension(100, 36));
-        
+        btnSearch = createFlatButton("Tìm kiếm", "primary");
         pnSearch.add(txtSearch, BorderLayout.CENTER);
         pnSearch.add(btnSearch, BorderLayout.EAST);
         
         JPanel pnAction = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        pnAction.setBackground(new Color(150, 214, 255));
+        pnAction.setBackground(Color.WHITE);
         
-        btnAdd = new ButtonToolBar("Thêm");
-        btnEdit = new ButtonToolBar("Sửa");     
-        btnDelete = new ButtonToolBar("Xóa");
-        btnDown = new ButtonToolBar("Tải Xuống");
-        btnrefresh = new ButtonToolBar("Tải lại trang");
-        btnPhanCong = new ButtonToolBar("Phân công nhân sự"); // Nút phân công
-        
-        btnDown.setPreferredSize(new Dimension(100, 36));
-        btnEdit.setPreferredSize(new Dimension(80, 36));   
-        btnDelete.setPreferredSize(new Dimension(80, 36));
-        btnAdd.setPreferredSize(new Dimension(80, 36));
+        btnAdd = createFlatButton("Thêm", "primary");
+        btnEdit = createFlatButton("Sửa", "");     
+        btnDelete = createFlatButton("Xóa", "danger");
+        btnDown = createFlatButton("Tải Xuống", "success");
+        btnrefresh = createFlatButton("Tải lại", "");
+        btnPhanCong = createFlatButton("Phân công NS", "primary"); 
         btnPhanCong.setPreferredSize(new Dimension(140, 36));
-        btnrefresh.setPreferredSize(new Dimension(100, 36));
         
         cbTrangThai = new JComboBox<>(new String[]{"Tất cả", "Chuẩn bị", "Đang thực hiện", "Hoàn thành"});
         cbTrangThai.setPreferredSize(new Dimension(130, 36));
         cbTrangThai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
-        pnAction.add(cbTrangThai); 
-        pnAction.add(btnAdd);
-        pnAction.add(btnEdit);   
-        pnAction.add(btnDelete);
-        pnAction.add(btnPhanCong);
-        pnAction.add(btnDown);
-        pnAction.add(btnrefresh);
+        pnAction.add(cbTrangThai); pnAction.add(btnAdd); pnAction.add(btnEdit);   
+        pnAction.add(btnDelete); pnAction.add(btnPhanCong); pnAction.add(btnDown); pnAction.add(btnrefresh);
         
         pnToolBar.add(pnSearch, BorderLayout.CENTER);
         pnToolBar.add(pnAction, BorderLayout.EAST);
         
-        pnSearchDA = new JPanel(new BorderLayout());
-        pnSearchDA.setBackground(Color.WHITE);
-        pnSearchDA.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-            ));
         pnSearchDA.add(pnHeader, BorderLayout.NORTH);
         pnSearchDA.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearchDA, BorderLayout.NORTH);
 
-
-        
+        // ================= 2 BẢNG DỮ LIỆU =================
         String[] colsDA = {"Mã Dự Án", "Tên Dự Án", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái", "Người quản lý"};
-
         modelDA = new DefaultTableModel(colsDA, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tableDA = new JTable(modelDA);
-        tableDA.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tableDA.setRowHeight(28);
-        tableDA.setShowGrid(true);
-        tableDA.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        JScrollPane scrollDA = new JScrollPane(tableDA);
+        styleTable(tableDA); // Gọi hàm style
         
+        JScrollPane scrollDA = new JScrollPane(tableDA);
+        scrollDA.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        scrollDA.getViewport().setBackground(Color.WHITE);
         
         JPanel pnChiTiet = new JPanel(new BorderLayout());
         pnChiTiet.setBackground(Color.WHITE);
-        pnChiTiet.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(Color.GRAY), "Chi tiết nhân sự tham gia", 
-            0, 0, new Font("Segoe UI", Font.BOLD, 14), Color.BLUE
+        pnChiTiet.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(2, 0, 0, 0, new Color(59, 130, 246)),
+            BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Chi Tiết Nhân Sự Tham Gia", 
+                0, 0, new Font("Segoe UI", Font.BOLD, 15), new Color(30, 41, 59))
         ));
 
         String[] colsPCDA = {"Mã NV", "Tên Nhân Viên", "Vai Trò Đảm Nhận"};
@@ -151,31 +137,31 @@ public class DuAn_GUI extends JPanel {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tablePCDA = new JTable(modelPCDA);
-        tablePCDA.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tablePCDA.setRowHeight(28);
-        tablePCDA.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        pnChiTiet.add(new JScrollPane(tablePCDA), BorderLayout.CENTER);
+        styleTable(tablePCDA);
         
-        // --- 3. GHÉP 2 BẢNG VÀO SPLIT PANE ---
+        JScrollPane scrollPCDA = new JScrollPane(tablePCDA);
+        scrollPCDA.setBorder(BorderFactory.createEmptyBorder());
+        scrollPCDA.getViewport().setBackground(Color.WHITE);
+        pnChiTiet.add(scrollPCDA, BorderLayout.CENTER);
+        
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollDA, pnChiTiet);
-        splitPane.setResizeWeight(0.6); // Bảng trên 60%, bảng dưới 40%
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setDividerSize(8);
+        splitPane.setResizeWeight(0.6); 
+        splitPane.setDividerSize(10);
+        splitPane.setBorder(null);
+        splitPane.setOpaque(false);
         
         add(splitPane, BorderLayout.CENTER);
         
-        // --- THỐNG KÊ ---
+        // ================= THỐNG KÊ (Card Đẹp) =================
         JPanel pnThongKe = new JPanel(new GridLayout(1, 3, 20, 0)); 
-        pnThongKe.setBackground(Color.WHITE);
-        pnThongKe.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        pnThongKe.setBackground(new Color(226, 232, 240));
+        pnThongKe.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
         
-        lblSoChuanBi = new JLabel("0");
-        lblSoDangThucHien = new JLabel("0");
-        lblSoHoanThanh = new JLabel("0");
+        lblSoChuanBi = new JLabel("0"); lblSoDangThucHien = new JLabel("0"); lblSoHoanThanh = new JLabel("0");
         
-        pnThongKe.add(taoOThongKe("Chuẩn bị", new Color(255, 235, 153), lblSoChuanBi));        
-        pnThongKe.add(taoOThongKe("Đang thực hiện", new Color(153, 204, 255), lblSoDangThucHien)); 
-        pnThongKe.add(taoOThongKe("Hoàn thành", new Color(153, 255, 153), lblSoHoanThanh));       
+        pnThongKe.add(taoOThongKe("Chuẩn bị", new Color(245, 158, 11), lblSoChuanBi));        
+        pnThongKe.add(taoOThongKe("Đang thực hiện", new Color(59, 130, 246), lblSoDangThucHien)); 
+        pnThongKe.add(taoOThongKe("Hoàn thành", new Color(16, 185, 129), lblSoHoanThanh));       
         
         add(pnThongKe, BorderLayout.SOUTH);
 
@@ -189,6 +175,24 @@ public class DuAn_GUI extends JPanel {
         addEventClickTableDA(); 
         taiDuLieu();
         taiDuLieuLenBang();
+    }
+    
+    private JButton createFlatButton(String text, String style) {
+        JButton btn = new JButton(text);
+        btn.setPreferredSize(new Dimension(100, 36));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (!style.isEmpty()) btn.putClientProperty("FlatLaf.styleClass", style);
+        return btn;
+    }
+
+    private void styleTable(JTable tb) {
+        tb.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tb.setRowHeight(30);
+        tb.setShowVerticalLines(false); tb.setShowHorizontalLines(true);
+        tb.setGridColor(new Color(230, 230, 230));
+        tb.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tb.getTableHeader().setBackground(new Color(248, 250, 252));
     }
     
     // SỰ KIỆN CLICK BẢNG TRÊN

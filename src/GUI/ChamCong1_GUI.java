@@ -31,9 +31,11 @@ public class ChamCong1_GUI extends JDialog {
         setModal(true);
         setLayout(new BorderLayout());
 
+        getContentPane().setBackground(Color.WHITE);
+        
         JPanel pnForm = new JPanel(new GridLayout(7, 2, 10, 15));
+        pnForm.setBackground(Color.WHITE); // Nền trắng
         pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
         
         pnForm.add(new JLabel("Mã Chấm Công:"));
         txtMaCC = new JTextField();
@@ -75,10 +77,15 @@ public class ChamCong1_GUI extends JDialog {
         add(pnForm, BorderLayout.CENTER);
 
         JPanel pnBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnBtn.setBackground(Color.WHITE); // Nền trắng
+        
         btnLuu = new JButton("Lưu Dữ Liệu");
-        btnLuu.setBackground(new Color(46, 204, 113));
-        btnLuu.setForeground(Color.WHITE);
+        btnLuu.putClientProperty("FlatLaf.styleClass", "primary"); // Style xịn
+        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         btnHuy = new JButton("Hủy Bỏ");
+        btnHuy.putClientProperty("FlatLaf.styleClass", "danger"); // Style xịn
+        btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         pnBtn.add(btnLuu);
         pnBtn.add(btnHuy);

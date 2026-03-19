@@ -85,39 +85,36 @@ public class BangLuong1_GUI extends JDialog {
     
     private void khoiTaoGiaoDien() {
         setTitle("Quản Lý Bảng Lương");
-        setSize(500, 500);
+        setSize(500, 520);
         setLocationRelativeTo(parentGUI);
         setModal(true);
         setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.WHITE); // Ép nền trắng
 
         JPanel pnForm = new JPanel(new GridLayout(10, 2, 10, 15));
+        pnForm.setBackground(Color.WHITE);
         pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
+        // Form fields (Giữ nguyên logic khởi tạo của bạn)
         pnForm.add(new JLabel("Mã Bảng Lương:"));
-        txtMaBL = new JTextField(); 
-        txtMaBL.setEditable(false); 
-        txtMaBL.setBackground(new Color(230, 230, 230));
+        txtMaBL = new JTextField(); txtMaBL.setEditable(false); 
+        txtMaBL.setBackground(new Color(241, 245, 249)); // Màu xám rất nhạt (Read-only)
         pnForm.add(txtMaBL);
 
-        
         pnForm.add(new JLabel("Chọn Nhân Viên:"));
         cbNhanVien = new JComboBox<>();
         List<NhanVien_DTO> dsNV = busNV.layDanhSachNhanVien();
         for (NhanVien_DTO nv : dsNV) {
-            
             if (nv.getTrangThai() != null && nv.getTrangThai().name().equals("DangLam")) {
                 cbNhanVien.addItem(nv.getMaNV() + " - " + nv.getHoTen());
             }
         }
         pnForm.add(cbNhanVien);
-        
-        
         cbNhanVien.addActionListener(e -> capNhatTenNV());
         
         pnForm.add(new JLabel("Tên Nhân Viên:"));
-        txtTenNV = new JTextField(); 
-        txtTenNV.setEditable(false); 
-        txtTenNV.setBackground(new Color(230, 230, 230));
+        txtTenNV = new JTextField(); txtTenNV.setEditable(false); 
+        txtTenNV.setBackground(new Color(241, 245, 249));
         pnForm.add(txtTenNV);
 
         pnForm.add(new JLabel("Tháng:"));
@@ -129,22 +126,20 @@ public class BangLuong1_GUI extends JDialog {
         pnForm.add(cbNam);
 
         pnForm.add(new JLabel("Lương Cơ Bản (VNĐ):"));
-        txtLuongCB = new JTextField("0");
-        pnForm.add(txtLuongCB);
+        txtLuongCB = new JTextField("0"); pnForm.add(txtLuongCB);
         
         pnForm.add(new JLabel("Tổng Phụ Cấp (VNĐ):"));
-        txtPhuCap = new JTextField("0");
-        pnForm.add(txtPhuCap);
+        txtPhuCap = new JTextField("0"); pnForm.add(txtPhuCap);
         
         pnForm.add(new JLabel("Tổng Khấu Trừ (VNĐ):"));
-        txtKhauTru = new JTextField("0");
-        pnForm.add(txtKhauTru);
+        txtKhauTru = new JTextField("0"); pnForm.add(txtKhauTru);
         
         pnForm.add(new JLabel("THỰC LÃNH (VNĐ):"));
         txtThucLanh = new JTextField("0"); 
         txtThucLanh.setEditable(false); 
-        txtThucLanh.setBackground(new Color(200, 255, 200)); 
-        txtThucLanh.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        txtThucLanh.setBackground(new Color(220, 252, 231)); // Nền xanh nhạt thành công
+        txtThucLanh.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        txtThucLanh.setForeground(new Color(22, 101, 52)); // Chữ xanh đậm
         pnForm.add(txtThucLanh);
 
         pnForm.add(new JLabel("Trạng Thái:"));
@@ -153,13 +148,18 @@ public class BangLuong1_GUI extends JDialog {
 
         add(pnForm, BorderLayout.CENTER);
 
-        JPanel pnButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnLuu = new JButton("Lưu Bảng Lương");
-        btnLuu.setBackground(new Color(150, 214, 255));
-        btnHuy = new JButton("Hủy Bỏ");
+        JPanel pnButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        pnButtons.setBackground(Color.WHITE);
         
-        pnButtons.add(btnLuu);
-        pnButtons.add(btnHuy);
+        btnLuu = new JButton("Lưu Bảng Lương");
+        btnLuu.putClientProperty("FlatLaf.styleClass", "primary");
+        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        btnHuy = new JButton("Hủy Bỏ");
+        btnHuy.putClientProperty("FlatLaf.styleClass", "danger");
+        btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        pnButtons.add(btnLuu); pnButtons.add(btnHuy);
         add(pnButtons, BorderLayout.SOUTH);
 
         btnHuy.addActionListener(e -> dispose());

@@ -30,6 +30,8 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import java.awt.Cursor;
+import java.awt.Font;
 
 
 public class NhanVien2_GUI extends JPanel {
@@ -63,79 +65,86 @@ public class NhanVien2_GUI extends JPanel {
     
     private void initComponents() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.GRAY), 
-                "Chi tiết nhân viên"
+        setBackground(Color.WHITE);
+        // Điểm nhấn viền Xanh Ngọc
+        setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(16, 185, 129)), 
+            BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Chi Tiết Nhân Viên", 
+                0, 0, new Font("Segoe UI", Font.BOLD, 16), new Color(30, 41, 59))
         ));
 
-        txtMa = new JTextField();
-        txtTen = new JTextField();
-        txtDiaChi = new JTextField();
-        txtSDT = new JTextField();
-        txtEmail = new JTextField();
-        txtCCCD = new JTextField();
-        DatePickerSettings settingsNS = new DatePickerSettings();
-        settingsNS.setFormatForDatesCommonEra("dd-MM-yyyy");
-        dpNgaySinh = new DatePicker(settingsNS);
+        Font inputFont = new Font("Segoe UI", Font.PLAIN, 14);
 
-        DatePickerSettings settingsNVL = new DatePickerSettings();
-        settingsNVL.setFormatForDatesCommonEra("dd-MM-yyyy");
-        dpNgayVaoLam = new DatePicker(settingsNVL); 
+        txtMa = new JTextField(); txtMa.setEditable(false); txtMa.setBackground(new Color(241, 245, 249));
+        txtTen = new JTextField(); txtTen.setFont(inputFont);
+        txtDiaChi = new JTextField(); txtDiaChi.setFont(inputFont);
+        txtSDT = new JTextField(); txtSDT.setFont(inputFont);
+        txtEmail = new JTextField(); txtEmail.setFont(inputFont);
+        txtCCCD = new JTextField(); txtCCCD.setFont(inputFont);
         
-        txtMa.setEditable(false);
+        DatePickerSettings settingsNS = new DatePickerSettings(); settingsNS.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgaySinh = new DatePicker(settingsNS); dpNgaySinh.setFont(inputFont);
 
-        cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values());
-        cbPhongBan = new JComboBox<>();
-        loadComboPhongBan();
-        
-        cbChucVu = new JComboBox<>();
-        loadComboChucVu();
-        
-        cbTrangThai = new JComboBox<>(NhanVien_DTO.TrangThaiNhanVien.values());
+        DatePickerSettings settingsNVL = new DatePickerSettings(); settingsNVL.setFormatForDatesCommonEra("dd-MM-yyyy");
+        dpNgayVaoLam = new DatePicker(settingsNVL); dpNgayVaoLam.setFont(inputFont);
 
-        btnSua = new JButton("Sửa");
-        btnXoa = new JButton("Xóa");
-        btnLuu = new JButton("Lưu");
-        btnHuy = new JButton("Hủy");
+        cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values()); cbGioiTinh.setFont(inputFont);
+        cbPhongBan = new JComboBox<>(); loadComboPhongBan(); cbPhongBan.setFont(inputFont);
+        cbChucVu = new JComboBox<>(); loadComboChucVu(); cbChucVu.setFont(inputFont);
+        cbTrangThai = new JComboBox<>(NhanVien_DTO.TrangThaiNhanVien.values()); cbTrangThai.setFont(inputFont);
+
+        btnSua = new JButton("Sửa"); btnSua.putClientProperty("FlatLaf.styleClass", ""); 
+        btnXoa = new JButton("Xóa"); btnXoa.putClientProperty("FlatLaf.styleClass", "danger"); 
+        btnLuu = new JButton("Lưu"); btnLuu.putClientProperty("FlatLaf.styleClass", "primary"); 
+        btnHuy = new JButton("Hủy"); btnHuy.putClientProperty("FlatLaf.styleClass", "danger");
         
-        btnLuu.setEnabled(false);
-        btnHuy.setEnabled(false);
+        btnSua.setCursor(new Cursor(Cursor.HAND_CURSOR)); btnXoa.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR)); btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnLuu.setEnabled(false); btnHuy.setEnabled(false);
 
         JPanel panelForm = new JPanel(new GridLayout(0, 4, 15, 10)); 
+        panelForm.setBackground(Color.WHITE);
         panelForm.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        panelForm.add(new JLabel("Mã NV:")); panelForm.add(txtMa);
-        panelForm.add(new JLabel("Họ tên:")); panelForm.add(txtTen);
-        panelForm.add(new JLabel("Giới tính:")); panelForm.add(cbGioiTinh);
-        
-        
-        panelForm.add(new JLabel("Ngày sinh:")); 
-        panelForm.add(dpNgaySinh);
-            
-        panelForm.add(new JLabel("Địa chỉ:")); panelForm.add(txtDiaChi);
-        panelForm.add(new JLabel("SĐT:")); panelForm.add(txtSDT);
-        panelForm.add(new JLabel("Email:")); panelForm.add(txtEmail);
-        panelForm.add(new JLabel("CCCD:")); panelForm.add(txtCCCD);
-        panelForm.add(new JLabel("Ngày vào làm:")); 
-        panelForm.add(dpNgayVaoLam);
-        
-        panelForm.add(new JLabel("Phòng ban:")); panelForm.add(cbPhongBan);
-        panelForm.add(new JLabel("Chức vụ:")); panelForm.add(cbChucVu);
-        panelForm.add(new JLabel("Trạng thái:")); panelForm.add(cbTrangThai);
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
+        JLabel[] labels = {
+            new JLabel("Mã NV:"), new JLabel("Họ tên:"), new JLabel("Giới tính:"), new JLabel("Ngày sinh:"),
+            new JLabel("Địa chỉ:"), new JLabel("SĐT:"), new JLabel("Email:"), new JLabel("CCCD:"),
+            new JLabel("Ngày vào làm:"), new JLabel("Phòng ban:"), new JLabel("Chức vụ:"), new JLabel("Trạng thái:")
+        };
+        for(JLabel l : labels) l.setFont(labelFont);
+
+        panelForm.add(labels[0]); panelForm.add(txtMa);
+        panelForm.add(labels[1]); panelForm.add(txtTen);
+        panelForm.add(labels[2]); panelForm.add(cbGioiTinh);
+        panelForm.add(labels[3]); panelForm.add(dpNgaySinh);
+        panelForm.add(labels[4]); panelForm.add(txtDiaChi);
+        panelForm.add(labels[5]); panelForm.add(txtSDT);
+        panelForm.add(labels[6]); panelForm.add(txtEmail);
+        panelForm.add(labels[7]); panelForm.add(txtCCCD);
+        panelForm.add(labels[8]); panelForm.add(dpNgayVaoLam);
+        panelForm.add(labels[9]); panelForm.add(cbPhongBan);
+        panelForm.add(labels[10]); panelForm.add(cbChucVu);
+        panelForm.add(labels[11]); panelForm.add(cbTrangThai);
 
         JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        panelButtons.add(btnSua);
-        panelButtons.add(btnLuu);
-        panelButtons.add(btnHuy);
-        panelButtons.add(btnXoa);
+        panelButtons.setBackground(Color.WHITE);
+        panelButtons.add(btnSua); panelButtons.add(btnLuu); panelButtons.add(btnHuy); panelButtons.add(btnXoa);
 
         JPanel panelAvatar = new JPanel(new BorderLayout(5, 5));
+        panelAvatar.setBackground(Color.WHITE);
         panelAvatar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 0));
+        
         lblAvatar = new JLabel("Không có ảnh", JLabel.CENTER);
         lblAvatar.setPreferredSize(new Dimension(150, 200));
-        lblAvatar.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        lblAvatar.setBorder(BorderFactory.createDashedBorder(Color.GRAY, 3, 3, 2, false));
+        
         btnChonAnh = new JButton("Đổi ảnh");
+        btnChonAnh.putClientProperty("FlatLaf.styleClass", "primary");
+        btnChonAnh.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnChonAnh.setEnabled(false); 
+        
         panelAvatar.add(lblAvatar, BorderLayout.CENTER);
         panelAvatar.add(btnChonAnh, BorderLayout.SOUTH);
         

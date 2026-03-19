@@ -36,6 +36,8 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import java.awt.Cursor;
+import java.awt.Font;
 
 /**
  *
@@ -55,91 +57,85 @@ public class NhanVien1_GUI extends JDialog{
     File selectedFile=null;
     NhanVien_BUS bus = new NhanVien_BUS();
     NhanVien_DAO dao=new NhanVien_DAO();
-    public NhanVien1_GUI(){
-        setTitle("Thêm nhân viên");
-        setSize(850,500);
+    public NhanVien1_GUI() {
+        setTitle("Thêm nhân viên mới");
+        setSize(850, 520);
         setModal(true);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null); 
-        
+        getContentPane().setBackground(Color.WHITE); // Ép nền trắng
         
         JPanel pnForm = new JPanel(new GridLayout(0, 4, 15, 15));
+        pnForm.setBackground(Color.WHITE);
         pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        txtTen = new JTextField();
-        txtDiaChi = new JTextField();
-        txtSDT = new JTextField();
-        txtEmail = new JTextField();
-        txtCCCD = new JTextField();
-        txtMaNV=new JTextField();
-        txtMaNV.setForeground(Color.black);
+        Font inputFont = new Font("Segoe UI", Font.PLAIN, 14);
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
+
+        txtTen = new JTextField(); txtTen.setFont(inputFont);
+        txtDiaChi = new JTextField(); txtDiaChi.setFont(inputFont);
+        txtSDT = new JTextField(); txtSDT.setFont(inputFont);
+        txtEmail = new JTextField(); txtEmail.setFont(inputFont);
+        txtCCCD = new JTextField(); txtCCCD.setFont(inputFont);
+        
+        txtMaNV = new JTextField();
         txtMaNV.setEditable(false);
-        txtMaNV.setBackground(Color.LIGHT_GRAY);
+        txtMaNV.setBackground(new Color(241, 245, 249)); // Xám cực nhạt
+        txtMaNV.setFont(new Font("Segoe UI", Font.BOLD, 14));
         
         DatePickerSettings settingsNS = new DatePickerSettings();
         settingsNS.setFormatForDatesCommonEra("dd-MM-yyyy");
-        dpNgaySinh = new DatePicker(settingsNS);
+        dpNgaySinh = new DatePicker(settingsNS); dpNgaySinh.setFont(inputFont);
 
         DatePickerSettings settingsNVL = new DatePickerSettings();
         settingsNVL.setFormatForDatesCommonEra("dd-MM-yyyy");
-        dpNgayVaoLam = new DatePicker(settingsNVL);
+        dpNgayVaoLam = new DatePicker(settingsNVL); dpNgayVaoLam.setFont(inputFont);
         
-        cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values());
-        cbPhongBan = new JComboBox<>();
-        loadComboPhongBan();
-        cbChucVu = new JComboBox<>();
-        loadComboChucVu();
-        cbTrangThai = new JComboBox<>(NhanVien_DTO.TrangThaiNhanVien.values());
+        cbGioiTinh = new JComboBox<>(NhanVien_DTO.GioiTinh.values()); cbGioiTinh.setFont(inputFont);
+        cbPhongBan = new JComboBox<>(); loadComboPhongBan(); cbPhongBan.setFont(inputFont);
+        cbChucVu = new JComboBox<>(); loadComboChucVu(); cbChucVu.setFont(inputFont);
+        cbTrangThai = new JComboBox<>(NhanVien_DTO.TrangThaiNhanVien.values()); cbTrangThai.setFont(inputFont);
         
-        pnForm.add(new JLabel("Mã nhân viên"));
-        pnForm.add(txtMaNV);
-        
-        pnForm.add(new JLabel("Họ tên"));
-        pnForm.add(txtTen);
-        
-        pnForm.add(new JLabel("Ngày sinh"));
-        pnForm.add(dpNgaySinh);
+        JLabel[] labels = {
+            new JLabel("Mã nhân viên:"), new JLabel("Họ tên:"), new JLabel("Ngày sinh:"), new JLabel("Ngày vào làm:"),
+            new JLabel("Giới tính:"), new JLabel("Địa chỉ:"), new JLabel("SĐT:"), new JLabel("Email:"),
+            new JLabel("CCCD:"), new JLabel("Phòng ban:"), new JLabel("Chức vụ:"), new JLabel("Trạng thái:")
+        };
+        for(JLabel l : labels) l.setFont(labelFont);
 
-        pnForm.add(new JLabel("Ngày vào làm"));
-        pnForm.add(dpNgayVaoLam);
-        
-        pnForm.add(new JLabel("Giới tính"));
-        pnForm.add(cbGioiTinh);
+        pnForm.add(labels[0]); pnForm.add(txtMaNV);
+        pnForm.add(labels[1]); pnForm.add(txtTen);
+        pnForm.add(labels[2]); pnForm.add(dpNgaySinh);
+        pnForm.add(labels[3]); pnForm.add(dpNgayVaoLam);
+        pnForm.add(labels[4]); pnForm.add(cbGioiTinh);
+        pnForm.add(labels[5]); pnForm.add(txtDiaChi);
+        pnForm.add(labels[6]); pnForm.add(txtSDT);
+        pnForm.add(labels[7]); pnForm.add(txtEmail);
+        pnForm.add(labels[8]); pnForm.add(txtCCCD);
+        pnForm.add(labels[9]); pnForm.add(cbPhongBan);
+        pnForm.add(labels[10]); pnForm.add(cbChucVu);
+        pnForm.add(labels[11]); pnForm.add(cbTrangThai);
 
-        pnForm.add(new JLabel("Địa chỉ"));
-        pnForm.add(txtDiaChi);
+        btnLuu = new JButton("Lưu"); btnLuu.putClientProperty("FlatLaf.styleClass", "primary");
+        btnHuy = new JButton("Hủy"); btnHuy.putClientProperty("FlatLaf.styleClass", "danger");
+        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR)); btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        pnForm.add(new JLabel("SĐT"));
-        pnForm.add(txtSDT);
-        
-        pnForm.add(new JLabel("Email"));
-        pnForm.add(txtEmail);
-
-        pnForm.add(new JLabel("CCCD"));
-        pnForm.add(txtCCCD);
-        
-        pnForm.add(new JLabel("Phòng ban"));
-        pnForm.add(cbPhongBan);
-
-        pnForm.add(new JLabel("Chức vụ"));
-        pnForm.add(cbChucVu);
-
-        pnForm.add(new JLabel("Trạng thái"));
-        pnForm.add(cbTrangThai);
-
-        btnLuu = new JButton("Lưu");
-        btnHuy=new JButton("Hủy");
-
-        JPanel pnBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        pnBottom.add(btnLuu);
-        pnBottom.add(btnHuy);
+        JPanel pnBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        pnBottom.setBackground(Color.WHITE);
+        pnBottom.add(btnLuu); pnBottom.add(btnHuy);
         
         JPanel pnAvatar = new JPanel(new BorderLayout(5, 5));
+        pnAvatar.setBackground(Color.WHITE);
         pnAvatar.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 0)); 
+        
         lblAvatar = new JLabel("Chưa có ảnh", JLabel.CENTER);
-        lblAvatar.setPreferredSize(new Dimension(180, 240)); 
-        lblAvatar.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        lblAvatar.setPreferredSize(new Dimension(150, 200)); 
+        lblAvatar.setBorder(BorderFactory.createDashedBorder(Color.GRAY, 3, 3, 2, false));
+        
         btnChonAnh = new JButton("Chọn ảnh");
+        btnChonAnh.putClientProperty("FlatLaf.styleClass", "");
+        btnChonAnh.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         pnAvatar.add(lblAvatar, BorderLayout.CENTER);
         pnAvatar.add(btnChonAnh, BorderLayout.SOUTH);
         
@@ -150,9 +146,7 @@ public class NhanVien1_GUI extends JDialog{
         loadComboPhongBan(); 
         txtMaNV.setText(bus.taoMaMoiNhat());
         
-        addEventChonAnh();
-        addEventClose();
-        addEventLuu();
+        addEventChonAnh(); addEventClose(); addEventLuu();
     }
     
     public void addEventClose(){

@@ -22,60 +22,89 @@ public class ChiTietBaoHiem_GUI extends JPanel {
     String manvuser="";
 
     public ChiTietBaoHiem_GUI() {
-        setLayout(new BorderLayout());
+        setBackground(new Color(226, 232, 240)); 
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
+        Font modernFont = new Font("Segoe UI", Font.PLAIN, 14);
 
-        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnHeader.setBackground(new Color(150, 214, 255));
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 15, 5, 15));
+        // ================= PHẦN HEADER & TOOLBAR =================
+        pnSearch = new JPanel(new BorderLayout());
+        pnSearch.setBackground(Color.WHITE);
+        // Viền Xanh Ngọc ở trên cùng
+        pnSearch.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(16, 185, 129)),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+
+        pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        pnHeader.setBackground(Color.WHITE);
         lblTitle = new JLabel("Quản Lý Chi Tiết Bảo Hiểm Theo Nhân Viên");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitle.setForeground(new Color(30, 41, 59));
         pnHeader.add(lblTitle);
 
-
-        pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        pnToolBar.setBackground(new Color(150, 214, 255));
-        pnToolBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
+        pnToolBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        pnToolBar.setBackground(Color.WHITE);
+        pnToolBar.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
 
         txtSearch = new JTextField();
         txtSearch.setPreferredSize(new Dimension(250, 36));
-        btnSearch = new JButton("Tìm kiếm NV");
-        btnChiTiet = new JButton("Chi Tiết / Chỉnh Sửa"); 
-        btnRefresh = new JButton("Tải lại");
+        txtSearch.setFont(modernFont);
+        
+        btnSearch = createFlatButton("Tìm kiếm NV", "primary");
+        btnChiTiet = createFlatButton("Chi Tiết / Chỉnh Sửa", "success"); 
+        btnRefresh = createFlatButton("Tải lại", "");
 
-        pnToolBar.add(txtSearch); 
-        pnToolBar.add(btnSearch);
-        pnToolBar.add(btnChiTiet); 
-        pnToolBar.add(btnRefresh);
+        pnToolBar.add(txtSearch); pnToolBar.add(btnSearch);
+        pnToolBar.add(btnChiTiet); pnToolBar.add(btnRefresh);
 
-        pnSearch = new JPanel(new BorderLayout());
         pnSearch.add(pnHeader, BorderLayout.NORTH);
         pnSearch.add(pnToolBar, BorderLayout.CENTER);
         add(pnSearch, BorderLayout.NORTH);
 
+        // ================= PHẦN BẢNG DỮ LIỆU =================
         String[] cols = {"Mã Nhân Viên", "Tên Nhân Viên", "Số Lượng BH Tham Gia"};
         model = new DefaultTableModel(cols, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         table = new JTable(model);
-        table.setRowHeight(28);
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        styleTable(table);
 
         JScrollPane scroll = new JScrollPane(table);
-        scroll.setBorder(BorderFactory.createTitledBorder("Danh Sách Nhân Viên"));
-        add(scroll, BorderLayout.CENTER);
+        scroll.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        scroll.getViewport().setBackground(Color.WHITE);
+        
+        JPanel pnTableCard = new JPanel(new BorderLayout());
+        pnTableCard.setBackground(Color.WHITE);
+        pnTableCard.add(scroll, BorderLayout.CENTER);
+        
+        add(pnTableCard, BorderLayout.CENTER);
 
-        if(!check)
-        {
-        	taiDuLieuLenBanguser(manvuser);
-        }
-        else
-        {
-        	taiDuLieuLenBang();
-        }
+        if(!check) taiDuLieuLenBanguser(manvuser);
+        else taiDuLieuLenBang();
         addEvents();
     }
 
+    // --- THÊM 2 HÀM NÀY VÀO TRONG CLASS ChiTietBaoHiem_GUI ---
+    private JButton createFlatButton(String text, String style) {
+        JButton btn = new JButton(text);
+        btn.setPreferredSize(new Dimension(160, 36)); // Nút ở đây chữ dài hơn
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (!style.isEmpty()) btn.putClientProperty("FlatLaf.styleClass", style);
+        return btn;
+    }
+
+    private void styleTable(JTable tb) {
+        tb.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tb.setRowHeight(30);
+        tb.setShowVerticalLines(false);
+        tb.setShowHorizontalLines(true);
+        tb.setGridColor(new Color(230, 230, 230));
+        tb.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tb.getTableHeader().setBackground(new Color(248, 250, 252));
+    }
     private void taiDuLieuLenBang() {
         model.setRowCount(0);
         List<ChiTietBaoHiem_DTO> list = bus.layDanhSachNhanVienBaoHiem();

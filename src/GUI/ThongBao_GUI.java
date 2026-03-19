@@ -21,98 +21,93 @@ public class ThongBao_GUI extends JPanel {
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public ThongBao_GUI() {
-        setLayout(new BorderLayout(10, 10));
-        setBackground(Color.WHITE);
+        setLayout(new BorderLayout(15, 15));
+        setBackground(new Color(226, 232, 240)); // Nền xám tổng thể
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        
+        // ================= TRÁI: DANH SÁCH =================
         JPanel pnLeft = new JPanel(new BorderLayout());
         pnLeft.setBackground(Color.WHITE);
-        pnLeft.setBorder(BorderFactory.createTitledBorder("Danh Sách Thông Báo"));
+        // Điểm nhấn màu Rose
+        pnLeft.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(244, 63, 94)),
+            BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Danh Sách Thông Báo", 
+                0, 0, new Font("Segoe UI", Font.BOLD, 16), new Color(30, 41, 59))
+        ));
 
         String[] cols = {"Mã Thông Báo", "Mã Tài Khoản", "Nội Dung", "Ngày Tạo"};
         modelTB = new DefaultTableModel(cols, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tableTB = new JTable(modelTB);
-        tableTB.setRowHeight(28);
+        tableTB.setRowHeight(30);
         tableTB.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tableTB.setShowVerticalLines(false); tableTB.setShowHorizontalLines(true);
+        tableTB.setGridColor(new Color(230, 230, 230));
         tableTB.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tableTB.getTableHeader().setBackground(new Color(248, 250, 252));
 
-        pnLeft.add(new JScrollPane(tableTB), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(tableTB);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        pnLeft.add(scrollPane, BorderLayout.CENTER);
         add(pnLeft, BorderLayout.CENTER);
 
-        
+        // ================= PHẢI: CHI TIẾT & FORM =================
         JPanel pnRight = new JPanel(new BorderLayout(0, 15));
-        pnRight.setPreferredSize(new Dimension(350, 0));
+        pnRight.setPreferredSize(new Dimension(380, 0));
         pnRight.setBackground(Color.WHITE);
-        pnRight.setBorder(BorderFactory.createTitledBorder("Thông tin chi tiết"));
+        pnRight.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(148, 163, 184)), // Viền xám dịu
+            BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Thông Tin Chi Tiết", 
+                0, 0, new Font("Segoe UI", Font.BOLD, 16), new Color(30, 41, 59))
+        ));
 
         JPanel pnForm = new JPanel();
         pnForm.setLayout(new BoxLayout(pnForm, BoxLayout.Y_AXIS));
         pnForm.setBackground(Color.WHITE);
-        pnForm.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
+        pnForm.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
         
-        pnForm.add(new JLabel("Mã Thông Báo (Tự động):"));
-        txtMaTB = new JTextField();
-        txtMaTB.setEditable(false);
-        txtMaTB.setBackground(new Color(230, 230, 230));
-        pnForm.add(txtMaTB);
-        pnForm.add(Box.createVerticalStrut(10));
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
 
-        
-        pnForm.add(new JLabel("Người tạo (mã tài khoản):"));
-        String maTK_DangNhap = "";
-        if (DTO.taiKhoanDangDangNhap.getTkHienTai() != null) {
-            maTK_DangNhap = DTO.taiKhoanDangDangNhap.getTkHienTai().getMataikhoan();
-        }
-        txtMaTK = new JTextField(maTK_DangNhap);
-        txtMaTK.setEditable(false);
-        pnForm.add(txtMaTK);
-        pnForm.add(Box.createVerticalStrut(10));
+        JLabel lbl1 = new JLabel("Mã Thông Báo (Tự động):"); lbl1.setFont(labelFont); pnForm.add(lbl1);
+        txtMaTB = new JTextField(); txtMaTB.setEditable(false); txtMaTB.setBackground(new Color(241, 245, 249));
+        pnForm.add(txtMaTB); pnForm.add(Box.createVerticalStrut(15));
 
-        
-        pnForm.add(new JLabel("Ngày Tạo:"));
-        txtNgayTao = new JTextField();
-        txtNgayTao.setEditable(false); 
-        txtNgayTao.setBackground(new Color(230, 230, 230));
-        pnForm.add(txtNgayTao);
-        pnForm.add(Box.createVerticalStrut(10));
+        JLabel lbl2 = new JLabel("Người tạo (mã tài khoản):"); lbl2.setFont(labelFont); pnForm.add(lbl2);
+        String maTK_DangNhap = (DTO.taiKhoanDangDangNhap.getTkHienTai() != null) ? DTO.taiKhoanDangDangNhap.getTkHienTai().getMataikhoan() : "";
+        txtMaTK = new JTextField(maTK_DangNhap); txtMaTK.setEditable(false); txtMaTK.setBackground(new Color(241, 245, 249));
+        pnForm.add(txtMaTK); pnForm.add(Box.createVerticalStrut(15));
 
-        
-        pnForm.add(new JLabel("Nội Dung:"));
-        txtNoiDung = new JTextArea(5, 20);
-        txtNoiDung.setLineWrap(true);
-        txtNoiDung.setWrapStyleWord(true);
+        JLabel lbl3 = new JLabel("Ngày Tạo:"); lbl3.setFont(labelFont); pnForm.add(lbl3);
+        txtNgayTao = new JTextField(); txtNgayTao.setEditable(false); txtNgayTao.setBackground(new Color(241, 245, 249));
+        pnForm.add(txtNgayTao); pnForm.add(Box.createVerticalStrut(15));
+
+        JLabel lbl4 = new JLabel("Nội Dung:"); lbl4.setFont(labelFont); pnForm.add(lbl4);
+        txtNoiDung = new JTextArea(5, 20); txtNoiDung.setLineWrap(true); txtNoiDung.setWrapStyleWord(true);
+        txtNoiDung.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollNoiDung = new JScrollPane(txtNoiDung);
         pnForm.add(scrollNoiDung);
 
         pnRight.add(pnForm, BorderLayout.CENTER);
 
+        // NÚT BẤM
         JPanel pnButtons = new JPanel(new GridLayout(2, 2, 10, 10));
         pnButtons.setBackground(Color.WHITE);
-        pnButtons.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        pnButtons.setBorder(BorderFactory.createEmptyBorder(10, 15, 15, 15));
 
-        btnThem = new JButton("Thêm Mới");
-        btnThem.setBackground(new Color(153, 255, 153));
-        
-        btnSua = new JButton("Cập Nhật");
-        btnSua.setBackground(new Color(255, 235, 153));
-        
-        btnXoa = new JButton("Xóa");
-        btnXoa.setBackground(new Color(255, 153, 153));
-        
-        btnLamMoi = new JButton("Làm Mới Form");
+        btnThem = new JButton("Thêm Mới"); btnThem.putClientProperty("FlatLaf.styleClass", "primary");
+        btnSua = new JButton("Cập Nhật"); btnSua.putClientProperty("FlatLaf.styleClass", "success");
+        btnXoa = new JButton("Xóa"); btnXoa.putClientProperty("FlatLaf.styleClass", "danger");
+        btnLamMoi = new JButton("Làm Mới"); 
 
-        pnButtons.add(btnThem);
-        pnButtons.add(btnSua);
-        pnButtons.add(btnXoa);
-        pnButtons.add(btnLamMoi);
+        btnThem.setCursor(new Cursor(Cursor.HAND_CURSOR)); btnSua.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnXoa.setCursor(new Cursor(Cursor.HAND_CURSOR)); btnLamMoi.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        pnButtons.add(btnThem); pnButtons.add(btnSua);
+        pnButtons.add(btnXoa); pnButtons.add(btnLamMoi);
 
         pnRight.add(pnButtons, BorderLayout.SOUTH);
-
         add(pnRight, BorderLayout.EAST);
 
         

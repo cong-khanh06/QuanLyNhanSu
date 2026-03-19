@@ -24,7 +24,6 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
     private JLabel jlvaluemaso, jlvaluehoten, jlvaluegioitinh, jlvaluesdt, jlvaluedc, jlvaluephongban, jlvaluengayvaolam;
     private JButton btthem, btxoa, btsua, btsearch, btrefresh,btthongke;
 	
-
     public Phongban1_GUI() {
         pbb = new Phongban_BUS();
         init();
@@ -40,40 +39,51 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
     }
 
     public void init() {
-        setBackground(Color.white);
-        this.setLayout(new BorderLayout(0, 0));
-        this.setBorder(null);      
-        JPanel panelTop = new JPanel(new BorderLayout());
-        panelTop.setPreferredSize(new Dimension(1000, 300));
-        panelTop.setBorder(new LineBorder(Color.GRAY));
-        panelTop.setBackground(Color.white);
+        // 1. ĐỔI MÀU NỀN TỔNG THỂ SANG XÁM XANH NHẠT (Tạo độ sâu)
+        setBackground(new Color(226, 232, 240)); 
+        this.setLayout(new BorderLayout(15, 15)); 
+        this.setBorder(new EmptyBorder(15, 15, 15, 15)); 
+        
+        Font modernFont = new Font("Segoe UI", Font.PLAIN, 14);
+        Font boldFont = new Font("Segoe UI", Font.BOLD, 14);
+
+        // ================= PHẦN TRÊN: PHÒNG BAN =================
+        JPanel panelTop = new JPanel(new BorderLayout(0, 10));
+        panelTop.setBackground(Color.WHITE); // Khối Card màu trắng
+        
+        // 2. TẠO ĐIỂM NHẤN: Đường viền xanh dương đậm ở trên cùng của Card
+        panelTop.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(59, 130, 246)), // Accent Top
+            BorderFactory.createCompoundBorder(
+                new LineBorder(new Color(210, 215, 220)), 
+                new EmptyBorder(10, 15, 10, 15)
+            )
+        ));
 
         JPanel panelTopToolbar = new JPanel(new BorderLayout());
-        panelTopToolbar.setBackground(new Color(0, 255, 255));
-        panelTopToolbar.setPreferredSize(new Dimension(0, 45));
+        panelTopToolbar.setBackground(Color.WHITE);
 
-        JLabel lbtt = new JLabel("  Quản lý phòng ban");
-        lbtt.setFont(new Font("Arial", Font.BOLD, 16));
+        JLabel lbtt = new JLabel("Danh Sách Phòng Ban");
+        lbtt.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lbtt.setForeground(new Color(30, 41, 59));
         panelTopToolbar.add(lbtt, BorderLayout.WEST);
 
-        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 10));
-        pnlButtons.setOpaque(false);
+        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        pnlButtons.setBackground(Color.WHITE);
 
         jtfSearch = new JTextField(15);
-        btsearch = createStyledButton("Tìm kiếm", "/img/searchpb.png");
-        btrefresh = createStyledButton("Refresh", "/img/Refresh.png");
-        btthem = createStyledButton("Thêm", "/img/addpb.png");
-        btsua = createStyledButton("Sửa", "/img/fixpb.png");
-        btxoa = createStyledButton("Xóa", "/img/deletepb.png");
-        btthongke = createStyledButton("Thống kê", "/img/thongke.png");
+        jtfSearch.setPreferredSize(new Dimension(200, 35));
+        jtfSearch.setFont(modernFont);
+        
+        btsearch = createStyledButton("Tìm kiếm", "/img/searchpb.png", "primary");
+        btrefresh = createStyledButton("Làm mới", "/img/Refresh.png", "");
+        btthem = createStyledButton("Thêm", "/img/addpb.png", "primary");
+        btsua = createStyledButton("Sửa", "/img/fixpb.png", "");
+        btxoa = createStyledButton("Xóa", "/img/deletepb.png", "danger");
+        btthongke = createStyledButton("Thống kê", "/img/thongke.png", "success");
 
-        pnlButtons.add(jtfSearch);
-        pnlButtons.add(btsearch);
-        pnlButtons.add(btrefresh);
-        pnlButtons.add(btthem);
-        pnlButtons.add(btsua);
-        pnlButtons.add(btxoa);
-        pnlButtons.add(btthongke);
+        pnlButtons.add(jtfSearch); pnlButtons.add(btsearch); pnlButtons.add(btrefresh);
+        pnlButtons.add(btthem); pnlButtons.add(btsua); pnlButtons.add(btxoa); pnlButtons.add(btthongke);
 
         panelTopToolbar.add(pnlButtons, BorderLayout.EAST);
         panelTop.add(panelTopToolbar, BorderLayout.NORTH);
@@ -85,21 +95,30 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         ) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         });
-        JScrollPane scrollPaneTop=new JScrollPane(table);
-        scrollPaneTop.getViewport().setBackground(Color.white);
+        styleTable(table); 
         
-        panelTop.add(scrollPaneTop,BorderLayout.CENTER);
-        this.add(panelTop, BorderLayout.NORTH);
+        JScrollPane scrollPaneTop = new JScrollPane(table);
+        scrollPaneTop.setBorder(BorderFactory.createEmptyBorder());
+        scrollPaneTop.getViewport().setBackground(Color.WHITE);
+        panelTop.add(scrollPaneTop, BorderLayout.CENTER);
         
-        JPanel panelBottom = new JPanel(new GridLayout(1, 2, 0, 0));
-        panelBottom.setOpaque(false);
-
-        JPanel panelLeft = new JPanel(new BorderLayout());
-        panelLeft.setBorder(new TitledBorder(new LineBorder(Color.BLACK), "Danh sách nhân viên"));
-        panelLeft.setBackground(Color.white);
+        // ================= PHẦN DƯỚI: CHI TIẾT NHÂN VIÊN =================
+        // KHU VỰC TRÁI (BẢNG NHÂN VIÊN)
+        JPanel panelLeft = new JPanel(new BorderLayout(0, 10));
+        panelLeft.setBackground(Color.WHITE);
         
-        jlnhanvien = new JLabel("Nhân Viên", SwingConstants.CENTER);
-        jlnhanvien.setFont(new Font("Arial", Font.BOLD, 14));
+        // Tạo điểm nhấn viền trên màu Xanh Ngọc cho khối Nhân viên
+        panelLeft.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(16, 185, 129)), // Accent Top Xanh ngọc
+            BorderFactory.createCompoundBorder(
+                new LineBorder(new Color(210, 215, 220)), 
+                new EmptyBorder(10, 15, 10, 15)
+            )
+        ));
+        
+        jlnhanvien = new JLabel("Nhân Viên", SwingConstants.LEFT);
+        jlnhanvien.setFont(boldFont);
+        jlnhanvien.setForeground(new Color(16, 185, 129)); // Chữ đồng màu viền
         panelLeft.add(jlnhanvien, BorderLayout.NORTH);
 
         table_1 = new JTable();
@@ -109,51 +128,62 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         ) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         });
+        styleTable(table_1);
+        
         JScrollPane scrollPanelLeft = new JScrollPane(table_1);
+        scrollPanelLeft.setBorder(BorderFactory.createEmptyBorder());
         scrollPanelLeft.getViewport().setBackground(Color.WHITE);
         panelLeft.add(scrollPanelLeft, BorderLayout.CENTER);
 
+        // KHU VỰC PHẢI (THÔNG TIN CHI TIẾT)
         JPanel panelRight = new JPanel(new BorderLayout());
         panelRight.setBackground(Color.WHITE);
-        panelRight.setBorder(new TitledBorder(new LineBorder(Color.BLACK), "Thông tin chi tiết"));
+        
+        // Tạo điểm nhấn viền trên màu Tím cho khối Chi tiết
+        panelRight.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(139, 92, 246)), // Accent Top Tím
+            BorderFactory.createCompoundBorder(
+                new LineBorder(new Color(210, 215, 220)), 
+                new EmptyBorder(10, 20, 10, 20)
+            )
+        ));
+
+        JLabel lblDetailTitle = new JLabel("Thông Tin Chi Tiết");
+        lblDetailTitle.setFont(boldFont);
+        lblDetailTitle.setForeground(new Color(139, 92, 246)); // Chữ đồng màu viền
+        panelRight.add(lblDetailTitle, BorderLayout.NORTH);
 
         JPanel pnlContent = new JPanel(new BorderLayout(20, 0)); 
         pnlContent.setBackground(Color.WHITE);
-        pnlContent.setBorder(new EmptyBorder(50, 15, 10, 10));
+        pnlContent.setBorder(new EmptyBorder(20, 0, 0, 0));
 
-        
-        JPanel pnlLabels = new JPanel(new GridLayout(7, 1, 0, 20)); 
+        JPanel pnlLabels = new JPanel(new GridLayout(7, 1, 0, 15)); 
         pnlLabels.setBackground(Color.WHITE);
         
         String[] lbText = {"Mã số:", "Họ tên:", "Giới tính:", "Số điện thoại:", "Địa chỉ:", "Phòng ban:", "Ngày vào làm:"};
         for (String text : lbText) {
             JLabel lbl = new JLabel(text);
-            lbl.setFont(new Font("Arial", Font.BOLD, 13));
+            lbl.setFont(modernFont);
+            lbl.setForeground(new Color(100, 116, 139)); // Label xám dịu
             pnlLabels.add(lbl);
         }
 
         JPanel pnlValues = new JPanel(new GridLayout(7, 1, 0, 15));
         pnlValues.setBackground(Color.WHITE);
 
-        jlvaluemaso = createValueLabel();
-        jlvaluehoten = createValueLabel();
-        jlvaluegioitinh = createValueLabel();
-        jlvaluesdt = createValueLabel();
-        jlvaluedc = createValueLabel();
-        jlvaluephongban = createValueLabel();
+        jlvaluemaso = createValueLabel(); jlvaluehoten = createValueLabel();
+        jlvaluegioitinh = createValueLabel(); jlvaluesdt = createValueLabel();
+        jlvaluedc = createValueLabel(); jlvaluephongban = createValueLabel();
         jlvaluengayvaolam = createValueLabel();
 
-        pnlValues.add(jlvaluemaso);
-        pnlValues.add(jlvaluehoten);
-        pnlValues.add(jlvaluegioitinh);
-        pnlValues.add(jlvaluesdt);
-        pnlValues.add(jlvaluedc);
-        pnlValues.add(jlvaluephongban);
+        pnlValues.add(jlvaluemaso); pnlValues.add(jlvaluehoten);
+        pnlValues.add(jlvaluegioitinh); pnlValues.add(jlvaluesdt);
+        pnlValues.add(jlvaluedc); pnlValues.add(jlvaluephongban);
         pnlValues.add(jlvaluengayvaolam);
         
-        jlAvatar=new JLabel("Đang cập nhật",JLabel.CENTER);
-        jlAvatar.setPreferredSize(new Dimension(150,180));
-        jlAvatar.setBorder(new LineBorder(Color.GRAY));
+        jlAvatar=new JLabel("Chưa có ảnh",JLabel.CENTER);
+        jlAvatar.setPreferredSize(new Dimension(140,180));
+        jlAvatar.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
 
         pnlContent.add(pnlLabels, BorderLayout.WEST);   
         pnlContent.add(pnlValues, BorderLayout.CENTER); 
@@ -162,46 +192,63 @@ public class Phongban1_GUI extends JPanel implements ActionListener {
         JPanel pnlNorthWrapper = new JPanel(new BorderLayout());
         pnlNorthWrapper.setBackground(Color.WHITE);
         pnlNorthWrapper.add(pnlContent, BorderLayout.NORTH);
-
         panelRight.add(pnlNorthWrapper, BorderLayout.CENTER);
 
-        panelBottom.add(panelLeft);
-        panelBottom.add(panelRight);
-        this.add(panelBottom, BorderLayout.CENTER);
-      
+        JSplitPane splitPaneBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelLeft, panelRight);
+        splitPaneBottom.setResizeWeight(0.45);
+        splitPaneBottom.setDividerSize(10);
+        splitPaneBottom.setBorder(null);
+        splitPaneBottom.setOpaque(false); // Xóa nền thanh kéo
 
-        btthem.addActionListener(this);
-        btsua.addActionListener(this);
-        btxoa.addActionListener(this);
-        btsearch.addActionListener(this);
-        btrefresh.addActionListener(this);
-        btthongke.addActionListener(this);
+        JSplitPane splitPaneMain = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelTop, splitPaneBottom);
+        splitPaneMain.setResizeWeight(0.6); 
+        splitPaneMain.setDividerSize(12);
+        splitPaneMain.setBorder(null);
+        splitPaneMain.setOpaque(false);
+
+        this.add(splitPaneMain, BorderLayout.CENTER);
+
+        btthem.addActionListener(this); btsua.addActionListener(this);
+        btxoa.addActionListener(this); btsearch.addActionListener(this);
+        btrefresh.addActionListener(this); btthongke.addActionListener(this);
+    }
+    
+    // Hàm tối ưu giao diện bảng
+    private void styleTable(JTable tb) {
+        tb.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tb.setRowHeight(30);
+        tb.setShowVerticalLines(false);
+        tb.setShowHorizontalLines(true);
+        tb.setGridColor(new Color(230, 230, 230));
+        tb.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        
+        // Nền Header bảng xám rất nhẹ để phân cách
+        tb.getTableHeader().setBackground(new Color(241, 245, 249)); 
     }
 
-    private JButton createStyledButton(String text, String iconPath) {
+    // Hàm tạo nút dùng sức mạnh của FlatLaf
+    private JButton createStyledButton(String text, String iconPath, String styleClass) {
         JButton btn = new JButton(text);
-        btn.setFocusPainted(false);
-        btn.setBackground(new Color(73, 209, 141));
-        btn.setForeground(Color.BLUE);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setPreferredSize(new Dimension(100, 35));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        if (!styleClass.isEmpty()) {
+            btn.putClientProperty("FlatLaf.styleClass", styleClass);
+        }
         
         java.net.URL url = getClass().getResource(iconPath);
         if (url != null) {
             ImageIcon icon = new ImageIcon(new ImageIcon(url).getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH));
             btn.setIcon(icon);
         }
-        
-        btn.addMouseListener(new MouseAdapter() {
-            @Override public void mouseEntered(MouseEvent e) { btn.setBackground(new Color(46, 204, 113)); }
-            @Override public void mouseExited(MouseEvent e) { btn.setBackground(new Color(73, 209, 141)); }
-        });
         return btn;
     }
 
     private JLabel createValueLabel() {
         JLabel label = new JLabel("");
-        label.setForeground(Color.BLUE);
-        label.setFont(new Font("Arial", Font.PLAIN, 13));
+        label.setForeground(Color.BLACK);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
         return label;
     }
 

@@ -63,8 +63,9 @@ public class DuAn1_GUI extends JDialog {
         setLocationRelativeTo(parentGUI);
         setModal(true);
         setLayout(new BorderLayout());
-
+        getContentPane().setBackground(Color.WHITE);
         JPanel pnForm = new JPanel(new GridLayout(6, 2, 10, 20));
+        pnForm.setBackground(Color.WHITE);
         pnForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         pnForm.add(new JLabel("Mã Dự Án:"));
@@ -110,9 +111,15 @@ public class DuAn1_GUI extends JDialog {
         add(pnForm, BorderLayout.CENTER);
 
         JPanel pnButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnButtons.setBackground(Color.WHITE); // Nền trắng
+        
         btnLuu = new JButton("Lưu Dự Án");
-        btnLuu.setBackground(new Color(150, 214, 255));
+        btnLuu.putClientProperty("FlatLaf.styleClass", "primary"); // Style xịn
+        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         btnHuy = new JButton("Hủy Bỏ");
+        btnHuy.putClientProperty("FlatLaf.styleClass", "danger"); // Style xịn
+        btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         pnButtons.add(btnLuu);
         pnButtons.add(btnHuy);

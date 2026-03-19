@@ -6,13 +6,14 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
+import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -38,7 +39,9 @@ public class Display_GUI extends JFrame{
     ChucVu_GUI chucvu;
     ChiTietBaoHiem_GUI chitietbaohiem;
     ThongBao_GUI thongbao;
-
+    Color sidebarBackgroundColor = new Color(228, 233, 242);
+    Color userInfoBackgroundColor = new Color(215, 222, 235);
+    Color primaryTextColor = new Color(30, 41, 59);
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
         setSize(1400,800);
@@ -62,19 +65,32 @@ public class Display_GUI extends JFrame{
         
         pnLeft=new JPanel();
         pnLeft.setPreferredSize(new Dimension(250,800));
-        pnLeft.setBackground(new Color(150,214,255));
+        pnLeft.setBackground(sidebarBackgroundColor);
         pnLeft.setLayout(new BorderLayout());
         
+        
+        Font modernFont = new Font("Segoe UI", Font.PLAIN, 14);
+        Font boldFont = new Font("Segoe UI", Font.BOLD, 14);
         name=new JLabel("Tên Đăng nhập: ");
         role=new JLabel("Chức vụ: ");
         
         nameValue = new JLabel("");
         roleValue = new JLabel("");
         
+        name.setFont(modernFont);
+        nameValue.setFont(boldFont); // Cho tên in đậm
+        role.setFont(modernFont);
+        roleValue.setFont(boldFont);
+        name.setForeground(primaryTextColor);
+        nameValue.setForeground(primaryTextColor);
+        role.setForeground(primaryTextColor);
+        roleValue.setForeground(primaryTextColor);
+        
         pnRAN=new JPanel();
         pnRAN.setPreferredSize(new Dimension(250,100));
         pnRAN.setLayout(new GridLayout(2,2,5,5));
-        pnRAN.setBackground(new Color(200, 230, 255)); 
+        pnRAN.setBackground(userInfoBackgroundColor); 
+        pnRAN.setBorder(new EmptyBorder(15, 15, 15, 15));
         
         pnRAN.add(name);
         pnRAN.add(nameValue);
@@ -85,8 +101,9 @@ public class Display_GUI extends JFrame{
         
         pnCard=new JPanel();
         pnCard.setPreferredSize(new Dimension(250,700));
+        pnCard.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnCard.setLayout(new BoxLayout(pnCard, BoxLayout.Y_AXIS));
-        pnCard.setBackground(new Color(120, 190, 240));
+        pnCard.setBackground(sidebarBackgroundColor);
         btnHome = new ButtonSidebar("Trang chủ", loadIcon("/GUI/icon/home.png"));
         pnCard.add(btnHome);
         btnNV=new ButtonSidebar("Nhân viên", loadIcon("/GUI/icon/nhanvien.png"));
@@ -296,7 +313,13 @@ public class Display_GUI extends JFrame{
     
     public static void main(String []args)
     {
-    	Display_GUI ds=new Display_GUI();
+            try {
+            // Có thể thay bằng FlatDarkLaf() nếu thích giao diện tối
+            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
+        }
+        Display_GUI ds = new Display_GUI();
     }
     
 }

@@ -159,7 +159,8 @@ public class TrangChu_GUI extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(mauNen);
         panel.setBorder(new EmptyBorder(20, 20, 20, 20)); 
-
+        panel.putClientProperty("FlatLaf.style", "arc: 15");
+        
         JLabel lblTitle = new JLabel(tieuDe);
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitle.setForeground(Color.WHITE);
@@ -170,11 +171,11 @@ public class TrangChu_GUI extends JPanel {
         lblValue.setFont(new Font("Segoe UI", Font.BOLD, 40));
         lblValue.setForeground(Color.WHITE);
         lblValue.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        
         panel.add(lblTitle);
         panel.add(Box.createVerticalStrut(10)); 
         panel.add(lblValue);
-
+        
         return panel;
     }
     

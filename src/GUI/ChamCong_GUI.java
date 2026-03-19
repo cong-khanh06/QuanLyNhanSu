@@ -28,69 +28,77 @@ public class ChamCong_GUI extends JPanel {
     private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public ChamCong_GUI() {
-        setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        // NỀN XÁM TỔNG THỂ
+        setLayout(new BorderLayout(15, 15));
+        setBackground(new Color(226, 232, 240));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JLabel lblTitle = new JLabel("QUẢN LÝ CHẤM CÔNG HÀNG NGÀY", JLabel.CENTER);
+        // ================= HEADER & TOOLBAR (Card Trắng) =================
+        JPanel pnTopCard = new JPanel(new BorderLayout());
+        pnTopCard.setBackground(Color.WHITE);
+        pnTopCard.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(3, 0, 0, 0, new Color(245, 158, 11)), // Viền Cam
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+
+        JLabel lblTitle = new JLabel("QUẢN LÝ CHẤM CÔNG HÀNG NGÀY");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        lblTitle.setForeground(new Color(30, 41, 59));
+        pnTopCard.add(lblTitle, BorderLayout.NORTH);
 
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        filterPanel.setBackground(new Color(150, 214, 255));
-        filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        filterPanel.setBackground(Color.WHITE);
+        filterPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
         txtSearch = new JTextField(15);
-        txtSearch.setPreferredSize(new Dimension(150, 30));
-        btnSearch = new JButton("Tìm kiếm");
+        txtSearch.setPreferredSize(new Dimension(150, 36));
+        txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnSearch = createFlatButton("Tìm kiếm", "primary");
 
-        cboPhong = new JComboBox<>();
-        cboPhong.addItem("Tất cả");
+        cboPhong = new JComboBox<>(); cboPhong.addItem("Tất cả");
         for (String p : bus.getDanhSachPhong()) cboPhong.addItem(p);
 
-        cboThang = new JComboBox<>();
-        cboThang.addItem("Tất cả");
+        cboThang = new JComboBox<>(); cboThang.addItem("Tất cả");
         for (int i = 1; i <= 12; i++) cboThang.addItem(String.valueOf(i));
         
-        cboNam = new JComboBox<>();
-        cboNam.addItem("Tất cả");
+        cboNam = new JComboBox<>(); cboNam.addItem("Tất cả");
         int namHienTai = Year.now().getValue();
         for (int i = 2020; i <= namHienTai; i++) cboNam.addItem(String.valueOf(i)); 
-        
         
         cboThang.setSelectedItem("Tất cả");
         cboNam.setSelectedItem("Tất cả");
 
-        btnAdd = new ButtonToolBar("Thêm Mới");
-        btnEdit = new ButtonToolBar("Sửa");
-        btnDelete = new ButtonToolBar("Xóa");
+        btnAdd = createFlatButton("Thêm Mới", "primary");
+        btnEdit = createFlatButton("Sửa", "");
+        btnDelete = createFlatButton("Xóa", "danger");
 
-        filterPanel.add(txtSearch);
-        filterPanel.add(btnSearch);
+        filterPanel.add(txtSearch); filterPanel.add(btnSearch);
         filterPanel.add(new JLabel("Phòng:")); filterPanel.add(cboPhong);
         filterPanel.add(new JLabel("Tháng:")); filterPanel.add(cboThang);
         filterPanel.add(new JLabel("Năm:")); filterPanel.add(cboNam);
-        filterPanel.add(btnAdd);
-        filterPanel.add(btnEdit);
-        filterPanel.add(btnDelete);
+        filterPanel.add(btnAdd); filterPanel.add(btnEdit); filterPanel.add(btnDelete);
 
-        add(lblTitle, BorderLayout.NORTH);
+        pnTopCard.add(filterPanel, BorderLayout.CENTER);
+        add(pnTopCard, BorderLayout.NORTH);
         
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.add(filterPanel, BorderLayout.NORTH);
-
+        // ================= BẢNG DỮ LIỆU =================
         String[] cols = { "Mã CC", "Nhân viên", "Ngày Chấm", "Giờ Vào", "Giờ Ra", "Tăng ca (Giờ)", "Trạng thái" };
         model = new DefaultTableModel(cols, 0) {
             public boolean isCellEditable(int r, int c) { return false; }
         };
 
         table = new JTable(model);
-        table.setRowHeight(28);
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        table.setShowGrid(true);
+        styleTable(table);
 
-        centerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-        add(centerPanel, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        
+        JPanel pnTableCard = new JPanel(new BorderLayout());
+        pnTableCard.setBackground(Color.WHITE);
+        pnTableCard.add(scrollPane, BorderLayout.CENTER);
+        
+        add(pnTableCard, BorderLayout.CENTER);
 
         
         btnSearch.addActionListener(e -> refreshData());
@@ -146,7 +154,25 @@ public class ChamCong_GUI extends JPanel {
 
         refreshData();
     }
+    
+    private JButton createFlatButton(String text, String style) {
+        JButton btn = new JButton(text);
+        btn.setPreferredSize(new Dimension(100, 36));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (!style.isEmpty()) btn.putClientProperty("FlatLaf.styleClass", style);
+        return btn;
+    }
 
+    private void styleTable(JTable tb) {
+        tb.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tb.setRowHeight(30);
+        tb.setShowVerticalLines(false); tb.setShowHorizontalLines(true);
+        tb.setGridColor(new Color(230, 230, 230));
+        tb.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tb.getTableHeader().setBackground(new Color(248, 250, 252));
+    }
+    
     public void refreshData() {
         if (isAdmin) loadTable();
         else loadTableuser(currentMaNV);

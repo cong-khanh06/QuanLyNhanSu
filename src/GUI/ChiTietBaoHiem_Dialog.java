@@ -37,6 +37,7 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
     }
 
     private void khoiTaoGiaoDien() {
+        getContentPane().setBackground(Color.WHITE);
         setSize(800, 500);
         setLocationRelativeTo(getParent());
         setLayout(new BorderLayout(0, 10));
@@ -98,7 +99,10 @@ public class ChiTietBaoHiem_Dialog extends JDialog {
         pnBottom.add(btnXoa);
         pnBottom.add(btnDong);
         add(pnBottom, BorderLayout.SOUTH);
-
+        
+        btnThem.putClientProperty("FlatLaf.styleClass", "primary");
+        btnXoa.putClientProperty("FlatLaf.styleClass", "danger");
+        btnDong.putClientProperty("FlatLaf.styleClass", "");
   
         btnDong.addActionListener(e -> dispose());
         
