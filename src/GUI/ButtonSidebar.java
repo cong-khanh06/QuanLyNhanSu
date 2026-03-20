@@ -13,10 +13,10 @@ public class ButtonSidebar extends JButton {
 
     public ButtonSidebar(String text, ImageIcon icon) {
         
-        Color normal = new Color(228, 233, 242); 
-        Color hover  = new Color(200, 210, 228); 
-        
-        Color textColor = new Color(30, 41, 59);
+        Color normal = new Color(238, 249, 245); 
+        Color hover  = new Color(214, 239, 229); 
+
+        Color textColor = new Color(36, 66, 56);
 
         setText(text);
         setIcon(icon);

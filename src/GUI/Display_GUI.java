@@ -39,9 +39,9 @@ public class Display_GUI extends JFrame{
     ChucVu_GUI chucvu;
     ChiTietBaoHiem_GUI chitietbaohiem;
     ThongBao_GUI thongbao;
-    Color sidebarBackgroundColor = new Color(228, 233, 242);
-    Color userInfoBackgroundColor = new Color(215, 222, 235);
-    Color primaryTextColor = new Color(30, 41, 59);
+    Color sidebarBackgroundColor = new Color(238, 249, 245);
+    Color userInfoBackgroundColor = new Color(214, 239, 229);
+    Color primaryTextColor = new Color(36, 66, 56);
     public Display_GUI(){
         setTitle("Quản Lý Nhân Sự");
         setSize(1400,800);
